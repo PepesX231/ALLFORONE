@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-40 -64 80 100"><defs><linearGradient id="gy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c4"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#ff9500"/></linearGradient></defs>
+    <g stroke-linejoin="round">
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="#050a1c" stroke="#050a1c" stroke-width="20" transform="translate(4 7)"/>
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="#fff" stroke="#fff" stroke-width="18"/>
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="url(#gy)" stroke="#0b1b3f" stroke-width="5"/>
+      <path d="M-4-17c1-3 2.4-5.6 4-6.6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+      <circle cx="-6.5" cy="0" r="3.3" fill="#0b1b3f"/><circle cx="6.5" cy="0" r="3.3" fill="#0b1b3f"/>
+      <circle cx="-5.4" cy="-1.2" r="1.1" fill="#fff"/><circle cx="7.6" cy="-1.2" r="1.1" fill="#fff"/>
+      <path d="M-3.8 6c2.2 2 5.4 2 7.6 0" fill="none" stroke="#0b1b3f" stroke-width="2.8" stroke-linecap="round"/>
+      <ellipse cx="-12" cy="5" rx="3.6" ry="2.1" fill="#ff8fa3"/><ellipse cx="12" cy="5" rx="3.6" ry="2.1" fill="#ff8fa3"/>
+      <g transform="translate(2 -30) rotate(12)">
+        <path d="M-24 0L0-11 24 0 0 11z" fill="#0b1b3f" stroke="#fff" stroke-width="7" paint-order="stroke"/>
+        <path d="M-13 4v8c0 4.5 26 4.5 26 0V4" fill="#0b1b3f" stroke="#fff" stroke-width="6" paint-order="stroke"/>
+        <path d="M-24 0L0-11 24 0 0 11z" fill="#0b1b3f"/><path d="M-13 4v8c0 4.5 26 4.5 26 0V4" fill="#0b1b3f"/>
+        <path d="M-20-1L0-9.5" stroke="#3a5aa8" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M0 0l16 4.5v12" fill="none" stroke="#ffd23f" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="16" cy="18.5" r="3.6" fill="#ffd23f" stroke="#0b1b3f" stroke-width="1.5"/>
+      </g>
+    </g>
+  </svg>

@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>All for One University | Hamster Hub</title>
+<meta name="description" content="การแข่งขันเทคโนโลยีสำหรับนักเรียนมัธยมทั่วประเทศ รวมทีม 2–3 คน สร้างผลงานจริง ลงสนามจริง ลุ้นรอบชิงที่ IoTE KMITL ลาดกระบัง คนละ 190 บาท สมัครภายใน 20 ต.ค.">
+<meta name="theme-color" content="#0a0a0a">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="th_TH">
+<meta property="og:title" content="All for One University — ขอให้ได้มหาลัยซักที่">
+<meta property="og:description" content="การแข่งขันเทคโนโลยีสำหรับนักเรียนมัธยมทั่วประเทศ · ทีม 2–3 คน · คนละ 190 บาท · รอบชิงที่ IoTE KMITL">
+<meta property="og:image" content="https://media.mediaquest.uk/uploads/1790485996187-ChatGPT_Image_Sep_27_2026_12_13_07_PM.webp">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/img/star.svg">
+<link rel="apple-touch-icon" href="assets/img/mascot-sm.webp">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+<script>
+  // progressive enhancement flags (set before first paint to avoid a flash)
+  (function (d) {
+    d.classList.add('js');
+    try { if (CSS.supports('animation-timeline: view()')) d.classList.add('sda'); } catch (e) {}
+  })(document.documentElement);
+  // posters come from another host: drop any that fail, and the whole section if none load
+  window.__posterFail = function (img) {
+    var f = img.closest('figure'); if (f) f.remove();
+    var l = document.getElementById('posterList');
+    if (l && !l.children.length) { var s = document.getElementById('posters'); if (s) s.remove(); }
+  };
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Event",
+  "name": "All for One University",
+  "description": "การแข่งขันเทคโนโลยีสำหรับนักเรียนมัธยมทั่วประเทศ 3 สาย: Game Development, Software for Business & Tourism, IoT & Innovation",
+  "startDate": "2026-10-22",
+  "endDate": "2026-11-15",
+  "eventStatus": "https://schema.org/EventScheduled",
+  "eventAttendanceMode": "https://schema.org/MixedEventAttendanceMode",
+  "location": [
+    { "@type": "VirtualLocation", "url": "https://www.hamsterhub.co/allforone" },
+    { "@type": "Place", "name": "IoTE KMITL ลาดกระบัง",
+      "address": { "@type": "PostalAddress", "addressLocality": "ลาดกระบัง", "addressRegion": "กรุงเทพมหานคร", "addressCountry": "TH" } }
+  ],
+  "offers": { "@type": "Offer", "price": "190", "priceCurrency": "THB", "url": "https://www.hamsterhub.co/allforone", "validFrom": "2026-09-28", "availability": "https://schema.org/InStock" },
+  "organizer": { "@type": "Organization", "name": "Hamster Hub", "url": "https://www.hamsterhub.co/" },
+  "image": ["https://media.mediaquest.uk/uploads/1790485996187-ChatGPT_Image_Sep_27_2026_12_13_07_PM.webp"]
+}
+</script>
+<script src="assets/js/data.js" defer></script>
+<script src="assets/js/main.js" defer></script>
+<script src="assets/js/tracks3d.js" defer></script>
+</head>
+<body>
+<div class="sky" id="sky" aria-hidden="true"></div>
+<a class="skip" href="#main">ข้ามไปที่เนื้อหา</a>
+<!-- icons -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="i-game" viewBox="0 0 24 24"><path d="M7 6h10a4 4 0 0 1 3.95 3.37l.95 6.1a2.6 2.6 0 0 1-4.53 2.11L15.5 15.5h-7l-1.87 2.08A2.6 2.6 0 0 1 2.1 15.47l.95-6.1A4 4 0 0 1 7 6z"/><path d="M8 9.5v4M6 11.5h4"/><circle cx="15.5" cy="10.5" r=".6" fill="currentColor"/><circle cx="17.5" cy="12.5" r=".6" fill="currentColor"/></symbol>
+  <symbol id="i-app" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="14" rx="2.5"/><path d="M8 21h8M7 14v-2M11 14V9M15 14v-4"/></symbol>
+  <symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9 18h6M10 21.5h4"/><path d="M12 2.5a6.8 6.8 0 0 0-4 12.3c.6.5 1 1.2 1 2V18h6v-1.2c0-.8.4-1.5 1-2A6.8 6.8 0 0 0 12 2.5z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.7a3.5 3.5 0 0 1 0 6.6M21.5 20a6.5 6.5 0 0 0-3.6-5.8"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20.5 11.5a8 8 0 0 1-11.7 7.1L3.5 20l1.4-4.9A8 8 0 1 1 20.5 11.5z"/><path d="M8.5 11.5h.01M12.5 11.5h.01M16.5 11.5h.01" stroke-width="2.6"/></symbol>
+  <symbol id="i-present" viewBox="0 0 24 24"><path d="M2.5 4h19M4 4v11h16V4M12 15v5M8.5 20h7"/><path d="M8 11.5l2.7-2.7 2 2 3.3-3.3"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M12 10.5l1 2 2.2.3-1.6 1.5.4 2.2-2-1-2 1 .4-2.2-1.6-1.5 2.2-.3z"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.9 5.1L18 10l-5.1 1.9L11 17l-1.9-5.1L4 10l5.1-1.9z"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M8 21h8M12 16.5V21M7 3.5h10V9a5 5 0 0 1-10 0z"/><path d="M17 5h3.2v1.6A4 4 0 0 1 16.6 11M7 5H3.8v1.6A4 4 0 0 0 7.4 11"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></symbol>
+  <symbol id="i-growth" viewBox="0 0 24 24"><path d="M3 17.5l6-6 4 4 8-8"/><path d="M15 7.5h6v6"/></symbol>
+  <symbol id="i-rocket" viewBox="0 0 24 24"><path d="M5.5 15.5c-1.5 1.3-2 3.8-2 5 1.2 0 3.7-.5 5-2"/><path d="M9 15l-2.5-2.5C8.8 7.3 13 3.5 20.5 3.5c0 7.5-3.8 11.7-9 14z"/><circle cx="15" cy="9" r="1.6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21.5s7-6.1 7-11.8a7 7 0 0 0-14 0c0 5.7 7 11.8 7 11.8z"/><circle cx="12" cy="9.8" r="2.5"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-flip" viewBox="0 0 24 24"><path d="M3 12a9 9 0 0 1 15.3-6.4L21 8M21 3v5h-5M21 12a9 9 0 0 1-15.3 6.4L3 16M3 21v-5h5"/></symbol>
+  <symbol id="i-seed" viewBox="0 0 24 24"><path d="M12 21v-8"/><path d="M12 13c0-4 3-7 8-7 0 4-3 7-8 7zM12 13C12 9.5 9.5 7 5 7c0 3.5 2.5 6 7 6z"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M21.5 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 1.7 4.2 2 2 0 0 1 3.7 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L7.6 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></symbol>
+  <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14.5 8H17V4.2h-2.8A4.2 4.2 0 0 0 10 8.4V11H7.2v3.8H10V21h3.8v-6.2h2.7l.6-3.8h-3.3V8.8c0-.5.3-.8.7-.8z"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.4" cy="6.6" r=".7" fill="currentColor"/></symbol>
+</defs></svg>
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="gy" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c4"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#ff9500"/></linearGradient>
+  <linearGradient id="gb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bfe9ff"/><stop offset=".5" stop-color="#4aa8ff"/><stop offset="1" stop-color="#1f52e0"/></linearGradient>
+  <!-- ALL FOR ONE UNIVERSITY wordmark -->
+  <symbol id="afo-logo" viewBox="0 0 400 200">
+    <g transform="rotate(-5 200 100)" font-family="Luckiest Guy, Impact, sans-serif" text-anchor="middle" stroke-linejoin="round" paint-order="stroke">
+      <g font-size="70">
+        <text x="200" y="100" textLength="340" lengthAdjust="spacingAndGlyphs" fill="#050a1c" stroke="#050a1c" stroke-width="22" transform="translate(4 7)"><tspan>ALL FOR </tspan><tspan fill-opacity="0" stroke-opacity="0">O</tspan><tspan>NE</tspan></text>
+        <text x="200" y="100" textLength="340" lengthAdjust="spacingAndGlyphs" fill="#fff" stroke="#fff" stroke-width="20"><tspan>ALL FOR </tspan><tspan fill-opacity="0" stroke-opacity="0">O</tspan><tspan>NE</tspan></text>
+        <text x="200" y="100" textLength="340" lengthAdjust="spacingAndGlyphs" fill="url(#gy)" stroke="#0b1b3f" stroke-width="9"><tspan>ALL FOR </tspan><tspan fill-opacity="0" stroke-opacity="0">O</tspan><tspan>NE</tspan></text>
+      </g>
+      <g font-size="44">
+        <text x="206" y="160" textLength="290" lengthAdjust="spacingAndGlyphs" fill="#050a1c" stroke="#050a1c" stroke-width="20" transform="translate(4 6)">UNIVERSITY</text>
+        <text x="206" y="160" textLength="290" lengthAdjust="spacingAndGlyphs" fill="#fff" stroke="#fff" stroke-width="18">UNIVERSITY</text>
+        <text x="206" y="160" textLength="290" lengthAdjust="spacingAndGlyphs" fill="url(#gb)" stroke="#0b1b3f" stroke-width="8">UNIVERSITY</text>
+      </g>
+      <use href="#afo-star" x="236.6" y="12" width="80" height="100"/>
+      <path d="M372 44l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="#ffd23f" stroke="#0b1b3f" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M28 150l3 7 7 3-7 3-3 7-3-7-7-3 7-3z" fill="#4aa8ff" stroke="#0b1b3f" stroke-width="2" stroke-linejoin="round"/>
+    </g>
+  </symbol>
+  <symbol id="afo-cap" viewBox="-31 -17 62 42" overflow="visible">
+    <g stroke-linejoin="round" stroke-linecap="round">
+      <path d="M-26 0L0-12 26 0 0 12z" fill="#050a1c" transform="translate(2 3)"/>
+      <path d="M-14 4.5v8.5c0 5 28 5 28 0V4.5" fill="#050a1c" transform="translate(2 3)"/>
+      <path d="M-26 0L0-12 26 0 0 12z" fill="#0b1b3f" stroke="#fff" stroke-width="6" paint-order="stroke"/>
+      <path d="M-14 4.5v8.5c0 5 28 5 28 0V4.5" fill="#0b1b3f" stroke="#fff" stroke-width="5" paint-order="stroke"/>
+      <path d="M-26 0L0-12 26 0 0 12z" fill="#16295a"/><path d="M-14 4.5v8.5c0 5 28 5 28 0V4.5" fill="#0b1b3f"/>
+      <path d="M-21-1.5L0-10.5" stroke="#4a6fc4" stroke-width="2.4"/>
+      <path d="M0 0l17 5v12.5" fill="none" stroke="#ffd23f" stroke-width="2.8"/>
+      <circle cx="17" cy="19.5" r="3.8" fill="#ffd23f" stroke="#0b1b3f" stroke-width="1.5"/>
+    </g>
+  </symbol>
+  <symbol id="afo-star" viewBox="-40 -64 80 100" overflow="visible">
+    <g stroke-linejoin="round">
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="#050a1c" stroke="#050a1c" stroke-width="20" transform="translate(4 7)"/>
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="#fff" stroke="#fff" stroke-width="18"/>
+      <path d="M0-26c2.4 0 3.6 1.8 4.6 4.2l4.6 10.3 11.2 1.3c2.5.3 4.2 1.4 4.9 3.4.7 2.1-.3 4-2.1 5.6l-8.4 7.7 2.4 11c.6 2.5-.1 4.5-1.8 5.7-1.8 1.3-3.9 1.1-6-.1L0 17.6l-9.4 5.5c-2.1 1.2-4.2 1.4-6 .1-1.7-1.2-2.4-3.2-1.8-5.7l2.4-11-8.4-7.7c-1.8-1.6-2.8-3.5-2.1-5.6.7-2 2.4-3.1 4.9-3.4l11.2-1.3 4.6-10.3C-3.6-24.2-2.4-26 0-26z" fill="url(#gy)" stroke="#0b1b3f" stroke-width="5"/>
+      <path d="M-4-17c1-3 2.4-5.6 4-6.6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>
+      <circle cx="-6.5" cy="0" r="3.3" fill="#0b1b3f"/><circle cx="6.5" cy="0" r="3.3" fill="#0b1b3f"/>
+      <circle cx="-5.4" cy="-1.2" r="1.1" fill="#fff"/><circle cx="7.6" cy="-1.2" r="1.1" fill="#fff"/>
+      <path d="M-3.8 6c2.2 2 5.4 2 7.6 0" fill="none" stroke="#0b1b3f" stroke-width="2.8" stroke-linecap="round"/>
+      <ellipse cx="-12" cy="5" rx="3.6" ry="2.1" fill="#ff8fa3"/><ellipse cx="12" cy="5" rx="3.6" ry="2.1" fill="#ff8fa3"/>
+      <g transform="translate(2 -30) rotate(12)">
+        <path d="M-24 0L0-11 24 0 0 11z" fill="#0b1b3f" stroke="#fff" stroke-width="7" paint-order="stroke"/>
+        <path d="M-13 4v8c0 4.5 26 4.5 26 0V4" fill="#0b1b3f" stroke="#fff" stroke-width="6" paint-order="stroke"/>
+        <path d="M-24 0L0-11 24 0 0 11z" fill="#0b1b3f"/><path d="M-13 4v8c0 4.5 26 4.5 26 0V4" fill="#0b1b3f"/>
+        <path d="M-20-1L0-9.5" stroke="#3a5aa8" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M0 0l16 4.5v12" fill="none" stroke="#ffd23f" stroke-width="2.6" stroke-linecap="round"/>
+        <circle cx="16" cy="18.5" r="3.6" fill="#ffd23f" stroke="#0b1b3f" stroke-width="1.5"/>
+      </g>
+    </g>
+  </symbol>
+    <symbol id="star4" viewBox="0 0 40 40"><path d="M20 3c1.6 8.4 4.6 11.4 13 13-8.4 1.6-11.4 4.6-13 13-1.6-8.4-4.6-11.4-13-13 8.4-1.6 11.4-4.6 13-13z" fill="currentColor" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round"/><path d="M15.5 13.5c1.2-1.4 2.2-3 3-5" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="2" stroke-linecap="round"/></symbol>
+  <symbol id="starface" viewBox="0 0 48 48"><path d="M24 4.5c1.7 0 2.6 1.3 3.3 3l3.3 7.4 8 .9c1.8.2 3 1 3.5 2.4.5 1.5-.2 2.9-1.5 4l-6 5.5 1.7 7.9c.4 1.8-.1 3.2-1.3 4.1-1.3.9-2.8.8-4.3-.1L24 35.6l-6.8 3.9c-1.5.9-3 1-4.3.1-1.2-.9-1.7-2.3-1.3-4.1l1.7-7.9-6-5.5c-1.3-1.1-2-2.5-1.5-4 .5-1.4 1.7-2.2 3.5-2.4l8-.9 3.3-7.4c.7-1.7 1.6-3 3.3-3z" fill="currentColor" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round"/><circle cx="19.6" cy="23" r="2" fill="#0b1b3f"/><circle cx="28.4" cy="23" r="2" fill="#0b1b3f"/><path d="M21.5 27.2c1.4 1.3 3.6 1.3 5 0" fill="none" stroke="#0b1b3f" stroke-width="2" stroke-linecap="round"/><ellipse cx="16.6" cy="27" rx="2.2" ry="1.3" fill="#ff8fa3" opacity=".8"/><ellipse cx="31.4" cy="27" rx="2.2" ry="1.3" fill="#ff8fa3" opacity=".8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5l4.8 4.8L19.5 7"/></symbol>
+  <symbol id="il-p1" viewBox="0 0 64 64"><path d="M10 20a4 4 0 0 1 4-4h11l5 5h20a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z" fill="#ff8a3d" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><rect x="18" y="12" width="26" height="22" rx="3" fill="#fff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" transform="rotate(-8 31 23)"/><path d="M22 20h14M22 25h10" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" transform="rotate(-8 31 23)"/><path d="M10 28h44v21a4 4 0 0 1-4 4H14a4 4 0 0 1-4-4z" fill="#ffb27a" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M32 33l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.6-4.8 2.6.9-5.4-3.9-3.8 5.4-.8z" fill="#ffd23f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/></symbol><symbol id="il-p2" viewBox="0 0 64 64"><path d="M8 14h30a5 5 0 0 1 5 5v14a5 5 0 0 1-5 5H22l-8 7v-7H8a5 5 0 0 1-5-5V19a5 5 0 0 1 5-5z" fill="#4d9fff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="15" cy="26" r="2.2" fill="#fff"/><circle cx="23" cy="26" r="2.2" fill="#fff"/><circle cx="31" cy="26" r="2.2" fill="#fff"/><path d="M34 30h22a5 5 0 0 1 5 5v11a5 5 0 0 1-5 5h-3v6l-7-6H34a5 5 0 0 1-5-5V35a5 5 0 0 1 5-5z" fill="#fff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M38 41l4 4 8-8" fill="none" stroke="#2fd08b" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="il-p3" viewBox="0 0 64 64"><path d="M32 8v7" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="32" cy="7" r="3.5" fill="#ff8fa3" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><rect x="12" y="15" width="40" height="32" rx="10" fill="#b89bff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><rect x="18" y="22" width="28" height="16" rx="7" fill="#1b2033" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="26" cy="30" r="3" fill="#7fd8ff"/><circle cx="38" cy="30" r="3" fill="#7fd8ff"/><path d="M8 28v8M56 28v8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 47v5h20v-5" fill="#9b7bff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M52 6l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#ffd23f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.8"/></symbol><symbol id="il-p4" viewBox="0 0 64 64"><g transform="translate(16 30)"><path d="M-11 22c0-8 5-13 11-13s11 5 11 13z" fill="#2fd08b" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle r="9" cy="0" fill="#ffd9b8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M-9-2c1-6 5-9 9-9s8 3 9 9c-5-3-13-3-18 0z" fill="#3a2a1f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="-3" cy="2" r="1.3" fill="#0b1b3f"/><circle cx="3" cy="2" r="1.3" fill="#0b1b3f"/></g><g transform="translate(48 30)"><path d="M-11 22c0-8 5-13 11-13s11 5 11 13z" fill="#4d9fff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle r="9" cy="0" fill="#ffd9b8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M-9-2c1-6 5-9 9-9s8 3 9 9c-5-3-13-3-18 0z" fill="#1f2a44" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="-3" cy="2" r="1.3" fill="#0b1b3f"/><circle cx="3" cy="2" r="1.3" fill="#0b1b3f"/></g><g transform="translate(32 26)"><path d="M-11 22c0-8 5-13 11-13s11 5 11 13z" fill="#ff8a3d" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle r="9" cy="0" fill="#ffd9b8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M-9-2c1-6 5-9 9-9s8 3 9 9c-5-3-13-3-18 0z" fill="#6b3b1f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><circle cx="-3" cy="2" r="1.3" fill="#0b1b3f"/><circle cx="3" cy="2" r="1.3" fill="#0b1b3f"/></g></symbol><symbol id="il-p5" viewBox="0 0 64 64"><path d="M32 36c0-10 6-17 16-17 0 10-6 17-16 17z" fill="#2fd08b" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M32 38c0-8-5-13-13-13 0 8 5 13 13 13z" fill="#57e6a8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M32 30v14" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M16 42h32l-4 16H20z" fill="#ff8a3d" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M14 42h36v6H14z" fill="#ffb27a" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M50 8l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z" fill="#ffd23f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-width="1.8"/></symbol><symbol id="il-p6" viewBox="0 0 64 64"><path d="M20 50l-6 10M44 50l6 10M32 50v10" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><rect x="8" y="10" width="48" height="40" rx="5" fill="#fff" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M16 40l8-8 6 5 10-12 8 6" fill="none" stroke="#4d9fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="48" cy="31" r="3" fill="#ff8a3d" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-width="2"/><rect x="14" y="16" width="16" height="4" rx="2" fill="#c3cde0"/></symbol><symbol id="il-p7" viewBox="0 0 64 64"><path d="M20 10h24v14a12 12 0 0 1-24 0z" fill="#ffd23f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M20 14h-8v4a8 8 0 0 0 8 8M44 14h8v4a8 8 0 0 1-8 8" fill="none" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M32 36v8" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 44h20v6H22zM18 50h28v6H18z" fill="#ffb23f" stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><path d="M32 15l1.8 3.6 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4-2.9-2.8 4-.6z" fill="#fff"/></symbol>
+  <symbol id="i-cap" viewBox="0 0 24 24"><path d="M2 9l10-5 10 5-10 5z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5M22 9v6"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v5M12 10V4a1.5 1.5 0 0 1 3 0v6M15 10V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a6 6 0 0 1-4.6-2.2L3.8 14a1.5 1.5 0 0 1 2.3-1.9L9 15"/></symbol>
+</defs></svg>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <!-- journey illustrations -->
+  <symbol id="il-1" viewBox="0 0 150 104">
+    <ellipse cx="75" cy="98" rx="58" ry="5" fill="#000" opacity=".35"/>
+    <g stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="84" y="16" width="46" height="62" rx="7" fill="#fff"/>
+      <rect x="97" y="10" width="20" height="11" rx="4" fill="#ffd23f"/>
+      <path d="M92 36l4 4 7-7M92 54l4 4 7-7" fill="none" stroke="#12a36b" stroke-width="3.4"/>
+      <path d="M108 38h14M108 56h14" fill="none" stroke="#c3cde0" stroke-width="3.4"/>
+      <path d="M14 96c0-15 8-24 19-24s19 9 19 24z" fill="#2fd08b"/>
+      <circle cx="33" cy="58" r="11" fill="#ffd9b8"/>
+      <path d="M22 55c0-8 5-13 11-13s11 5 11 12c-5-4-15-4-22 1z" fill="#2b2f44"/>
+      <path d="M46 96c0-17 9-27 21-27s21 10 21 27z" fill="#ff8a3d"/>
+      <circle cx="67" cy="53" r="12" fill="#ffd9b8"/>
+      <path d="M55 51c0-9 5-15 12-15s12 6 12 14c-7-5-17-5-24 1z" fill="#6b3b1f"/>
+    </g>
+    <path d="M136 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#ffd23f"/>
+  </symbol>
+  <symbol id="il-2" viewBox="0 0 150 104">
+    <ellipse cx="75" cy="98" rx="60" ry="5" fill="#000" opacity=".35"/>
+    <g stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="32" y="34" width="86" height="54" rx="6" fill="#1f2a4a"/>
+      <rect x="38" y="40" width="74" height="42" rx="3" fill="#4d9fff"/>
+      <path d="M22 88h106l-8 9H30z" fill="#c3cde0"/>
+      <circle cx="75" cy="24" r="14" fill="#ffd23f"/>
+      <path d="M69 36h12v6H69z" fill="#c3cde0"/>
+      <path d="M71 24l4 4 4-4" fill="none"/>
+    </g>
+    <g stroke="#ffd23f" stroke-width="3" stroke-linecap="round"><path d="M75 3v4M55 12l3 3M95 12l-3 3M50 26h4M96 26h4"/></g>
+    <g fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M60 64a21 21 0 0 1 30 0"/><path d="M66 70a12 12 0 0 1 18 0"/></g>
+    <circle cx="75" cy="75" r="3" fill="#fff"/>
+  </symbol>
+  <symbol id="il-3" viewBox="0 0 150 104">
+    <ellipse cx="75" cy="98" rx="60" ry="5" fill="#000" opacity=".35"/>
+    <g stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="18" y="16" width="86" height="70" rx="8" fill="#1f2a4a"/>
+      <path d="M18 30h86" fill="none"/>
+    </g>
+    <circle cx="28" cy="23" r="2.6" fill="#ff6b6b"/><circle cx="36" cy="23" r="2.6" fill="#ffd23f"/><circle cx="44" cy="23" r="2.6" fill="#2fd08b"/>
+    <g stroke-width="4" stroke-linecap="round"><path d="M30 42h24" stroke="#ff8a3d"/><path d="M60 42h20" stroke="#4d9fff"/><path d="M38 54h30" stroke="#2fd08b"/><path d="M38 66h18" stroke="#c3cde0"/><path d="M62 66h22" stroke="#ff8a3d"/><path d="M30 78h26" stroke="#4d9fff"/></g>
+    <g stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round">
+      <path d="M112 44l4-1 2-5 5 1 2 5 4 2 5-3 3 4-3 4 1 5 5 2-1 5-5 1-2 4 3 5-4 3-4-3-5 1-2 5-5-1-1-5-4-2-5 3-3-4 3-4-1-5-5-2 1-5 5-1 2-4-3-5 4-3z" fill="#ff8a3d"/>
+      <circle cx="120" cy="58" r="7" fill="#1f2a4a"/>
+      <path d="M92 4h44a8 8 0 0 1 8 8v14a8 8 0 0 1-8 8h-26l-10 8v-8h-8a8 8 0 0 1-8-8V12a8 8 0 0 1 8-8z" fill="#2fd08b"/>
+    </g>
+    <g fill="#fff"><circle cx="104" cy="19" r="3"/><circle cx="114" cy="19" r="3"/><circle cx="124" cy="19" r="3"/></g>
+  </symbol>
+  <symbol id="il-4" viewBox="0 0 150 104">
+    <path d="M52 0L30 98h24zM98 0l22 98H96z" fill="#ffd23f" opacity=".18"/>
+    <ellipse cx="75" cy="99" rx="62" ry="5" fill="#000" opacity=".35"/>
+    <g stroke="#0b1b3f" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round">
+      <rect x="54" y="66" width="42" height="30" rx="3" fill="#ffd23f"/>
+      <rect x="18" y="76" width="36" height="20" rx="3" fill="#c3cde0"/>
+      <rect x="96" y="80" width="36" height="16" rx="3" fill="#ff8a3d"/>
+      <path d="M62 20h26v12a13 13 0 0 1-26 0z" fill="#ffd23f"/>
+      <path d="M62 24h-8v4a8 8 0 0 0 8 8M88 24h8v4a8 8 0 0 1-8 8" fill="none"/>
+      <path d="M75 45v8M66 58h18v-5H66z" fill="#ffd23f"/>
+    </g>
+    <text x="75" y="88" text-anchor="middle" font-family="Luckiest Guy, Impact, sans-serif" font-size="16" fill="#0b1b3f">1</text>
+    <g fill="#fff"><path d="M26 18l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path d="M124 30l1.6 4 4 1.6-4 1.6-1.6 4-1.6-4-4-1.6 4-1.6z"/></g>
+  </symbol>
+
+  <linearGradient id="rgrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="100" y2="100"><stop offset="0" stop-color="#ff8f8f"/><stop offset=".5" stop-color="#ffb36b"/><stop offset="1" stop-color="#ffd23f"/></linearGradient>
+</defs></svg>
+
+<!-- ============ HEADER ============ -->
+<header class="hdr" id="hdr">
+  <div class="wrap">
+    <div class="hdr-row main-row">
+      <a class="logo mark cap" href="#top" aria-label="All for One University — กลับขึ้นด้านบน"><svg viewBox="-31 -17 62 42" aria-hidden="true"><use href="#afo-cap" x="-31" y="-17" width="62" height="42"/></svg></a>
+      <nav class="dnav" aria-label="เมนูหลัก">
+        <a href="#tracks" data-spy="tracks">สายการแข่งขัน</a>
+        <a href="#perks" data-spy="perks">สิ่งที่ได้รับ</a>
+        <a href="#journey" data-spy="journey">เส้นทาง</a>
+        <a href="#faq" data-spy="faq">FAQ</a>
+      </nav>
+      <div class="hdr-cta"><a class="btn btn-orange btn-sm" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัคร</a></div>
+    </div>
+    <nav class="hdr-row snav" aria-label="ไปยังส่วนต่างๆ">
+      <a class="logo mark only cap" href="#top" aria-label="กลับขึ้นด้านบน"><svg viewBox="-31 -17 62 42" aria-hidden="true"><use href="#afo-cap" x="-31" y="-17" width="62" height="42"/></svg></a>
+      <div class="chips" id="chips">
+        <a class="chip" href="#tracks" data-spy="tracks">สายแข่ง</a>
+        <a class="chip" href="#perks" data-spy="perks">ได้อะไร</a>
+        <a class="chip" href="#journey" data-spy="journey">เส้นทาง</a>
+        <a class="chip" href="#faq" data-spy="faq">FAQ</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<!-- ============ HERO ============ -->
+<section class="hero" id="top" aria-labelledby="heroTitle">
+  <div class="stars" aria-hidden="true"><i style="--x:6%;--y:14%;--s:20px;--d:7s;--dl:0s;--t:2.6s;color:#ffd23f"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:88%;--y:10%;--s:16px;--d:8s;--dl:0.8s;--t:3s;color:#6fb2ff"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:80%;--y:30%;--s:30px;--d:6s;--dl:0.4s;--t:3.2s;color:#ffd23f"><svg viewBox="0 0 48 48"><use href="#starface"/></svg></i><i style="--x:14%;--y:52%;--s:12px;--d:7s;--dl:1.2s;--t:2.2s;color:#ffffff"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:93%;--y:58%;--s:18px;--d:9s;--dl:0.2s;--t:2.8s;color:#ff9ec4"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:48%;--y:6%;--s:12px;--d:7s;--dl:1.8s;--t:2.4s;color:#6fb2ff"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:4%;--y:78%;--s:26px;--d:8s;--dl:1s;--t:3.4s;color:#ff9ec4"><svg viewBox="0 0 48 48"><use href="#starface"/></svg></i><i style="--x:70%;--y:86%;--s:14px;--d:6s;--dl:0.6s;--t:2.6s;color:#ffd23f"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i></div>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="orgs">
+        <span class="org-hh"><img src="assets/img/mascot-sm.webp" alt="Hamster Hub" width="128" height="128"><span>HAMSTER HUB</span></span>
+        <span class="sep" aria-hidden="true"></span>
+        <img class="lg-edu" src="assets/img/logo-eduverse.webp" alt="EDUverse" width="483" height="72">
+        <span class="sep" aria-hidden="true"></span>
+        <img class="lg-iote" src="assets/img/logo-iote.webp" alt="IoTE KMITL" width="365" height="96">
+      </div>
+      <h1 class="sr">All for One University</h1>
+      <div class="logo hero-logo" role="img" aria-label="All for One University"><svg viewBox="0 0 400 200"><use href="#afo-logo"/></svg></div>
+      <p class="hero-title" id="heroTitle">ขอให้ได้มหาลัยซักที่</p>
+      <p class="hero-lead">การแข่งขันเทคโนโลยีสำหรับนักเรียนมัธยมทั่วประเทศ เริ่มจากศูนย์ ก็สร้างผลงานที่พาเข้ามหาลัยได้</p>
+      <div class="hero-cta" id="heroCta">
+        <a class="btn btn-orange" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัครเข้าร่วม · 190 บาท <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <p class="hero-meta">ทีม 2–3 คน · สมัครคนเดียวก็ได้</p>
+      </div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- ============ TRACKS: product-style showcase — one big floating 3D model per track ============ -->
+<section id="tracks" aria-labelledby="tracksTitle">
+  <div class="wrap">
+    <div class="sc-head reveal">
+      <h2 class="sc-title" id="tracksTitle">3 <span>TRACKS</span></h2>
+      <p>รวมทีม 2–3 คน เลือกแข่ง 1 สาย</p>
+    </div>
+  </div>
+  <div class="trio-wrap" id="trioWrap">
+    <div class="trio" aria-hidden="true"></div>
+    <div class="trio-hit" role="group" aria-label="เลือกสายการแข่งขัน">
+      <button type="button" data-i="0" style="--c:#2fd08b;--c2:#0e8f5c" aria-label="ดูสาย Game Development"><img alt="" hidden><span class="ph" aria-hidden="true"><svg class="ic"><use href="#i-game"/></svg></span><b>GAME DEV</b><small>เกม</small></button>
+      <button type="button" data-i="1" style="--c:#ff8a3d;--c2:#d9480f" aria-label="ดูสาย Software for Business &amp; Tourism"><img alt="" hidden><span class="ph" aria-hidden="true"><svg class="ic"><use href="#i-app"/></svg></span><b>SOFTWARE</b><small>แอป / เว็บ</small></button>
+      <button type="button" data-i="2" style="--c:#4d9fff;--c2:#2350c9" aria-label="ดูสาย IoT &amp; Innovation"><img alt="" hidden><span class="ph" aria-hidden="true"><svg class="ic"><use href="#i-bulb"/></svg></span><b>IOT</b><small>IoT &amp; นวัตกรรม</small></button>
+    </div>
+  </div>
+  <div class="cs" id="cs" hidden style="--c:#2fd08b;--c2:#0e8f5c">
+    <button class="cs-back" id="csBack" type="button"><svg class="ic"><use href="#i-arrow"/></svg>ดูทั้ง 3 สาย</button>
+    <div class="cs-glow" aria-hidden="true"></div>
+    <p class="cs-big" id="csBig" aria-hidden="true">GAME DEV</p>
+    <div class="cs-copy" id="cfInfo" aria-live="polite">
+      <h3 id="cfName">Game Development</h3>
+      <p id="cfDesc">สร้างเกมและประสบการณ์ที่สนุกสำหรับผู้เล่น</p>
+      <span class="cf-pill" id="cfPill">“เล่นได้ · สร้างสรรค์ได้ · เป็นจริงได้”</span>
+      <button class="btn" type="button" data-track="0" id="cfGo" aria-haspopup="dialog">ดูรายละเอียดสายนี้ <svg class="ic"><use href="#i-arrow"/></svg></button>
+    </div>
+    <button class="cs-model" id="csModel" type="button" aria-label="ดูรายละเอียดสาย Game Development" aria-haspopup="dialog">
+      <span class="cs-host" id="csHost"><img class="cs-snap" alt="" hidden><span class="ph" aria-hidden="true"><svg class="ic"><use href="#i-game"/></svg></span></span>
+      <span class="cs-floor" aria-hidden="true"></span>
+    </button>
+    <button class="cs-arrow prev" type="button" data-dir="-1" aria-label="สายก่อนหน้า"><svg class="ic"><use href="#i-arrow"/></svg></button>
+    <button class="cs-arrow next" type="button" data-dir="1" aria-label="สายถัดไป"><svg class="ic"><use href="#i-arrow"/></svg></button>
+    <div class="cs-thumbs" role="group" aria-label="เลือกสาย"><button class="cs-thumb on" type="button" data-i="0" aria-label="สาย GAME DEV" aria-pressed="true" style="--c:#2fd08b"><img alt="" hidden><span class="ph" style="--c:#2fd08b;--c2:#0e8f5c"><svg class="ic"><use href="#i-game"/></svg></span><b>GAME DEV</b></button><button class="cs-thumb" type="button" data-i="1" aria-label="สาย SOFTWARE" aria-pressed="false" style="--c:#ff8a3d"><img alt="" hidden><span class="ph" style="--c:#ff8a3d;--c2:#d9480f"><svg class="ic"><use href="#i-app"/></svg></span><b>SOFTWARE</b></button><button class="cs-thumb" type="button" data-i="2" aria-label="สาย IOT" aria-pressed="false" style="--c:#4d9fff"><img alt="" hidden><span class="ph" style="--c:#4d9fff;--c2:#2350c9"><svg class="ic"><use href="#i-bulb"/></svg></span><b>IOT</b></button></div>
+  </div>
+</section>
+
+<!-- ============ PERKS: simple, boxless list + one gold final line ============ -->
+<section id="perks" class="pk-sec" aria-labelledby="perksTitle">
+  <div class="wrap">
+    <div class="sc-head reveal">
+      <h2 class="sc-title" id="perksTitle"><span class="sr">สมัครแล้วได้อะไรบ้าง</span><span aria-hidden="true">WHAT YOU <span>GET</span></span></h2>
+      <p>สมัครแล้วได้อะไรบ้าง · <b class="pk-fee">190 บาท / คน</b> จ่ายครั้งเดียว</p>
+    </div>
+    <ul class="pk-list">
+      <li class="pk reveal" style="--k:#ff8a3d;--d:0.00s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p1"/></svg><div><h3>ผลงานจริง 1 ชิ้น</h3><p>ใช้ได้จริง ใส่ Portfolio ได้เลย</p></div></li>
+      <li class="pk reveal" style="--k:#4d9fff;--d:0.06s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p2"/></svg><div><h3>เมนเทอร์ช่วยดูงาน</h3><p>ผู้เชี่ยวชาญช่วยตลอดช่วงพัฒนา</p></div></li>
+      <li class="pk reveal" style="--k:#9b7bff;--d:0.12s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p3"/></svg><div><h3>AI เป็นผู้ช่วย</h3><p>ช่วยคิด ช่วยสร้าง ไปได้ไกลกว่าเดิม</p></div></li>
+      <li class="pk reveal" style="--k:#2fd08b;--d:0.00s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p4"/></svg><div><h3>ทีม &amp; เพื่อนใหม่</h3><p>ทีม 2–3 คน · สมัครคนเดียวก็ได้</p></div></li>
+      <li class="pk reveal" style="--k:#ff6b8a;--d:0.06s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p5"/></svg><div><h3>เริ่มจากศูนย์ได้</h3><p>มีแค่ไอเดียก็เริ่มได้</p></div></li>
+      <li class="pk reveal" style="--k:#38b6e8;--d:0.12s"><svg class="pk-ic" aria-hidden="true"><use href="#il-p6"/></svg><div><h3>เวทีนำเสนอจริง</h3><p>Pitch ต่อหน้ากรรมการจริง</p></div></li>
+    </ul>
+    <div class="pk-final reveal">
+      <svg class="pk-trophy" aria-hidden="true"><use href="#il-p7"/></svg>
+      <div>
+        <p class="pk-final-k">FINAL · 13–15 พ.ย. · IoTE สจล.</p>
+        <h3>อันดับ 1–2 ของแต่ละสาย ได้ขึ้นเวทีรอบชิง</h3>
+        <p>รับสิทธิ์สัมภาษณ์ พร้อมรางวัลและสิทธิพิเศษ <small>*ตามเงื่อนไขที่กำหนด</small></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TIMELINE (winding road, 3D islands) ============ -->
+<section id="journey" aria-labelledby="jTitle">
+  <div class="wrap">
+    <div class="tl-head">
+      <h2 class="tl-title" id="jTitle">TIMELINE</h2>
+      <p class="tl-sub">4 ก้าว จากไอเดียสู่เวทีจริง</p>
+    </div>
+    <div class="road" id="road">
+      <svg class="rp rp-m" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="glow" d="M26 13C26 25 74 25 74 37S26 49 26 61 70 74 70 86"/>
+        <path class="base" d="M26 13C26 25 74 25 74 37S26 49 26 61 70 74 70 86"/>
+        <path class="prog" d="M26 13C26 25 74 25 74 37S26 49 26 61 70 74 70 86"/>
+      </svg>
+      <svg class="rp rp-d" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <path class="glow" d="M12 32C25 32 25 66 38 66S50 30 63 30 74 62 87 62"/>
+        <path class="base" d="M12 32C25 32 25 66 38 66S50 30 63 30 74 62 87 62"/>
+        <path class="prog" d="M12 32C25 32 25 66 38 66S50 30 63 30 74 62 87 62"/>
+      </svg>
+      <ol class="stops" style="list-style:none;margin:0;padding:0">
+      <li class="stop s1 r" data-start="2026-09-28" data-end="2026-10-20">
+        <span class="isle" aria-hidden="true"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-1"/></svg></span>
+        <span class="lab"><span class="n">01<span class="bd"></span></span><span class="d">28 ก.ย. – 20 ต.ค.</span><b>สมัคร &amp; รวมทีม</b><span class="t">ทีม 2–3 คน หรือสมัครคนเดียว</span></span>
+      </li>
+      <li class="stop s2 l" data-start="2026-10-22" data-end="2026-10-25">
+        <span class="isle" aria-hidden="true"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-2"/></svg></span>
+        <span class="lab"><span class="n">02<span class="bd"></span></span><span class="d">22 – 25 ต.ค.</span><b>รอบคัดเลือกออนไลน์</b><span class="t">รับโจทย์ + นำเสนอไอเดีย</span></span>
+      </li>
+      <li class="stop s3 r" data-start="2026-10-26" data-end="2026-11-12">
+        <span class="isle" aria-hidden="true"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-3"/></svg></span>
+        <span class="lab"><span class="n">03<span class="bd"></span></span><span class="d">26 ต.ค. – 12 พ.ย.</span><b>พัฒนาผลงาน</b><span class="t">ทำจริงกับเมนเทอร์ &amp; ผู้เชี่ยวชาญ</span></span>
+      </li>
+      <li class="stop s4 l" data-start="2026-11-13" data-end="2026-11-15">
+        <span class="isle" aria-hidden="true"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-4"/></svg></span>
+        <span class="lab"><span class="n">FINAL<span class="bd"></span></span><span class="d">13 – 15 พ.ย.</span><b>รอบชิงชนะเลิศ</b><span class="t">นำเสนอต่อกรรมการ ณ IoTE สจล.</span></span>
+      </li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POSTERS (light, hides itself if images fail) ============ -->
+<section class="sec" id="posters" aria-labelledby="psTitle">
+  <div class="wrap">
+    <div class="sec-head ps-head reveal">
+      <div><span class="eyebrow">โปสเตอร์โครงการ</span>
+      <h2 class="h2" id="psTitle">ดูรายละเอียดแบบเต็มๆ</h2></div>
+      <div class="ps-nav"><button class="rnd prev" type="button" data-ps="-1" aria-label="โปสเตอร์ก่อนหน้า"><svg class="ic"><use href="#i-arrow"/></svg></button><button class="rnd" type="button" data-ps="1" aria-label="โปสเตอร์ถัดไป"><svg class="ic"><use href="#i-arrow"/></svg></button></div>
+    </div>
+    <div class="posters" id="posterList">
+      <figure class="poster"><a href="https://media.mediaquest.uk/uploads/1790497715290-ChatGPT_Image_Sep_27_2026_03_28_22_PM.webp" data-lb><img loading="lazy" decoding="async" width="941" height="1672" onerror="window.__posterFail&&__posterFail(this)" src="https://media.mediaquest.uk/uploads/1790497715290-ChatGPT_Image_Sep_27_2026_03_28_22_PM.webp" alt="โปสเตอร์ All for One University"></a><figcaption>ขอให้ได้มหาลัยซักที่</figcaption></figure>
+      <figure class="poster"><a href="https://media.mediaquest.uk/uploads/1790485292999-ChatGPT_Image_Sep_27_2026_02_11_40_AM-4.webp" data-lb><img loading="lazy" decoding="async" width="941" height="1672" onerror="window.__posterFail&&__posterFail(this)" src="https://media.mediaquest.uk/uploads/1790485292999-ChatGPT_Image_Sep_27_2026_02_11_40_AM-4.webp" alt="โปสเตอร์ 3 สายการแข่งขัน"></a><figcaption>รวมทีม 2–3 คน · 3 สาย</figcaption></figure>
+      <figure class="poster"><a href="https://media.mediaquest.uk/uploads/1790497545179-ChatGPT_Image_Sep_27_2026_03_25_34_PM.webp" data-lb><img loading="lazy" decoding="async" width="941" height="1672" onerror="window.__posterFail&&__posterFail(this)" src="https://media.mediaquest.uk/uploads/1790497545179-ChatGPT_Image_Sep_27_2026_03_25_34_PM.webp" alt="โปสเตอร์ ใช้ AI สร้างผลงานคุณภาพ"></a><figcaption>ใช้ AI สร้างผลงานคุณภาพ</figcaption></figure>
+      <figure class="poster"><a href="https://media.mediaquest.uk/uploads/1790485390669-ChatGPT_Image_Sep_27_2026_02_11_53_AM-8.webp" data-lb><img loading="lazy" decoding="async" width="941" height="1672" onerror="window.__posterFail&&__posterFail(this)" src="https://media.mediaquest.uk/uploads/1790485390669-ChatGPT_Image_Sep_27_2026_02_11_53_AM-8.webp" alt="โปสเตอร์ เส้นทางการแข่งขัน"></a><figcaption>เส้นทางการแข่งขัน</figcaption></figure>
+      <figure class="poster"><a href="https://media.mediaquest.uk/uploads/1790488386468-startup_mobile.webp" data-lb><img loading="lazy" decoding="async" width="941" height="1672" onerror="window.__posterFail&&__posterFail(this)" src="https://media.mediaquest.uk/uploads/1790488386468-startup_mobile.webp" alt="โปสเตอร์ ต่อยอดสู่ Startup"></a><figcaption>ต่อยอดสู่ Startup</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+<!-- ============ FAQ ============ -->
+<section class="sec" id="faq" aria-labelledby="faqTitle">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="h2" id="faqTitle">คำถามที่พบบ่อย</h2>
+    </div>
+    <div class="faq">
+      <details><summary>ต้องมีผลงานหรือพื้นฐานมาก่อนไหม?<svg class="ic"><use href="#i-plus"/></svg></summary><p>ไม่จำเป็นต้องมีผลงานมาก่อน เริ่มจากศูนย์ก็สร้างผลงานได้ ระหว่างทางมีเมนเทอร์และผู้เชี่ยวชาญช่วยให้คำแนะนำ</p></details>
+      <details><summary>ค่าสมัครเท่าไหร่?<svg class="ic"><use href="#i-plus"/></svg></summary><p>คนละ 190 บาท</p></details>
+      <details><summary>ทีมละกี่คน สมัครคนเดียวได้ไหม?<svg class="ic"><use href="#i-plus"/></svg></summary><p>แข่งเป็นทีม 2–3 คน ในหน้าสมัครเลือกได้ทั้ง “สมัครคนเดียว” และ “สมัครกลุ่ม”</p></details>
+      <details><summary>แข่งที่ไหน ต้องเดินทางไหม?<svg class="ic"><use href="#i-plus"/></svg></summary><p>รอบคัดเลือกแข่งออนไลน์ (22–25 ต.ค.) ส่วนรอบชิงชนะเลิศเป็นแบบ Onsite ที่ IoTE KMITL ลาดกระบัง (13–15 พ.ย.)</p></details>
+      <details><summary>ถ้าได้ที่ 1–2 จะได้อะไร?<svg class="ic"><use href="#i-plus"/></svg></summary><p>ทีมที่คว้าอันดับ 1–2 ของแต่ละสาย รับสิทธิ์สัมภาษณ์ พร้อมรางวัลและสิทธิพิเศษจากโครงการ (เป็นไปตามเงื่อนไขและคุณสมบัติที่กำหนด)</p></details>
+      <details><summary>ใครเป็นผู้จัด?<svg class="ic"><use href="#i-plus"/></svg></summary><p>Hamster Hub ร่วมกับ EDUverse และ IoTE (IoT System &amp; Information Engineering) สจล.</p></details>
+      <details><summary>มีคำถามเพิ่มเติม ติดต่อใคร?<svg class="ic"><use href="#i-plus"/></svg></summary><p>ทัก LINE @smart-school หรือโทร 090-060-2555 ได้เลย</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ REGISTER (the only countdown) ============ -->
+<section id="register" aria-labelledby="regTitle">
+  <div class="stars" aria-hidden="true"><i style="--x:8%;--y:12%;--s:20px;--d:7s;--dl:0s;--t:2.6s;color:#ffd23f"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:86%;--y:16%;--s:30px;--d:6s;--dl:0.4s;--t:3.2s;color:#ffd23f"><svg viewBox="0 0 48 48"><use href="#starface"/></svg></i><i style="--x:92%;--y:62%;--s:16px;--d:8s;--dl:0.8s;--t:2.8s;color:#6fb2ff"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:5%;--y:70%;--s:24px;--d:8s;--dl:1.2s;--t:3s;color:#ff9ec4"><svg viewBox="0 0 48 48"><use href="#starface"/></svg></i><i style="--x:30%;--y:6%;--s:12px;--d:7s;--dl:1.6s;--t:2.2s;color:#ffffff"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i><i style="--x:70%;--y:90%;--s:14px;--d:6s;--dl:0.2s;--t:2.6s;color:#ffd23f"><svg viewBox="0 0 40 40"><use href="#star4"/></svg></i></div>
+  <div class="wrap">
+    <div class="register reveal">
+      <div class="logo" role="img" aria-label="All for One University" style="width:min(78vw,340px);margin:0 auto"><svg viewBox="0 0 400 200"><use href="#afo-logo"/></svg></div>
+      <h2 id="regTitle">โอกาสดีๆ รอคนที่กล้าลงมือทำ</h2>
+      <p>คนละ 190 บาท · ทีม 2–3 คน · สมัครได้ทั้งคนเดียวและเป็นกลุ่ม</p>
+      <div data-cd-wrap>
+        <p class="cd-label" id="cdLabel">ปิดรับสมัครใน</p>
+        <div class="cd" data-cd aria-live="off">
+          <div><b data-u="d">--</b><span>วัน</span></div>
+          <div><b data-u="h">--</b><span>ชั่วโมง</span></div>
+          <div><b data-u="m">--</b><span>นาที</span></div>
+          <div><b data-u="s">--</b><span>วินาที</span></div>
+        </div>
+      </div>
+      <div class="cta-row">
+        <a class="btn btn-orange" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัครเข้าร่วม <svg class="ic"><use href="#i-arrow"/></svg></a>
+        <a class="btn btn-line" data-line href="https://page.line.me/jkm4247u?openQrModal=true" target="_blank" rel="noopener"><svg class="ic"><use href="#i-chat"/></svg>ถามทาง LINE</a>
+      </div>
+      <small>หรือโทร <a href="tel:0900602555">090-060-2555</a></small>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="logo" role="img" aria-label="All for One University" style="width:150px"><svg viewBox="0 0 400 200"><use href="#afo-logo"/></svg></div>
+    <div class="orgs" style="justify-content:flex-start;margin-top:18px">
+      <span class="org-hh"><img src="assets/img/mascot-sm.webp" alt="Hamster Hub" width="128" height="128"><span>HAMSTER HUB</span></span>
+      <span class="sep" aria-hidden="true"></span>
+      <img class="lg-edu" src="assets/img/logo-eduverse.webp" alt="EDUverse" width="483" height="72">
+      <span class="sep" aria-hidden="true"></span>
+      <img class="lg-iote" src="assets/img/logo-iote.webp" alt="IoTE KMITL" width="365" height="96">
+    </div>
+    <h4>GET IN TOUCH</h4>
+    <div class="contacts">
+      <a href="https://www.facebook.com/HamsterHubThailand" target="_blank" rel="noopener"><svg class="ic"><use href="#i-fb"/></svg>Hamster Hub</a>
+      <a data-line href="https://page.line.me/jkm4247u?openQrModal=true" target="_blank" rel="noopener"><svg class="ic"><use href="#i-chat"/></svg>LINE @smart-school</a>
+      <a href="tel:0900602555"><svg class="ic"><use href="#i-phone"/></svg>090-060-2555</a>
+      <a href="https://www.instagram.com/hamsterhub_ig/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-ig"/></svg>hamsterhub_ig</a>
+    </div>
+    <div class="ftr-bottom"><span>© 2026 Hamster Hub. All rights reserved.</span><span>MORE STUDENTS · BRIGHTER TOMORROW</span></div>
+  </div>
+</footer>
+
+<div class="bbar" id="bbar">
+  <div class="logo" style="width:84px" aria-hidden="true"><svg viewBox="0 0 400 200"><use href="#afo-logo"/></svg></div>
+  <span class="bbar-txt">คนละ 190 บาท<br>ทีม 2–3 คน</span>
+  <a class="btn btn-orange" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัคร</a>
+</div>
+
+
+
+<dialog class="sheet" id="sheet" aria-labelledby="shTitle">
+  <div class="sheet-backdrop" data-close></div>
+  <div class="sheet-panel" id="sheetPanel">
+    <div class="sheet-top">
+      <div class="sheet-grab" id="sheetGrab" aria-hidden="true"><span></span></div>
+      <div class="sheet-bar">
+        <div class="tabs" role="tablist" id="sheetTabs"></div>
+        <button class="x-btn" type="button" data-close aria-label="ปิด"><svg class="ic"><use href="#i-x"/></svg></button>
+      </div>
+    </div>
+    <div class="sheet-scroll" id="sheetScroll" tabindex="-1" autofocus><div class="sheet-content" id="sheetContent"></div></div>
+    <div class="sheet-foot">
+      <a class="btn btn-orange" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัครสายนี้ · 190 บาท</a>
+      <button class="btn btn-line" type="button" id="sheetNext">สายถัดไป <svg class="ic"><use href="#i-arrow"/></svg></button>
+    </div>
+  </div>
+</dialog>
+<dialog class="lb" id="lb" aria-label="ดูโปสเตอร์">
+  <div class="lb-bg" data-lbx></div>
+  <figure class="lb-fig"><img id="lbImg" alt=""><figcaption id="lbCap"></figcaption></figure>
+  <button class="rnd lb-x" type="button" data-lbx aria-label="ปิด"><svg class="ic"><use href="#i-x"/></svg></button>
+  <button class="rnd lb-prev prev" type="button" data-lbd="-1" aria-label="ก่อนหน้า"><svg class="ic"><use href="#i-arrow"/></svg></button>
+  <button class="rnd lb-next" type="button" data-lbd="1" aria-label="ถัดไป"><svg class="ic"><use href="#i-arrow"/></svg></button>
+  <p class="lb-count" id="lbCount"></p>
+</dialog>
+</body>
+</html>

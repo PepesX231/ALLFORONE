@@ -176,10 +176,10 @@
     if (!document.hidden) { tick(); cdTimer = setInterval(tick, 1000); }
   });
 
-  /* ---------- 3. timeline: vertical road; scroll fills it and walks the hamster down; stops pop in ---------- */
+  /* ---------- 3. timeline: one-screen winding road; as the section scrolls in, a hamster walks it and the road lights up ---------- */
   (function () {
     var road = $('#road'); if (!road) return;
-    var stops = $$('.stop', road), line = $('.tl-line', road), fill = $('.tl-fill', road), walker = $('.tl-walker', road);
+    var sec = road.closest('section'), stops = $$('.stop', road), walker = $('.tl-walker', road);
     var now = new Date(), nextSet = false;
     stops.forEach(function (li) {
       var st = new Date(li.dataset.start + 'T00:00:00+07:00'), en = new Date(li.dataset.end + 'T23:59:59+07:00'), bd = $('.bd', li);
@@ -188,28 +188,46 @@
       else if (!nextSet) { li.classList.add('next'); bd.textContent = 'ถัดไป'; nextSet = true; }
     });
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: .2 });
-    stops.forEach(function (li) { io.observe(li); });
-    var H = 0, dots = [], active = false, ticking = false, last = -1, idle;
+      if (!es[0].isIntersecting) return; io.disconnect();
+      stops.forEach(function (li) { li.classList.add('in'); });
+    }, { threshold: .25 });
+    io.observe(road);
+    var path, prog, L = 0, SL = 0, W = 0, H = 0, pts = [], active = false, ticking = false, last = -1, idle, hdrH = 60;
     function measure() {
-      H = line.offsetHeight; var top = line.offsetTop;
-      dots = stops.map(function (li) { var d = $('.tl-dot', li); return li.offsetTop + d.offsetTop - top; });
+      var vis = $$('.rp', road).filter(function (sv) { return sv.getBoundingClientRect().width > 0; })[0]; if (!vis) return;
+      path = $('.base', vis); prog = $('.prog', vis);
+      W = road.offsetWidth; H = road.offsetHeight; L = path.getTotalLength();
+      pts = []; SL = 0; var prev = null;
+      for (var k = 0; k <= 120; k++) {                          // sample the stretched path in screen px
+        var q = path.getPointAtLength(L * k / 120), x = q.x * W / 100, y = q.y * H / 100;
+        if (prev) SL += Math.hypot(x - prev[0], y - prev[1]);
+        pts.push([x, y, SL]); prev = [x, y];
+      }
+      prog.style.strokeDasharray = Math.ceil(SL + 2) + ' ' + Math.ceil(SL + 2);
+      var h = $('.hdr'); hdrH = h ? h.offsetHeight : 60;
+      last = -1;
+    }
+    function at(p) {                                             // point at fraction p of the on-screen length
+      var d = p * SL, i = 1; while (i < pts.length - 1 && pts[i][2] < d) i++;
+      var a = pts[i - 1], b = pts[i], f = b[2] > a[2] ? (d - a[2]) / (b[2] - a[2]) : 0;
+      return [a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f];
     }
     function upd() {
-      ticking = false; if (!active) return;
-      var r = line.getBoundingClientRect(), p = clamp((innerHeight * .58 - r.top) / Math.max(1, r.height), 0, 1);
-      if (reduced) p = 1;
-      if (Math.abs(p - last) < .0005) return; last = p;
-      fill.style.transform = 'scaleY(' + p.toFixed(4) + ')';
-      walker.style.transform = 'translate3d(0,' + (p * H).toFixed(1) + 'px,0)';
-      stops.forEach(function (li, i) { li.classList.toggle('passed', p * H >= dots[i] - 4); });
-      walker.classList.add('go'); clearTimeout(idle); idle = setTimeout(function () { walker.classList.remove('go'); }, 180);
+      ticking = false; if (!active || !pts.length) return;
+      var r = sec.getBoundingClientRect(), vh = innerHeight;
+      var p = reduced ? .97 : clamp((vh - r.top) / Math.max(1, vh - hdrH), 0, 1) * .97;
+      p = Math.round(p * 400) / 400; if (p === last) return;
+      var moved = last >= 0; last = p;
+      prog.style.strokeDashoffset = ((1 - p) * (SL + 2)).toFixed(1);
+      var xy = at(p), ww = walker.offsetWidth, wh = walker.offsetHeight;
+      walker.style.transform = 'translate3d(' + (xy[0] - ww / 2).toFixed(1) + 'px,' + (xy[1] - wh * .92).toFixed(1) + 'px,0)';
+      if (moved) { walker.classList.add('go'); clearTimeout(idle); idle = setTimeout(function () { walker.classList.remove('go'); }, 160); }
     }
-    new IntersectionObserver(function (es) { active = es[0].isIntersecting; if (active) { measure(); last = -1; upd(); } }).observe(road);
+    new IntersectionObserver(function (es) { active = es[0].isIntersecting; if (active) { if (!pts.length) measure(); upd(); } }).observe(sec);
     addEventListener('scroll', function () { if (active && !ticking) { ticking = true; raf(upd); } }, { passive: true });
-    addEventListener('resize', function () { measure(); last = -1; upd(); }, { passive: true });
-    if (reduced) stops.forEach(function (li) { li.classList.add('in'); });
+    addEventListener('resize', function () { measure(); upd(); }, { passive: true });
+    walker.addEventListener('load', function () { last = -1; upd(); });
+    measure();
   })();
 
   /* ---------- 4a. header swap + scroll-spy ---------- */

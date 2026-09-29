@@ -926,53 +926,6 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .dawn-sun{background:radial-gradient(closest-side,rgba(255,252,235,1),rgba(255,226,150,.7) 18%,rgba(255,200,120,.25) 45%,rgba(255,190,110,0) 70%)}
 @media (min-aspect-ratio:1/1){.sn-dawn .c-pal2{left:43%;bottom:17%;width:min(6.5vw,12vh)}}
 
-/* ---------- 3b. timeline v2: one vertical road you scroll down; a hamster walks it, friends wait at each stop ---------- */
-#journey{padding:clamp(40px,7vh,90px) 0 clamp(40px,7vh,90px)}
-.road{position:relative;max-width:980px;margin:clamp(18px,4vh,40px) auto 0;padding:0}
-.tl-line{position:absolute;left:50%;top:70px;bottom:70px;width:4px;margin-left:-2px;border-radius:4px;background:rgba(255,236,210,.16);overflow:hidden}
-.tl-fill{position:absolute;inset:0;border-radius:4px;background:linear-gradient(#57e6a8,#79b8ff 40%,#ffa865 70%,#ffe08a);box-shadow:0 0 12px rgba(120,200,255,.5);transform-origin:50% 0;transform:scaleY(0);will-change:transform}
-.tl-walker{position:absolute;left:50%;top:70px;z-index:4;width:78px;height:auto;max-width:none;margin:-104px 0 0 -39px;pointer-events:none;will-change:transform;filter:drop-shadow(0 8px 10px rgba(0,0,0,.45))}
-.tl-walker.go{animation:waddle .5s ease-in-out infinite alternate}
-@keyframes waddle{from{rotate:-5deg}to{rotate:5deg}}
-.stops{position:relative;list-style:none;margin:0;padding:0;display:grid;gap:clamp(26px,6vh,64px)}
-.stop{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;column-gap:110px;min-height:190px;--w:132px}
-.stop.r{grid-template-areas:"art lab"}.stop.l{grid-template-areas:"lab art"}
-.s4{--w:156px}
-.tl-dot{position:absolute;left:50%;top:50%;z-index:2;width:20px;height:20px;margin:-10px;border-radius:50%;background:#15183a;border:3px solid var(--pc);box-shadow:0 0 0 6px #0b0b10;transition:background .4s,transform .4s cubic-bezier(.2,1.6,.4,1)}
-.stop.passed .tl-dot{background:var(--pc);transform:scale(1.15)}
-.isle{grid-area:art;position:relative;width:var(--w);opacity:0;transform:translate3d(0,26px,0) scale(.7);transition:opacity .5s ease,transform .7s cubic-bezier(.2,1.4,.4,1)}
-.stop.r .isle{justify-self:end}.stop.l .isle{justify-self:start}
-.lab{grid-area:lab;display:block;opacity:0;transform:translate3d(0,14px,0);transition:opacity .5s ease .12s,transform .6s ease .12s}
-.stop.r .lab{text-align:left}.stop.l .lab{text-align:right}
-.lab b{font-size:clamp(17px,2vw,21px)}.lab span.t{font-size:14px}.s4 .lab b{color:#ffe08a}
-.tl-ham{position:absolute;bottom:14%;z-index:2;height:auto;max-width:none;width:calc(var(--w) * .72);opacity:0;transform:translate3d(0,30%,0) scale(.6);transform-origin:50% 100%;
-  transition:opacity .4s ease .25s,transform .7s cubic-bezier(.2,1.5,.4,1) .25s;filter:drop-shadow(0 8px 10px rgba(0,0,0,.4))}
-.stop.r .tl-ham{right:92%}.stop.l .tl-ham{left:92%}
-.s1 .tl-ham{width:calc(var(--w) * 1.05)}
-.stop.in .isle,.stop.in .lab{opacity:1;transform:none}
-.stop.in .tl-ham{opacity:1;transform:none;animation:wig 3s ease-in-out 1s infinite}
-.stop.now .isle{animation:hop 2.6s ease-in-out infinite}
-@media (max-width:760px){
-  .road{max-width:520px}
-  .tl-line{left:26px;top:40px;bottom:40px}
-  .tl-walker{left:26px;width:50px;margin:-66px 0 0 -25px}
-  .stops{gap:clamp(22px,4.5vh,40px)}
-  .stop,.stop.l,.stop.r{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"art lab";column-gap:12px;min-height:0;padding:34px 0 0 50px;--w:86px}
-  .s4{--w:96px}
-  .tl-dot{left:26px;top:calc(34px + var(--w) * .35);width:16px;height:16px;margin:-8px}
-  .stop.l .isle,.stop.r .isle{justify-self:start}
-  .stop.l .lab,.stop.r .lab{text-align:left}
-  .lab b{font-size:17px}.lab span.t{font-size:13.5px}
-  .stop.r .tl-ham,.stop.l .tl-ham{left:50%;right:auto;bottom:58%;width:calc(var(--w) * .62);margin-left:calc(var(--w) * -.31)}
-  .s1 .tl-ham,.stop.r.s1 .tl-ham{width:calc(var(--w) * .95);margin-left:calc(var(--w) * -.475)}
-}
-.rm .isle,.rm .lab,.rm .tl-ham{transition:none;opacity:1;transform:none}.rm .tl-walker.go,.lite .tl-walker.go,.lite .stop.in .tl-ham{animation:none}
-@media (min-width:761px){
-  .peek{height:clamp(250px,min(46vw,44vh),440px)}
-  .pk-title{font-size:clamp(54px,min(15vw,19vh),190px)!important;margin-top:clamp(70px,min(14vw,15vh),150px)}
-  .pkh{height:clamp(110px,min(24vw,25vh),250px);bottom:clamp(58px,min(11vw,12vh),130px)}
-  .pk-c{height:clamp(100px,min(21vw,22vh),220px);margin-left:calc(clamp(100px,min(21vw,22vh),220px) * -.39);bottom:clamp(70px,min(14vw,15vh),160px)}
-}
 /* desktop: title peek + the three models + their labels fit one screen */
 @media (min-width:761px) and (min-aspect-ratio:1/1){
   #tracks{padding:10px 0 14px}
@@ -1025,16 +978,66 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .story-pin,.scene-shade{display:none}
 .beat .st1{top:calc(100% - var(--S))}
 .bt-sky .c-wave,.bt-sky .c-wave{bottom:calc(100% - var(--S) + 3%)}
-/* timeline v2.1: phones — the character stands on its pedestal (no icon + character pile-up), slimmer rail */
-.s1 .tl-ham{width:calc(var(--w) * .8)}
-@media (max-width:760px){
-  .tl-line{left:20px}
-  .tl-walker{left:20px;width:40px;margin:-54px 0 0 -20px}
-  .stop,.stop.l,.stop.r{padding:18px 0 0 40px;column-gap:14px}
-  .tl-dot{left:20px;top:calc(18px + var(--w) * .55);width:14px;height:14px;margin:-7px}
-  .stop .art{visibility:hidden}
-  .isle{height:calc(var(--w) * .72)}
-  .stop.r .tl-ham,.stop.l .tl-ham,.s1 .tl-ham,.stop.r.s1 .tl-ham{left:50%;right:auto;bottom:20%;width:calc(var(--w) * .92);margin-left:calc(var(--w) * -.46)}
-}
 /* shadows/glow are baked into the cast images: CSS filters on moving images were the #1 scroll cost on phones */
 .cast,.tl-ham,.tl-walker,.pkh,.sn-dawn .c-point,.sn-dawn .c-pal,.bt-dawn .c-point{filter:none!important}
+
+/* ---------- 3c. timeline v3: the whole winding road on one screen (phone + desktop); each stop is a hamster on its
+   pedestal; one more hamster walks the road as the section scrolls in ---------- */
+#journey{padding:clamp(20px,4vh,56px) 0 clamp(20px,4vh,56px)}
+.road{position:relative;max-width:1040px;margin:clamp(6px,2vh,24px) auto 0;height:clamp(380px,calc(100svh - var(--hdr) - 190px),560px)}
+.rp{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.rp path{fill:none;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.rp .glow{stroke:rgba(255,226,180,.08);stroke-width:22}
+.rp .base{stroke:rgba(255,236,210,.28);stroke-width:5;stroke-dasharray:2 12}
+.rp .prog{stroke:url(#rgrad);stroke-width:6;filter:none}
+.rp-m{display:none}
+.stops{list-style:none;margin:0;padding:0}
+.stop{position:absolute;left:var(--x);top:var(--y);width:0;height:0;--w:118px}
+.s1{--x:11%;--y:44%}.s2{--x:37%;--y:76%}.s3{--x:63%;--y:40%}.s4{--x:88%;--y:72%;--w:130px}
+.isle{position:absolute;left:calc(var(--w) / -2);top:calc(var(--w) * -.69);width:var(--w);height:calc(var(--w) * .9);opacity:0;transform:translate3d(0,24px,0) scale(.7);transition:opacity .5s ease,transform .7s cubic-bezier(.2,1.4,.4,1);transition-delay:var(--dl,0s)}
+.isle::before{content:"";position:absolute;left:-30%;right:-30%;top:0;bottom:-40%;border-radius:50%;background:radial-gradient(closest-side,var(--halo,transparent),transparent);pointer-events:none}
+.tl-ham{position:absolute;left:50%;bottom:calc(var(--w) * .2);z-index:2;width:calc(var(--w) * .86);height:auto;max-width:none;margin-left:calc(var(--w) * -.43);transform-origin:50% 100%}
+.stop.in .tl-ham{animation:wig 3s ease-in-out 1s infinite}
+.stop.now .tl-ham{animation:hop 2.4s ease-in-out infinite}
+.lab{position:absolute;left:-100px;top:calc(var(--w) * .3);width:200px;text-align:center;opacity:0;transform:translate3d(0,10px,0);transition:opacity .5s ease,transform .5s ease;transition-delay:calc(var(--dl,0s) + .12s)}
+.stop.in .isle,.stop.in .lab{opacity:1;transform:none}
+.lab b{font-size:clamp(16px,1.6vw,19px)}.lab span.t{font-size:13.5px}.s4 .lab b{color:#ffe08a}
+.s1{--dl:0s}.s2{--dl:.12s}.s3{--dl:.24s}.s4{--dl:.36s}
+.tl-walker{position:absolute;left:0;top:0;z-index:3;width:58px;height:auto;max-width:none;pointer-events:none;will-change:transform}
+.tl-walker.go{animation:waddle .45s ease-in-out infinite alternate}
+@keyframes waddle{from{rotate:-6deg}to{rotate:6deg}}
+@media (max-width:760px){
+  .road{max-width:440px;height:clamp(500px,calc(100svh - var(--hdr) - 140px),720px)}
+  .rp-m{display:block}.rp-d{display:none}
+  .stop{--w:80px}.s4{--w:88px}
+  .s1{--x:26%;--y:14%}.s2{--x:74%;--y:38%}.s3{--x:26%;--y:62%}.s4{--x:72%;--y:88%}
+  .lab{top:calc(var(--w) * -.62);width:min(54vw,220px);text-align:left}
+  .s1 .lab,.s3 .lab{left:calc(var(--w) * .56)}
+  .s2 .lab,.s4 .lab{left:auto;right:calc(var(--w) * .56);text-align:right}
+  .lab b{font-size:16px}.lab span.t{font-size:12.5px}.lab .d{font-size:12.5px}
+  .tl-walker{width:40px}
+}
+.rm .isle,.rm .lab{transition:none;opacity:1;transform:none}.rm .tl-walker.go,.lite .tl-walker.go{animation:none}
+/* timeline v3 tuning */
+.road{max-width:1100px}.stop{--w:128px}.s4{--w:140px}
+@media (max-width:760px){.road{height:clamp(470px,calc(100svh - var(--hdr) - 215px),700px)}.stop{--w:78px}.s4{--w:84px}}
+/* story: neighbouring scenes melt into each other (the next one fades in over the last one) instead of a dark cut */
+.beat+.beat{--X:32vh;margin-top:calc(var(--X) * -1);height:calc(var(--S) + var(--X));min-height:calc(540px + var(--X));
+  -webkit-mask-image:linear-gradient(transparent,#000 var(--X));mask-image:linear-gradient(transparent,#000 var(--X))}
+.beat+.beat .st{top:var(--X)}
+.beat+.beat::before{display:none}
+.beat::after{display:none}
+.beat:last-child::after{display:block;height:22%}
+/* WHAT YOU GET: hamster emoji stickers, the old icon rides along as a tiny badge */
+.pk-orb.emo{width:58px;height:58px}
+.pk-orb.emo::before{display:none}
+.pk-orb.emo img{position:absolute;inset:0;width:100%;height:100%;transition:transform .45s cubic-bezier(.2,1.5,.4,1)}
+.pk-orb.emo .pk-ic{position:absolute;right:-6px;bottom:-4px;width:26px;height:26px;padding:3px;border-radius:50%;background:#15183a;box-shadow:0 0 0 2px color-mix(in srgb,var(--k) 70%,#fff)}
+.pk:hover .pk-orb.emo img{transform:translate3d(0,-4px,0) rotate(-6deg) scale(1.06)}
+.pk:hover .pk-orb.emo .pk-ic{transform:none}
+.pk{grid-template-columns:58px minmax(0,1fr)}
+@media (min-width:720px){.pk{grid-template-columns:minmax(0,1fr)}.pk-orb.emo{width:92px;height:92px}.pk-orb.emo .pk-ic{width:34px;height:34px;padding:4px}}
+.pk-list{gap:14px}
+@media (min-width:720px){.pk-list{gap:26px 28px}}
+/* 3 TRACKS intro: the glow stays inside its box (no hard cut line) */
+.pk-glow{top:50%!important;aspect-ratio:3!important;width:min(86vw,calc(30vh * 2.7))!important;background:radial-gradient(closest-side,rgba(255,210,63,.2),rgba(61,139,255,.12) 55%,transparent 100%)!important}

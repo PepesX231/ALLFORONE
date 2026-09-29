@@ -741,3 +741,18 @@
     })(performance.now());
   }, 1500);
 })();
+
+/* 5a. tracks intro peek — writes --t (0→1) as the title scrolls into view */
+(function () {
+  var pk = document.getElementById('peek'); if (!pk) return;
+  var on = false, last = -1, rq = window.requestAnimationFrame || function (f) { return setTimeout(f, 16); };
+  function upd() {
+    on = false;
+    var r = pk.getBoundingClientRect(), vh = window.innerHeight || 700;
+    var t = (vh - r.top) / (vh * 0.75); t = t < 0 ? 0 : t > 1 ? 1 : t;
+    t = 1 - Math.pow(1 - t, 3); t = Math.round(t * 200) / 200;
+    if (t !== last) { last = t; pk.style.setProperty('--t', t); }
+  }
+  addEventListener('scroll', function () { if (!on) { on = true; rq(upd); } }, { passive: true });
+  addEventListener('resize', upd); upd();
+})();

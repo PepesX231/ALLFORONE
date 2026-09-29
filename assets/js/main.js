@@ -75,6 +75,24 @@
     }
   })();
 
+
+  /* ---------- 1b. story hero: scroll drives the scene (--p 0→1) and which step is showing ---------- */
+  (function () {
+    var st = document.getElementById('top'); if (!st || !st.classList.contains('story')) return;
+    var steps = $$('.st', st), cur = 0, ticking = false, cuts = [.18, .43, .68];
+    function upd() {
+      ticking = false;
+      var r = st.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
+      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1);
+      st.style.setProperty('--p', p.toFixed(4));
+      var k = p < cuts[0] ? 0 : p < cuts[1] ? 1 : p < cuts[2] ? 2 : 3;
+      if (k !== cur) { cur = k; steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); }); }
+    }
+    addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
+    addEventListener('resize', upd, { passive: true });
+    upd();
+  })();
+
   /* ---------- 2. countdown (+ status) ---------- */
   var OPEN = new Date(CFG.regOpen), CLOSE = new Date(CFG.regClose), lastPhase = '';
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };

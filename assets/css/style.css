@@ -640,3 +640,66 @@ dialog.sheet::backdrop{background:transparent}
 .ios #journey::before,.ios .pk-sec::before{-webkit-mask-image:none;mask-image:none}
 .ios .mt b::after{display:none}
 .safe .sky{display:none}
+
+/* ================= STORY HERO: poster world → scroll story → night → 3 houses ================= */
+.story{position:relative;--p:0}
+.js .story{height:430vh;height:430svh}
+.story-pin{position:relative;height:calc(100vh - var(--hdr));height:calc(100svh - var(--hdr));overflow:hidden;isolation:isolate}
+.js .story-pin{position:sticky;top:var(--hdr)}
+.scene{position:absolute;inset:0;z-index:-1;pointer-events:none}
+.scene>*{position:absolute}
+.sc-sky{inset:0;background:linear-gradient(180deg,#4aa8ff 0%,#8fd0ff 38%,#d6f0ff 70%,#f4fbff 100%)}
+.sc-sun{right:6%;top:-12%;width:60vmin;height:60vmin;border-radius:50%;background:radial-gradient(closest-side,#fffbe0,rgba(255,244,190,.55) 40%,transparent)}
+.sc-cloud{width:var(--w);transform:translate3d(0,calc(var(--p) * var(--vy)),0)}
+.sc-cloud svg{display:block;width:100%;height:auto;max-width:none;animation:cloud var(--t) ease-in-out infinite alternate}
+.sc-cloud.c1{--w:clamp(140px,26vw,340px);--vy:-160px;--t:16s;left:-4%;top:10%}
+.sc-cloud.c2{--w:clamp(110px,18vw,240px);--vy:-240px;--t:20s;right:4%;top:6%}
+.sc-cloud.c3{--w:clamp(90px,14vw,200px);--vy:-120px;--t:14s;left:34%;top:26%;opacity:.85}
+.sc-cloud.c4{--w:clamp(160px,30vw,420px);--vy:-80px;--t:22s;right:-8%;top:40%;opacity:.9}
+@keyframes cloud{to{transform:translate3d(28px,0,0)}}
+.sc-city{left:0;right:0;bottom:0;width:100%;height:46%;max-width:none;transform:translate3d(0,calc(var(--p) * 60px),0)}
+.sc-uni{right:-3%;bottom:4%;width:min(58vw,60vh,640px);height:auto;max-width:none;transform:translate3d(0,calc(var(--p) * 110px),0)}
+.sc-bush{bottom:-5%;width:min(46vw,440px);height:auto;max-width:none;transform:translate3d(0,calc(var(--p) * 170px),0)}
+.sc-bush.l{left:-10%}.sc-bush.r{right:-12%;bottom:-8%}
+.sc-dusk{inset:0;background:linear-gradient(180deg,rgba(90,60,180,.0) 0%,rgba(120,70,190,.45) 45%,rgba(255,130,80,.6) 100%);opacity:calc((var(--p) - .38) * 3.2)}
+.sc-night{inset:0;background:radial-gradient(60% 45% at 50% 40%,rgba(47,111,224,.35),transparent 75%),linear-gradient(180deg,#0b1030 0%,#0a0a0f 92%);opacity:calc((var(--p) - .58) * 3.4)}
+.sc-night i{position:absolute;display:block}
+.sc-night i svg{display:block;width:100%;height:100%;animation:twinkle 2.8s ease-in-out infinite}
+.sc-night i:nth-child(2n) svg{animation-delay:-1.2s}
+/* steps */
+.st{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:0 var(--gut) 6vh;text-align:center;color:#10275e;visibility:hidden;transition:visibility 0s .7s}
+.st.on{visibility:visible;transition-delay:0s}
+.st .w{display:inline-block;opacity:0;transform:translate3d(0,34px,0) scale(.94);transition:opacity .55s ease,transform .8s cubic-bezier(.2,1.2,.35,1);transition-delay:calc(var(--i) * 110ms)}
+.st.on .w{opacity:1;transform:none}
+.st.past .w{opacity:0;transform:translate3d(0,-40px,0) scale(.96);transition-delay:0s;transition-duration:.35s}
+.st .orgs.w,.st .logo.w,.st .hero-cta.w{display:flex}
+.st .logo.w{display:block}
+.st .hero-cta.w{flex-direction:column;align-items:center}
+.st0 .orgs{padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.72);box-shadow:0 6px 20px -8px rgba(20,60,140,.35)}
+.st0 .orgs .sep{background:rgba(16,39,94,.2)}
+.st0 .org-hh{color:#10275e}
+.st0 .hero-logo{width:min(84vw,560px);margin-top:4px;filter:drop-shadow(0 14px 22px rgba(16,39,94,.28))}
+.st-tag{font-size:clamp(24px,6.4vw,44px);font-weight:800;line-height:1.25;letter-spacing:-.01em;color:#fff;text-shadow:0 3px 0 #1d4fbf,0 0 2px #1d4fbf,0 10px 24px rgba(16,39,94,.35)}
+.st-cue{margin-top:8px;align-items:center;gap:6px;font-size:14px;font-weight:700;color:#10275e}
+.st-cue.w{display:inline-flex}
+.st-cue .ic{width:16px;height:16px;transform:rotate(90deg);animation:cue 1.4s ease-in-out infinite}
+@keyframes cue{50%{transform:rotate(90deg) translate3d(5px,0,0)}}
+.st-s{font-size:clamp(16px,4.2vw,24px);font-weight:700;line-height:1.4;color:#10275e;text-shadow:0 1px 0 rgba(255,255,255,.8)}
+.st-big{margin:0;font-size:clamp(46px,14vw,128px);font-weight:800;line-height:1.08;letter-spacing:-.02em;color:#fff;
+  text-shadow:0 4px 0 #1d4fbf,0 -2px 0 #1d4fbf,3px 0 0 #1d4fbf,-3px 0 0 #1d4fbf,0 18px 36px rgba(16,39,94,.35)}
+.st-big .w{margin:0 .08em}
+.st-big .hl{color:#ffd23f;text-shadow:0 4px 0 #c2410c,0 -2px 0 #c2410c,3px 0 0 #c2410c,-3px 0 0 #c2410c,0 18px 36px rgba(120,40,0,.35)}
+.st-big .hl2{color:#ff7a2e;text-shadow:0 4px 0 #7c1d06,0 -2px 0 #7c1d06,3px 0 0 #7c1d06,-3px 0 0 #7c1d06,0 18px 36px rgba(120,40,0,.35)}
+.st.night,.st.night .st-s{color:#fff;text-shadow:none}
+.st.night .st-big{text-shadow:0 4px 0 #2f3fae,0 18px 40px rgba(0,0,0,.5)}
+.st.night .st-big .hl{text-shadow:0 4px 0 #c2410c,0 18px 40px rgba(0,0,0,.5)}
+.st-houses{gap:10px;flex-wrap:wrap;justify-content:center}
+.st-houses.w{display:flex}
+.st-houses b{padding:6px 14px;border-radius:999px;font:400 clamp(14px,3.6vw,20px)/1 "Luckiest Guy",Impact,sans-serif;letter-spacing:.04em;color:#0b0b10;background:var(--c);box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000)}
+.st3 .hero-cta{margin-top:14px;width:100%}
+.st3 .hero-meta{color:rgba(255,255,255,.7)}
+/* no JS / reduced motion: plain stacked story */
+html:not(.js) .st{position:relative;visibility:visible;min-height:60vh}
+html:not(.js) .st .w{opacity:1;transform:none}
+.rm .st .w{transition:opacity .3s ease;transform:none!important}
+.lite .sc-cloud svg,.lite .sc-night i svg{animation:none}

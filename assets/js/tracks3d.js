@@ -244,7 +244,7 @@
       var canvas = document.createElement('canvas');
       canvas.setAttribute('aria-hidden', 'true');
       host.appendChild(canvas);
-      var r = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !MOBILE, powerPreference: MOBILE ? 'low-power' : 'default' });
+      var r = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !IOS, powerPreference: MOBILE ? 'low-power' : 'default' });
       r.outputColorSpace = THREE.SRGBColorSpace;
       r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.08;
       this.r = r; this.cam = new THREE.PerspectiveCamera(kind === 'hero' ? 26 : 30, 1.4, .1, 80);

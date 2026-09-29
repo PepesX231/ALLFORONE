@@ -83,7 +83,7 @@
     var steps = $$('.st', st), vids = $$('.clip', st), N = steps.length, cur = -1, ticking = false;
     var portrait = matchMedia('(max-aspect-ratio: 1/1)').matches, safe = root.classList.contains('safe');
     // step → [clip index, stop time (s) or null = play to the end]
-    var PLAN = [[0, 1.9], [0, null], [1, null], [2, null], [3, null], [4, 1.9], [4, null]];
+    var PLAN = [[5, null], [0, null], [1, null], [2, null], [3, null], [4, 1.9], [4, null]];   // clip 5 = looping idle sky
     vids.forEach(function (v) {
       var n = v.dataset.clip, o = portrait ? 'p' : 'w';
       v.poster = 'assets/video/' + n + '-' + o + '.jpg';
@@ -93,7 +93,7 @@
     function show(k) {
       var plan = PLAN[k], v = vids[plan[0]], prev = cur < 0 ? null : PLAN[cur];
       vids.forEach(function (x, i) { x.classList.toggle('on', i === plan[0]); });
-      load(v); if (vids[plan[0] + 1]) load(vids[plan[0] + 1]);          // preload the next clip
+      load(v); var nx = PLAN[Math.min(k + 1, PLAN.length - 1)][0]; load(vids[nx]);          // preload the next clip
       if (safe || reduced) return;
       var sameClip = prev && prev[0] === plan[0];
       if (!sameClip || k < cur) { try { v.currentTime = k > 0 && sameClip ? 0 : 0; } catch (e) {} }
@@ -103,8 +103,10 @@
     }
     vids.forEach(function (v) {
       v.addEventListener('timeupdate', function () {
-        var s = parseFloat(v.dataset.stop); if (s && v.currentTime >= s) v.pause();
+        var s = parseFloat(v.dataset.stop); if (s && v.currentTime >= s) { v.pause(); v.classList.add('held'); }
       });
+      v.addEventListener('ended', function () { v.classList.add('held'); });
+      v.addEventListener('play', function () { v.classList.remove('held'); });
     });
     function upd() {
       ticking = false;
@@ -181,6 +183,7 @@
       }
       return len;
     }
+    road.style.setProperty('--fill', frac.toFixed(3));
     var shown = false;
     function layout(animate) {
       $$('.prog', road).forEach(function (p) {

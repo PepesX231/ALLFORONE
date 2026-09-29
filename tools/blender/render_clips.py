@@ -10,7 +10,7 @@ if sys.argv[-1].isdigit():
     CLIP, ORIENT, MODE, FR = sys.argv[-4], sys.argv[-3], sys.argv[-2], int(sys.argv[-1])
 else:
     FR = None
-OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', f'{CLIP}-{ORIENT}')
+OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', f'{CLIP}-{ORIENT}' + ('-idle' if MODE == 'idle' else ''))
 os.makedirs(OUT, exist_ok=True)
 FPS, SECONDS = 12, 4
 rnd = random.Random(7)
@@ -119,9 +119,10 @@ def key_cam(c, frames):
     for fc in c.animation_data.action.fcurves if hasattr(c.animation_data.action, 'fcurves') else []:
         for k in fc.keyframe_points: k.interpolation = 'SINE'; k.easing = 'EASE_IN_OUT'
 
+CLOUDS = []
 def cloud(loc, s, m):
     for dx, dy, dz, r in ((0, 0, 0, 1), (1.1, .2, -.15, .8), (-1.1, -.1, -.2, .75), (.5, .1, .45, .75), (-.5, 0, .35, .7)):
-        sphere(r * s, (loc[0] + dx * s, loc[1] + dy * s, loc[2] + dz * s), m, 'cloud', 20)
+        CLOUDS.append(sphere(r * s, (loc[0] + dx * s, loc[1] + dy * s, loc[2] + dz * s), m, 'cloud', 20))
 
 def tree(x, y, s, cols, trunk):
     cyl(.18 * s, 2 * s, (x, y, s), trunk, v=8)
@@ -145,20 +146,35 @@ def petals(center, size, count, frames, m):
 F = FPS * SECONDS
 if CLIP == 'towers':
     # twin glass towers from a low angle, sakura, drifting clouds; camera tilts down from the sky
-    flat_sky(hexc('#1f5fd0'), hexc('#bfe3ff'), 1.0)
+    rmp, _ = flat_sky(hexc('#1a4fc4'), hexc('#bfe3ff'), 1.0)
+    rmp.color_ramp.elements[0].position = .25; rmp.color_ramp.elements[1].position = 1.0
+    e = rmp.color_ramp.elements.new(.7); e.color = (*hexc('#4f97ec'), 1)
     sun(40, 200, 2.6)
-    glass = mat('glass', hexc('#5aa9e6'), rough=.04, metal=.85)
+    glass = mat('glass', hexc('#2f6fb8'), rough=.06, metal=.7)
     frame = mat('frame', hexc('#eef4fb'), .5)
+    spandrel = mat('spandrel', hexc('#9fb8d6'), .45, .2)
+    core = mat('core', hexc('#1d3b66'), .8)
+    litw = mat('litw', hexc('#cfe6ff'), .3, emit=hexc('#fff1c9'), estr=1.2)
     for side in (-1, 1):
-        # a slightly tapered tower: stack of floors, mullions as thin boxes
+        cx = side * 9.5
+        box((13.2, 11.2, 77), (cx, 0, 38.5), core)                               # dark interior mass: no see-through
         for i in range(24):
-            z = i * 3.2 + 1.6
-            box((14, 12, 3.0), (side * 9.5, 0, z), glass, name='floor')
-            box((14.3, 12.3, .25), (side * 9.5, 0, z + 1.55), frame)
-        for k in range(8):
-            x = side * 9.5 - 7 + k * 2
-            box((.22, .22, 77), (x, -6.05, 38.5), frame)
-        box((14.8, 12.8, 1.4), (side * 9.5, 0, 77.6), frame)
+            z = i * 3.2
+            box((14, 12, 2.1), (cx, 0, z + 1.9), glass, name='floor')
+            box((14.15, 12.15, .95), (cx, 0, z + .45), spandrel)
+            box((14.3, 12.3, .18), (cx, 0, z + 2.99), frame)
+            for k in range(3):
+                if rnd.random() < .35:
+                    box((rnd.uniform(1.5, 3.5), .05, 1.6), (cx + rnd.uniform(-5, 5), -6.02, z + 1.9), litw)
+        for k in range(15):
+            x = cx - 7 + k * 1.0
+            box((.16, .35, 77), (x, -6.12, 38.5), frame)
+        for k in range(13):
+            yv = -6 + k * 1.0
+            box((.35, .16, 77), (cx + side * 7.08, yv, 38.5), frame)
+        box((14.8, 12.8, 1.4), (cx, 0, 77.6), frame)
+        box((9, 7, 5), (cx, 1, 80.8), spandrel); box((9.4, 7.4, .5), (cx, 1, 83.5), frame)
+        cyl(.12, 8, (cx + side * 2, 1, 86), frame)
     # sky bridge
     box((5.2, 6, 5), (0, 0, 40), glass); box((5.6, 6.4, .4), (0, 0, 42.7), frame); box((5.6, 6.4, .4), (0, 0, 37.3), frame)
     # podium with columns
@@ -172,12 +188,16 @@ if CLIP == 'towers':
     trunk = mat('trunk', hexc('#6b3f33'), .8)
     for x, y, s in ((-22, -22, 2.2), (-15, -30, 1.8), (21, -24, 2.3), (14, -31, 1.7), (-27, -12, 1.9), (27, -13, 2.0)):
         tree(x, y, s, pinks, trunk)
-    cm = mat('cloud', (1, 1, 1), .9)
-    for x, y, z, s in ((-60, 90, 70, 9), (40, 110, 95, 11), (80, 60, 55, 7), (-20, 140, 120, 12), (-90, 70, 40, 8)):
+    cm = mat('cloud', (1, 1, 1), .9, emit=(1, 1, 1), estr=.45)
+    for x, y, z, s in ((-60, 90, 70, 9), (40, 110, 95, 11), (80, 60, 55, 7), (-20, 140, 120, 12), (-90, 70, 40, 8), (-38, 25, 118, 7), (46, 35, 135, 8), (-70, 40, 160, 9), (60, 10, 105, 6), (-45, 5, 210, 14), (40, 20, 240, 16), (-5, -15, 280, 18), (75, 0, 200, 13), (-85, 25, 250, 15), (15, 40, 190, 11)):
         cloud((x, y, z), s, cm)
+    if MODE == 'idle':
+        for o in CLOUDS:
+            x0 = o.location.x; o.location.x = x0 - 16; o.keyframe_insert('location', frame=1)
+            o.location.x = x0 + 16; o.keyframe_insert('location', frame=F)
     petals((0, -30, 30), (30, 15, 1), 700, F, pinks[1])
     c = camera((0, -26, 2), (0, 0, 60), 15)
-    key_cam(c, [(1, (0, -24, 2.0), (0, 0, 95)), (F, (0, -36, 2.6), (0, 0, 22))])
+    key_cam(c, [(1, (0, -24, 2.0), (0, 0, 95)), (F, (0, -36, 2.6), (0, 0, 22))] if MODE != 'idle' else [(1, (0, -24, 2.0), (0, 0, 95)), (F, (0, -24, 2.0), (0, 0, 95))])
 
 elif CLIP == 'desk':
     flat_sky(hexc('#0d1438'), hexc('#1b1f4a'), .6)
@@ -242,22 +262,49 @@ elif CLIP == 'friends':
         w, h = rnd.uniform(3, 7), rnd.uniform(6, 30)
         box((w, w, h), (rnd.uniform(-90, 90), rnd.uniform(40, 120), h / 2 - 6), city)
     body = mat('body', hexc('#1d1238'), .9)
-    def person(x, s, arm=None, hair=0):
-        cyl(.34 * s, 1.2 * s, (x, 5, .6 * s), body, v=16)
-        sphere(.36 * s, (x, 5, 1.2 * s), body)                          # shoulders
-        sphere(.3 * s, (x, 5, 1.62 * s), body)                          # head
-        hh = sphere(.33 * s, (x, 5.02, 1.7 * s), body); hh.scale = (1.05, 1, .8 + hair * .08)
-        for k in range(3 + hair):
-            sp = sphere(.12 * s, (x + (k - (2 + hair) / 2) * .16 * s, 5.05, 1.95 * s + (k % 2) * .06 * s), body); sp.scale = (1, 1, 1.6)
-        if arm == 'up':
-            cyl(.1 * s, 1.1 * s, (x + .45 * s, 5, 1.9 * s), body, rot=(0, .45, 0))
-        if arm in ('l', 'r'):
-            d = -1 if arm == 'l' else 1
-            cyl(.1 * s, .95 * s, (x + d * .55 * s, 5, 1.32 * s), body, rot=(0, d * 1.35, 0))
-    person(-1.15, 1.0, 'r', 2); person(0, 1.08, 'up', 0); person(1.15, 1.0, 'l', 1)
+    def skel(verts, edges, radii, m, name):
+        me = bpy.data.meshes.new(name); me.from_pydata(verts, edges, []); ob = bpy.data.objects.new(name, me)
+        sc.collection.objects.link(ob)
+        ob.modifiers.new('skin', 'SKIN')
+        for i, r in enumerate(radii):
+            ob.data.skin_vertices[0].data[i].radius = (r, r * .8)
+        ob.data.skin_vertices[0].data[0].use_root = True
+        sd = ob.modifiers.new('sub', 'SUBSURF'); sd.levels = 2; sd.render_levels = 2
+        me.materials.append(m)
+        return ob
+    def person(x, h, arm_l='down', arm_r='down', hair='short', y=5):
+        # joints (z up, facing +y away from camera); h = height scale
+        P = lambda dx, dz, dy=0: (x + dx * h, y + dy * h, dz * h)
+        V = [P(0, .95), P(0, 1.2), P(0, 1.42), P(0, 1.55),                      # 0 pelvis 1 spine 2 chest 3 neck
+             P(-.2, 1.44), P(.2, 1.44),                                         # 4 L shoulder 5 R shoulder
+             P(-.1, .9), P(-.12, .48), P(-.12, .05), P(.1, .9), P(.12, .48), P(.12, .05)]   # legs 6-11
+        E = [(0, 1), (1, 2), (2, 3), (2, 4), (2, 5), (0, 6), (6, 7), (7, 8), (0, 9), (9, 10), (10, 11)]
+        R = [.17, .15, .19, .07, .08, .08, .1, .075, .065, .1, .075, .065]
+        def arm(si, side, pose):
+            d = -1 if side == 'l' else 1
+            if pose == 'down':   pts = [P(d * .27, 1.15), P(d * .3, .88)]
+            elif pose == 'up':   pts = [P(d * .32, 1.78), P(d * .42, 2.12)]
+            elif pose == 'hug':  pts = [P(d * .45, 1.46, .02), P(d * .78, 1.47, .04)]
+            else:                pts = [P(d * .27, 1.2, -.05), P(d * .2, 1.0, -.1)]
+            i0 = len(V); V.extend(pts); E.extend([(si, i0), (i0, i0 + 1)]); R.extend([.065, .055])
+        arm(4, 'l', arm_l); arm(5, 'r', arm_r)
+        skel(V, E, R, body, 'person')
+        head = sphere(.13 * h, P(0, 1.72), body, 'head', 24); head.scale = (1, .95, 1.12)
+        if hair == 'spiky':
+            for k, (dx, dz, rx, ry) in enumerate(((-.1, 1.83, .5, -.6), (-.04, 1.88, .15, -.2), (.05, 1.87, -.1, .25), (.11, 1.82, -.4, .6), (0, 1.8, .9, 0), (-.13, 1.72, .2, -1.2), (.13, 1.72, .2, 1.2))):
+                bpy.ops.mesh.primitive_cone_add(radius1=.055 * h, depth=.2 * h, location=P(dx, dz, .02), rotation=(rx, ry, 0), vertices=8)
+                bpy.context.object.data.materials.append(body)
+        elif hair == 'pony':
+            cap = sphere(.14 * h, P(0, 1.75, .01), body, 'hair', 24); cap.scale = (1.05, 1, 1.02)
+            skel([P(0, 1.78, .1), P(0, 1.62, .2), P(0, 1.42, .22)], [(0, 1), (1, 2)], [.06, .05, .025], body, 'pony')
+        else:
+            cap = sphere(.145 * h, P(0, 1.76, .01), body, 'hair', 24); cap.scale = (1.06, 1.02, .9)
+    person(-.95, 1.0, 'down', 'hug', 'pony')
+    person(0, 1.08, 'down', 'up', 'spiky')
+    person(.95, 1.02, 'hug', 'down', 'short')
     star = mat('star', hexc('#ffd23f'), .3, emit=hexc('#ffe9a0'), estr=20); sphere(1.2, (16, 90, 40), star)
-    c = camera((0, -1.5, 1.2), (0, 20, 3.2), 30)
-    key_cam(c, [(1, (-.8, -2.2, .9), (0, 20, 3.0)), (F, (.4, -.2, 1.5), (0, 20, 4.2))])
+    c = camera((0, .2, 1.2), (0, 20, 2.9), 30)
+    key_cam(c, [(1, (-.7, -.6, 1.0), (0, 20, 2.8)), (F, (.35, .6, 1.3), (0, 20, 3.3))])
 
 elif CLIP == 'star':
     # the opportunity: a glowing star is handed up from the city, rising into the night sky

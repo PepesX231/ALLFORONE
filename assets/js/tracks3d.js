@@ -275,9 +275,9 @@
         ring.rotation.x = Math.PI / 2; ring.position.y = -1.1; G.add(ring);
         var ring2 = new THREE.Mesh(tor(3.45, .16), new THREE.MeshBasicMaterial({ color: 0x3d8bff, transparent: true, opacity: .14, toneMapped: false, depthWrite: false }));
         ring2.rotation.x = Math.PI / 2; ring2.position.y = -1.1; G.add(ring2);
-        G.add(blob(9, 3.2, -1.12));
+        var bl = blob(9, 3.2, -1.12); G.add(bl);
         sc.add(G);
-        this.mdl = { g: G, parts: parts }; this.fitR = 3.9;
+        this.mdl = { g: G, parts: parts, deco: [ring, ring2, bl] }; this.fitR = 3.9;
       } else {
         this.lights(sc, TINT[i]);
         var mdl = BUILD[i](); this.fitR = fitGroup(mdl.g); sc.add(mdl.g); this.mdl = mdl;
@@ -290,10 +290,19 @@
       this.r.setPixelRatio(DPR()); this.r.setSize(w, h, false);
       var cam = this.cam; cam.aspect = w / h;
       var vfov = cam.fov * Math.PI / 180, hfov = 2 * Math.atan(Math.tan(vfov / 2) * cam.aspect);
+      var tall = this.kind === 'hero' && cam.aspect < .9;           // phones: stack the 3 models in a column
+      if (this.kind === 'hero' && this.mdl && this.mdl.parts) {
+        this.mdl.parts.forEach(function (p, k) {
+          p.bx = tall ? -1.45 : (k - 1) * 3.15; p.by = tall ? (1 - k) * 3.05 : (k === 1 ? .3 : 0); p.bz = tall ? 0 : (k === 1 ? -.5 : 0);
+          p.wrap.position.set(p.bx, p.by, p.bz);
+        });
+        this.mdl.deco.forEach(function (o) { o.visible = !tall; });
+      }
       var d = this.kind === 'hero'
-        ? Math.max(5.1 / Math.tan(hfov / 2), 2.5 / Math.tan(vfov / 2))    // the row is ~10 wide x 5 tall
+        ? (tall ? Math.max(4.7 / Math.tan(vfov / 2), 3.2 / Math.tan(hfov / 2))
+                : Math.max(5.1 / Math.tan(hfov / 2), 2.5 / Math.tan(vfov / 2)))    // the row is ~10 wide x 5 tall
         : this.fitR / Math.sin(Math.min(vfov, hfov) / 2) * .92;
-      if (this.kind === 'hero') { cam.position.set(0, d * .2, d); cam.lookAt(0, -.05, 0); }
+      if (this.kind === 'hero') { cam.position.set(0, d * (tall ? .1 : .2), d); cam.lookAt(0, tall ? 0 : -.05, 0); }
       else { cam.position.set(0, d * .26, d); cam.lookAt(0, -this.fitR * .04, 0); }
       cam.updateProjectionMatrix();
       if (this.kind === 'hero' && this.mdl && this.mdl.parts) {       // line the name labels up under each model
@@ -301,8 +310,9 @@
         var btns = this.host.parentNode ? this.host.parentNode.querySelectorAll('.trio-hit button') : [];
         this.mdl.parts.forEach(function (p, k) {
           if (!btns[k]) return;
-          var v = new THREE.Vector3(p.wrap.position.x, -.2, p.wrap.position.z).project(cam);
+          var v = new THREE.Vector3(p.bx, tall ? p.by : -.2, p.bz).project(cam);
           btns[k].style.setProperty('--x', ((v.x + 1) * 50).toFixed(2) + '%');
+          btns[k].style.setProperty('--y', ((1 - v.y) * 50).toFixed(2) + '%');
         });
       }
       this.dirty = true; kick();
@@ -316,7 +326,7 @@
           var tk = p.s * (k === hot ? 1.14 : hot >= 0 ? .92 : 1);
           if (Math.abs(tk - p.k) > .001) { p.k += (tk - p.k) * (still ? 1 : .14); p.wrap.scale.setScalar(p.k); }
           p.wrap.rotation.y = p.base + (still ? 0 : Math.sin(t * .5 + k * 2.1) * .4);
-          p.wrap.position.y = (k === 1 ? .3 : 0) + (still ? 0 : Math.sin(t * 1.2 + k * 1.7) * .08);
+          p.wrap.position.y = (p.by || 0) + (still ? 0 : Math.sin(t * 1.2 + k * 1.7) * .08);
           if (!still) animateModel(p, t, k);
         });
         m.g.rotation.y = this.px * .3;

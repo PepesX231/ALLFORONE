@@ -705,7 +705,7 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .st0 .orgs{background:rgba(255,255,255,.94)}
 
 /* ================= story clips (pre-rendered video) ================= */
-.clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease;background:#123c9c}
+.clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .45s ease;background:#0a0a0f;transform-origin:50% 40%}
 .clip.on{opacity:1}
 .scene-shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,10,30,.45),rgba(8,10,30,.05) 45%,rgba(8,10,30,.25) 100%)}
 .st.on .w{transition-delay:calc(.1s + var(--i) * 90ms)}
@@ -715,3 +715,39 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .scene-shade{transition:background .6s}
 .story[data-step="6"] .scene-shade{background:radial-gradient(70% 45% at 50% 50%,rgba(6,8,26,.72),rgba(6,8,26,.25) 70%,rgba(6,8,26,.45))}
 .st-big{text-shadow:0 4px 0 #1d4fbf,0 0 24px rgba(0,0,0,.45)}
+
+/* ---------- timeline on phones: clean vertical rail, art left, text right (no overlapping) ---------- */
+@media (max-width:899px){
+  .road{height:auto;max-width:460px;padding:10px 0 4px}
+  .rp-m{display:none}
+  .stops{position:relative;display:grid;gap:clamp(14px,3.2vh,26px)}
+  .stops::before,.stops::after{content:"";position:absolute;left:43px;top:40px;bottom:46px;width:4px;margin-left:-2px;border-radius:4px;background:rgba(255,236,210,.18)}
+  .stops::after{bottom:auto;height:calc((100% - 86px) * var(--fill,0));background:linear-gradient(#57e6a8,#79b8ff,#ffa865,#ffe08a);box-shadow:0 0 12px rgba(120,200,255,.5);transform-origin:top;transform:scaleY(0);transition:transform 1.6s var(--ease) .3s}
+  .road.in .stops::after{transform:none}
+  .stop{position:relative;left:auto;top:auto;width:auto;height:auto;--w:86px;display:grid;grid-template-columns:86px minmax(0,1fr);align-items:center;gap:14px}
+  .s4{--w:86px}
+  .isle{position:relative;left:auto;top:auto;height:calc(var(--w) * .8)}
+  .isle .art{position:relative;z-index:1}
+  .lab,.stop.l .lab,.stop.r .lab,.s4 .lab{position:static;width:auto;text-align:left;top:auto;left:auto;right:auto}
+  .lab b{font-size:17px}
+  .lab span.t{font-size:13.5px}
+  .s4 .lab b{font-size:18px}
+}
+
+/* ---------- tracks on phones: 3 models stacked, name beside each ---------- */
+@media (max-width:719px){
+  .trio-wrap{padding-bottom:0}
+  .trio{aspect-ratio:auto;height:min(calc(100svh - var(--hdr) - 170px),640px);min-height:440px;background:radial-gradient(60% 50% at 30% 50%,rgba(61,139,255,.18),transparent 75%)}
+  .trio-hit button{left:0;width:100%;top:calc(var(--y) - 16%);bottom:auto;height:32%;transform:none;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 var(--gut) 0 56%;text-align:left}
+  .trio-hit button::before{left:4%;right:48%;top:4%;bottom:4%}
+  .trio-hit b{font-size:clamp(22px,7vw,30px)}
+  .trio-hit b::after{margin:8px 0 0}
+  .trio-hit small{font-size:14px;text-align:left}
+  .trio-hit small::after{content:"แตะเพื่อดู →";display:block;margin-top:6px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.55)}
+  .trio-hit img,.trio-hit .ph{left:4%;right:auto;width:44%;top:50%}
+  .trio-hit .ph{left:26%}
+}
+/* a held last frame keeps breathing: slow camera drift so the scene never looks frozen */
+.clip.held{animation:drift-cam 16s ease-in-out infinite alternate}
+@keyframes drift-cam{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.06) translate3d(-1.2%,-.8%,0)}}
+.rm .clip.held,.lite .clip.held{animation:none}

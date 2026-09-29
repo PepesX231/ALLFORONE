@@ -24,7 +24,19 @@
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
     d.classList.add('js');
-    try { if (CSS.supports('animation-timeline: view()')) d.classList.add('sda'); } catch (e) {}
+    var ua = navigator.userAgent, ios = /iP(hone|od|ad)/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+    if (ios) d.classList.add('ios');
+    // crash guard: if the last load in this tab never finished settling (the browser killed it),
+    // come back in safe mode — no WebGL, no animated sky — so the page always opens
+    try {
+      var ss = sessionStorage, k = 'afo-boot';
+      if (ss.getItem(k) === '1') d.classList.add('safe', 'lite');
+      ss.setItem(k, '1');
+      var ok = function () { try { ss.removeItem(k); } catch (e) {} };
+      addEventListener('load', function () { setTimeout(ok, 6000); });
+      addEventListener('pagehide', ok);
+    } catch (e) {}
+    try { if (!ios && CSS.supports('animation-timeline: view()')) d.classList.add('sda'); } catch (e) {}
   })(document.documentElement);
   // posters come from another host: drop any that fail, and the whole section if none load
   window.__posterFail = function (img) {

@@ -427,7 +427,7 @@ dialog.sheet::backdrop{background:transparent}
 .tab[aria-selected="true"]::after{transform:none}
 .x-btn{width:40px;height:40px;flex:none;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.08)}
 .x-btn .ic{width:20px;height:20px}
-.sheet-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;-webkit-mask-image:linear-gradient(transparent,#000 22px,#000 calc(100% - 22px),transparent);mask-image:linear-gradient(transparent,#000 22px,#000 calc(100% - 22px),transparent)}
+.sheet-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .sheet-content{padding:0 18px 30px;transform-origin:50% 35%}
 .sheet-foot{flex:none;display:flex;gap:10px;padding:12px 16px calc(12px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#121214}
 .sheet-foot .btn{flex:1;min-height:50px;padding:0 14px}
@@ -620,3 +620,9 @@ dialog.sheet::backdrop{background:transparent}
 @keyframes spin{to{transform:rotate(360deg)}}
 .rm .sky{display:none}
 .lite .mt:nth-child(n+6){display:none}
+
+/* iPhone / iPad: lighter compositing (no masks over big areas, no fixed animated sky layer under everything) */
+.ios .posters,.ios .posters.at-start,.ios .posters.at-end{-webkit-mask-image:none;mask-image:none}
+.ios #journey::before,.ios .pk-sec::before{-webkit-mask-image:none;mask-image:none}
+.ios .mt b::after{display:none}
+.safe .sky{display:none}

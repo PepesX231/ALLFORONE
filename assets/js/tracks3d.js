@@ -17,10 +17,15 @@
   var heroSlot = document.querySelector('.trio');
 
   function webgl() {
-    try { var c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); }
+    try {
+      var c = document.createElement('canvas'), g = c.getContext('webgl2') || c.getContext('webgl');
+      var ext = g && g.getExtension('WEBGL_lose_context'); if (ext) ext.loseContext();   // don't keep a probe context alive
+      return !!g;
+    }
     catch (e) { return false; }
   }
-  if (!webgl()) return;
+  if (root.classList.contains('safe') || !webgl()) return;
+  var IOS = root.classList.contains('ios'), MOBILE = IOS || matchMedia('(pointer: coarse)').matches;
 
   var pending = null;
   var api = window.AFO3D = {
@@ -37,7 +42,7 @@
     var lite = function () { return root.classList.contains('lite'); };
     var level = lite() ? 1 : 0;
     var running = false, skip = 0, t0 = performance.now(), prev = 0, gaps = [], stages = [], sheetStage = null, ready = false;
-    var DPR = function () { return Math.min(window.devicePixelRatio || 1, level ? 1.25 : 2); };
+    var DPR = function () { return Math.min(window.devicePixelRatio || 1, level ? 1.25 : (MOBILE ? 1.5 : 2)); };
 
     /* ---------- modelling kit ---------- */
     var matCache = {};
@@ -239,7 +244,7 @@
       var canvas = document.createElement('canvas');
       canvas.setAttribute('aria-hidden', 'true');
       host.appendChild(canvas);
-      var r = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true, powerPreference: 'default' });
+      var r = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: !MOBILE, powerPreference: MOBILE ? 'low-power' : 'default' });
       r.outputColorSpace = THREE.SRGBColorSpace;
       r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = 1.08;
       this.r = r; this.cam = new THREE.PerspectiveCamera(kind === 'hero' ? 26 : 30, 1.4, .1, 80);
@@ -375,7 +380,7 @@
 
     /* tracks ring: still renders of the 3 models for every card, then one live
        stage that main.js moves into whichever card is at the front */
-    (function snaps() {
+    if (!MOBILE) (function snaps() {
       var host = document.createElement('div');
       host.style.cssText = 'position:fixed;left:-2000px;top:0;width:520px;height:340px;pointer-events:none';
       document.body.appendChild(host);

@@ -37,7 +37,7 @@
      Each meteor gets its own shape, colour, size, angle and speed, and picks a new
      start point every loop, so the sky never repeats. Transform/opacity only. */
   (function () {
-    var sky = document.getElementById('sky'); if (!sky || reduced) return;
+    var sky = document.getElementById('sky'); if (!sky || reduced || root.classList.contains('safe')) return;
     var ns = 'http://www.w3.org/2000/svg';
     var C = ['#ffd23f', '#ff8a3d', '#6fb2ff', '#ff6b8a', '#9b7bff', '#2fd08b', '#8ff0ff'];
     var SHAPES = [
@@ -47,7 +47,7 @@
       '<circle cx="24" cy="24" r="12" fill="currentColor" stroke="#1b1540" stroke-width="3"/><circle cx="20" cy="20" r="3.6" fill="#fff" opacity=".85"/>',
       '<path d="M24 6c2 10 8 16 18 18-10 2-16 8-18 18-2-10-8-16-18-18 10-2 16-8 18-18z" fill="currentColor" stroke="#1b1540" stroke-width="3" stroke-linejoin="round"/>'
     ];
-    var small = innerWidth < 720, n = lite ? (small ? 4 : 6) : (small ? 7 : 12);
+    var small = innerWidth < 720, n = lite ? (small ? 4 : 6) : (small ? 6 : 12);
     var r = function (a, b) { return a + Math.random() * (b - a); };
     function place(el, first) {
       var a = r(22, 40), s = r(small ? 20 : 26, small ? 36 : 50);

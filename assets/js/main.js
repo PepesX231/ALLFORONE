@@ -208,7 +208,7 @@
   /* ---------- 4c. mobile bottom bar ---------- */
   var bbar = $('#bbar'), heroCtaVisible = true, endVisible = new Set();
   function syncBar() { bbar.classList.toggle('show', !heroCtaVisible && endVisible.size === 0 && !state.sheetOpen); }
-  new IntersectionObserver(function (es) { heroCtaVisible = es[0].isIntersecting; syncBar(); }).observe($('#heroCta'));
+  new IntersectionObserver(function (es) { heroCtaVisible = es[0].isIntersecting; syncBar(); }).observe($('#heroCta') || $('#top'));
   var endIO = new IntersectionObserver(function (es) {
     es.forEach(function (e) { if (e.isIntersecting) endVisible.add(e.target); else endVisible.delete(e.target); });
     syncBar();

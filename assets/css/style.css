@@ -657,12 +657,17 @@ dialog.sheet::backdrop{background:transparent}
 .sc-cloud.c3{--w:clamp(90px,14vw,200px);--vy:-120px;--t:14s;left:34%;top:26%;opacity:.85}
 .sc-cloud.c4{--w:clamp(160px,30vw,420px);--vy:-80px;--t:22s;right:-8%;top:40%;opacity:.9}
 @keyframes cloud{to{transform:translate3d(28px,0,0)}}
-.sc-city{left:0;right:0;bottom:0;width:100%;height:46%;max-width:none;transform:translate3d(0,calc(var(--p) * 60px),0)}
-.sc-uni{right:-3%;bottom:4%;width:min(58vw,60vh,640px);height:auto;max-width:none;transform:translate3d(0,calc(var(--p) * 110px),0)}
-.sc-bush{bottom:-5%;width:min(46vw,440px);height:auto;max-width:none;transform:translate3d(0,calc(var(--p) * 170px),0)}
-.sc-bush.l{left:-10%}.sc-bush.r{right:-12%;bottom:-8%}
+.sc-far,.sc-near,.sc-lights{inset:0;background:center bottom/cover no-repeat;transform-origin:50% 100%}
+.sc-far{background-image:url(../img/bg/kmitl-w-far.webp);transform:translate3d(0,calc(var(--p) * 30px),0) scale(calc(1 + var(--p) * .05))}
+.sc-near{background-image:url(../img/bg/kmitl-w-near.webp);transform:translate3d(0,calc(var(--p) * 70px),0) scale(calc(1 + var(--p) * .12))}
+.sc-lights{background-image:url(../img/bg/kmitl-w-lights.webp);transform:translate3d(0,calc(var(--p) * 30px),0) scale(calc(1 + var(--p) * .05));opacity:calc((var(--p) - .62) * 3.2)}
+@media (max-aspect-ratio:1/1){
+  .sc-far{background-image:url(../img/bg/kmitl-p-far.webp)}
+  .sc-near{background-image:url(../img/bg/kmitl-p-near.webp)}
+  .sc-lights{background-image:url(../img/bg/kmitl-p-lights.webp)}
+}
 .sc-dusk{inset:0;background:linear-gradient(180deg,rgba(90,60,180,.0) 0%,rgba(120,70,190,.45) 45%,rgba(255,130,80,.6) 100%);opacity:calc((var(--p) - .38) * 3.2)}
-.sc-night{inset:0;background:radial-gradient(60% 45% at 50% 40%,rgba(47,111,224,.35),transparent 75%),linear-gradient(180deg,#0b1030 0%,#0a0a0f 92%);opacity:calc((var(--p) - .58) * 3.4)}
+.sc-night{inset:0;background:radial-gradient(60% 40% at 50% 30%,rgba(47,111,224,.3),transparent 75%),linear-gradient(180deg,rgba(11,16,48,.97) 0%,rgba(12,14,40,.9) 45%,rgba(10,10,15,.84) 70%,#0a0a0f 99%);opacity:calc((var(--p) - .58) * 3.4)}
 .sc-night i{position:absolute;display:block}
 .sc-night i svg{display:block;width:100%;height:100%;animation:twinkle 2.8s ease-in-out infinite}
 .sc-night i:nth-child(2n) svg{animation-delay:-1.2s}
@@ -693,6 +698,7 @@ dialog.sheet::backdrop{background:transparent}
 .st.night,.st.night .st-s{color:#fff;text-shadow:none}
 .st.night .st-big{text-shadow:0 4px 0 #2f3fae,0 18px 40px rgba(0,0,0,.5)}
 .st.night .st-big .hl{text-shadow:0 4px 0 #c2410c,0 18px 40px rgba(0,0,0,.5)}
+.st-tr{font-family:"Luckiest Guy",Impact,sans-serif;font-weight:400;letter-spacing:.03em}
 .st-houses{gap:10px;flex-wrap:wrap;justify-content:center}
 .st-houses.w{display:flex}
 .st-houses b{padding:6px 14px;border-radius:999px;font:400 clamp(14px,3.6vw,20px)/1 "Luckiest Guy",Impact,sans-serif;letter-spacing:.04em;color:#0b0b10;background:var(--c);box-shadow:0 5px 0 color-mix(in srgb,var(--c) 55%,#000)}
@@ -703,3 +709,11 @@ html:not(.js) .st{position:relative;visibility:visible;min-height:60vh}
 html:not(.js) .st .w{opacity:1;transform:none}
 .rm .st .w{transition:opacity .3s ease;transform:none!important}
 .lite .sc-cloud svg,.lite .sc-night i svg{animation:none}
+/* keep the story text in the sky, above the campus */
+.st{justify-content:flex-start;padding-top:clamp(24px,8vh,96px)}
+.st3{justify-content:center;padding-top:0}
+.st0 .hero-logo{width:min(76vw,52vh,560px)}
+@media (min-aspect-ratio:1/1){.sc-far,.sc-near,.sc-lights{top:10%;bottom:-14%}}
+.st:not(.night)::before{content:"";position:absolute;left:50%;top:0;width:min(1000px,130vw);height:62%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(236,247,255,.7),rgba(236,247,255,0));opacity:0;transition:opacity .6s}
+.st.on:not(.night)::before{opacity:1}
+.st-cue{padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.85);box-shadow:0 6px 16px -8px rgba(16,39,94,.4)}

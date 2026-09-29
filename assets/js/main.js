@@ -86,7 +86,23 @@
       var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1);
       st.style.setProperty('--p', p.toFixed(4));
       var k = p < cuts[0] ? 0 : p < cuts[1] ? 1 : p < cuts[2] ? 2 : 3;
-      if (k !== cur) { cur = k; steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); }); }
+      if (k !== cur) { hit(k > cur ? 1 : -1); cur = k; st.dataset.step = k; steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); }); }
+    }
+    // anime-OP "cut": speed lines + white flash + slash bands + camera kick on every step change
+    var scene = $('.scene', st), hitT;
+    function hit(dir) {
+      if (reduced) return;
+      st.classList.remove('hit'); void st.offsetWidth; st.classList.add('hit');
+      st.style.setProperty('--dir', dir);
+      clearTimeout(hitT); hitT = setTimeout(function () { st.classList.remove('hit'); }, 900);
+      if (canAnimate) scene.animate([{ transform: 'scale(1.09) rotate(' + dir * -1.2 + 'deg)' }, { transform: 'none' }], { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)' });
+    }
+    // opening shot: camera flies out of the sky onto the campus, logo slams in
+    if (!reduced && canAnimate && scrollY < 40) {
+      st.classList.add('intro');
+      scene.animate([{ transform: 'translate3d(0,-18%,0) scale(1.55)', filter: 'brightness(1.6)' }, { transform: 'none', filter: 'none' }], { duration: 1500, easing: 'cubic-bezier(.2,.9,.2,1)' });
+      setTimeout(function () { hit(1); }, 900);
+      setTimeout(function () { st.classList.remove('intro'); }, 1800);
     }
     addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
     addEventListener('resize', upd, { passive: true });

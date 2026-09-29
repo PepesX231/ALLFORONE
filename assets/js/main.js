@@ -79,17 +79,29 @@
   /* ---------- 1b. story hero: scroll drives the scene (--p 0→1) and which step is showing ---------- */
   (function () {
     var st = document.getElementById('top'); if (!st || !st.classList.contains('story')) return;
-    var steps = $$('.st', st), cur = 0, ticking = false, cuts = [.18, .43, .68];
+    var steps = $$('.st', st), shots = $$('.shot', st), cur = 0, ticking = false, N = steps.length;
+    // which shot plays under each text step, and each shot's step range [first, last]
+    var SHOT = [0, 0, 1, 2, 3, 4, 4], RANGE = [[0, 1], [2, 2], [3, 3], [4, 4], [5, 6]], curShot = 0;
     function upd() {
       ticking = false;
       var r = st.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
-      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1);
-      st.style.setProperty('--p', p.toFixed(4));
-      var k = p < cuts[0] ? 0 : p < cuts[1] ? 1 : p < cuts[2] ? 2 : 3;
+      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1), f = p * N;
+      var k = Math.min(N - 1, Math.floor(f)), sh = SHOT[k], rg = RANGE[sh];
+      var q = clamp((f - rg[0]) / (rg[1] - rg[0] + 1), 0, 1);
+      shots[sh].style.setProperty('--q', q.toFixed(4));
+      if (sh === 4) {                                   // campus: day → night drives the old --p ramps
+        var t = f - 5, kp = t < 1 ? .62 * clamp(t, 0, 1) : .62 + .38 * clamp(t - 1, 0, 1);
+        st.style.setProperty('--p', kp.toFixed(4));
+      } else st.style.setProperty('--p', 0);
+      if (sh !== curShot) {
+        curShot = sh;
+        shots.forEach(function (s, i) { s.classList.toggle('on', i === sh); s.classList.toggle('ld', Math.abs(i - sh) <= 1); });
+      }
       if (k !== cur) { hit(k > cur ? 1 : -1); cur = k; st.dataset.step = k; steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); }); }
     }
     // anime-OP "cut": speed lines + white flash + slash bands + camera kick on every step change
     var scene = $('.scene', st), hitT;
+    shots.forEach(function (s, i) { s.classList.toggle('ld', i <= 1); });
     function hit(dir) {
       if (reduced) return;
       st.classList.remove('hit'); void st.offsetWidth; st.classList.add('hit');

@@ -643,7 +643,7 @@ dialog.sheet::backdrop{background:transparent}
 
 /* ================= STORY HERO: poster world → scroll story → night → 3 houses ================= */
 .story{position:relative;--p:0}
-.js .story{height:430vh;height:430svh}
+.js .story{height:600vh;height:600svh}
 .story-pin{position:relative;height:calc(100vh - var(--hdr));height:calc(100svh - var(--hdr));overflow:hidden;isolation:isolate}
 .js .story-pin{position:sticky;top:var(--hdr)}
 .scene{position:absolute;inset:0;z-index:-1;pointer-events:none}
@@ -711,7 +711,7 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .lite .sc-cloud svg,.lite .sc-night i svg{animation:none}
 /* keep the story text in the sky, above the campus */
 .st{justify-content:flex-start;padding-top:clamp(24px,8vh,96px)}
-.st3{justify-content:center;padding-top:0}
+.st6{justify-content:center;padding-top:0}
 .st0 .hero-logo{width:min(76vw,52vh,560px)}
 @media (min-aspect-ratio:1/1){.sc-far,.sc-near,.sc-lights{top:10%;bottom:-14%}}
 .st:not(.night)::before{content:"";position:absolute;left:50%;top:0;width:min(1000px,130vw);height:62%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(236,247,255,.7),rgba(236,247,255,0));opacity:0;transition:opacity .6s}
@@ -738,7 +738,7 @@ html:not(.js) .st .w{opacity:1;transform:none}
   -webkit-mask-image:radial-gradient(closest-side,transparent 34%,#000 70%);mask-image:radial-gradient(closest-side,transparent 34%,#000 70%)}
 .hit .fx-speed{animation:speed .75s cubic-bezier(.2,.8,.3,1)}
 @keyframes speed{0%{opacity:.95;transform:scale(1.25) rotate(0)}100%{opacity:0;transform:scale(1) rotate(8deg)}}
-.story[data-step="3"] .fx-speed{background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,210,63,.8) 0deg .7deg,transparent .7deg 5deg)}
+.story[data-step="6"] .fx-speed{background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,210,63,.8) 0deg .7deg,transparent .7deg 5deg)}
 /* white impact frame */
 .fx-flash{inset:0;background:#fff;opacity:0;mix-blend-mode:screen}
 .hit .fx-flash{animation:flash .45s ease-out}
@@ -769,8 +769,35 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .story .st.on .w{transform:none}
 .story .st.past .w{transform:translate3d(calc(var(--dir,1) * -90px),0,0) scale(.9) skewX(12deg);transition-duration:.2s;transition-delay:0s}
 .st-big{transform:rotate(-3deg)}
-.st1 .st-big,.st2 .st-big,.st3 .st-big{position:relative}
+.st .st-big{position:relative}
 /* opening shot */
 .intro .st0 .w{transition-delay:calc(.75s + var(--i) * 110ms)}
 .lite .fx-speed,.lite .fx-tone{display:none}
 .rm .fx{display:none}
+
+/* ================= OP shots: each scene is a pre-rendered layer pair, hard-cut by the flash ================= */
+.shot{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .18s linear,visibility 0s .18s}
+.shot.on{opacity:1;visibility:visible;transition-delay:0s}
+.shot>*{position:absolute}
+.shot:not(.ld) .lay{background-image:none!important}
+.lay{inset:0;background-position:center;background-size:cover;background-repeat:no-repeat}
+.l-bg{transform:scale(calc(1.06 + var(--q,0) * .04))}
+.l-fg{transform:scale(calc(1.02 + var(--q,0) * .1)) translate3d(0,calc(var(--q,0) * -1.5%),0)}
+.sh-desk .l-bg{background-image:url(../img/bg/desk-bg.webp)}.sh-desk .l-fg{background-image:url(../img/bg/desk-fg.webp)}
+.sh-friends .l-bg{background-image:url(../img/bg/friends-bg.webp)}.sh-friends .l-fg{background-image:url(../img/bg/friends-fg.webp);transform-origin:50% 100%}
+.sh-hands .l-bg{background-image:url(../img/bg/hands-bg.webp);transform:scale(calc(1.08 + var(--q,0) * .1)) rotate(calc(var(--q,0) * 6deg))}
+.sh-hands .l-fg{background-image:url(../img/bg/hands-fg.webp)}
+.sh-towers{background:#123c9c}
+.tw{inset:auto;left:50%;top:0;width:max(100%,calc((100svh - var(--hdr)) * .86));aspect-ratio:1400/2275;background:center top/100% auto no-repeat}
+.tw-bg{background-image:url(../img/bg/towers-bg.webp);transform:translate3d(-50%,calc(var(--q,0) * -.7 * (100% - 100svh + var(--hdr))),0)}
+.tw-fg{background-image:url(../img/bg/towers-fg.webp);transform:translate3d(-50%,calc(var(--q,0) * -1 * (100% - 100svh + var(--hdr))),0)}
+.petals{inset:0;pointer-events:none}
+.petals i{position:absolute;top:-6%;width:calc(18px * var(--s));height:calc(12px * var(--s));border-radius:70% 0 70% 0;background:#ffc2d6;box-shadow:inset -2px -2px 0 #f590b5;animation:petal var(--d) linear var(--dl) infinite}
+@keyframes petal{0%{transform:translate3d(0,0,0) rotate(0)}100%{transform:translate3d(-22vw,112vh,0) rotate(540deg)}}
+.lite .petals{display:none}
+.st1,.st2,.st3,.st4{text-shadow:none}
+.st.night .st-s{text-shadow:0 2px 10px rgba(0,0,0,.45)}
+.st2,.st3,.st4{justify-content:flex-start}
+.sh-friends .lay{background-position:center bottom}
+.st.night:not(.st6)::before{content:"";position:absolute;left:50%;top:0;width:min(1100px,140vw);height:60%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(8,8,30,.55),rgba(8,8,30,0))}
+@media (min-aspect-ratio:1/1){.sh-hands .lay{background-position:center 18%}.sh-desk .lay{background-position:center 70%}}

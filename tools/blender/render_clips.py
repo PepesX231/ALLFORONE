@@ -26,11 +26,14 @@ sc.cycles.use_adaptive_sampling = True
 sc.render.fps = FPS
 sc.frame_start, sc.frame_end = 1, FPS * SECONDS
 W, H = (960, 540) if ORIENT == 'w' else (540, 960)
+RS = float(os.environ.get('RES', '1')); W, H = int(W * RS), int(H * RS)
+LAYER = os.environ.get('LAYER', '')
 sc.render.resolution_x, sc.render.resolution_y = W, H
 sc.render.film_transparent = False
 sc.view_settings.view_transform = 'Standard'
 sc.view_settings.look = 'None'
 sc.render.image_settings.file_format = 'PNG'
+sc.render.image_settings.color_mode = 'RGBA'
 # anime ink lines
 sc.render.use_freestyle = True
 sc.render.line_thickness_mode = 'ABSOLUTE'
@@ -94,6 +97,11 @@ def flat_sky(top, bottom, strength=1.0):
     ramp.color_ramp.elements[1].position = .55; ramp.color_ramp.elements[1].color = (*top, 1)
     nt.links.new(tc.outputs['Generated'], sep.inputs[0]); nt.links.new(sep.outputs['Z'], ramp.inputs['Fac'])
     nt.links.new(ramp.outputs['Color'], bg.inputs['Color']); bg.inputs['Strength'].default_value = strength
+    if os.environ.get('LAYER') in ('mid', 'front'):          # camera sees pure green (keyed out later), lighting stays normal
+        lp = nt.nodes.new('ShaderNodeLightPath'); gb = nt.nodes.new('ShaderNodeBackground'); gb.inputs['Color'].default_value = (0, 1, 0, 1)
+        mx = nt.nodes.new('ShaderNodeMixShader'); out = nt.nodes['World Output']
+        nt.links.new(lp.outputs['Is Camera Ray'], mx.inputs[0]); nt.links.new(bg.outputs[0], mx.inputs[1]); nt.links.new(gb.outputs[0], mx.inputs[2])
+        nt.links.new(mx.outputs[0], out.inputs['Surface'])
     return ramp, bg
 
 def sun(elev, rot, energy=3.5, color=(1, .96, .9), angle=2):
@@ -319,7 +327,7 @@ if CLIP == 'towers':
         tree(x, y, s, pinks, trunk)
     cm = mat('cloud', (1, 1, 1), .9, emit=(1, 1, 1), estr=.45)
     for x, y, z, s in ((-60, 90, 70, 9), (40, 110, 95, 11), (80, 60, 55, 7), (-20, 140, 120, 12), (-90, 70, 40, 8), (-38, 25, 118, 7), (46, 35, 135, 8), (-70, 40, 160, 9), (60, 10, 105, 6), (-45, 5, 210, 14), (40, 20, 240, 16), (-5, -15, 280, 18), (75, 0, 200, 13), (-85, 25, 250, 15), (15, 40, 190, 11)):
-        cloud((x, y, z), s, cm)
+        if not os.environ.get('NOCLOUD'): cloud((x, y, z), s, cm)
     if MODE == 'idle':
         for o in CLOUDS:
             x0 = o.location.x; o.location.x = x0 - 16; o.keyframe_insert('location', frame=1)
@@ -526,14 +534,18 @@ elif CLIP == 'team':
     star_mascot((0, 9, 4.2), 4.2)
     # sunflowers: one master + linked duplicates
     stem = M('#3f8f3a', .3); pet = M('#ffc81f', .45); ctr = M('#6b3f1f', .3)
+    GROUPS = {'far': [], 'mid': [], 'front': []}
     def flower(x, y, hgt, rz):
-        cyl(.05, hgt, (x, y, hgt / 2), stem, v=6)
-        hd = cyl(.34, .08, (x, y, hgt), pet, rot=(1.35, 0, rz), v=14)
-        cc = cyl(.17, .1, (x, y - .03, hgt), ctr, rot=(1.35, 0, rz), v=12)
-    for i in range(60):
-        flower(rnd.uniform(-11, 11), rnd.uniform(2.2, 7), rnd.uniform(1.6, 2.6), rnd.uniform(-.3, .3))
-    for i in range(34):
-        flower(rnd.uniform(-9, 9), rnd.uniform(-3.4, -2.2), rnd.uniform(.5, .9), rnd.uniform(-.3, .3))
+        g = 'front' if y < 0 else ('mid' if y < 4.4 else 'far')
+        GROUPS[g].append(cyl(.05, hgt, (x, y, hgt / 2), stem, v=6))
+        GROUPS[g].append(cyl(.34, .08, (x, y, hgt), pet, rot=(1.35, 0, rz), v=14))
+        GROUPS[g].append(cyl(.17, .1, (x, y - .03, hgt), ctr, rot=(1.35, 0, rz), v=12))
+    for i in range(150):
+        flower(rnd.uniform(-16, 16), rnd.uniform(4.4, 11), rnd.uniform(1.6, 2.8), rnd.uniform(-.3, .3))
+    for i in range(70):
+        flower(rnd.uniform(-12, 12), rnd.uniform(2.0, 4.3), rnd.uniform(1.3, 2.1), rnd.uniform(-.3, .3))
+    for i in range(46):
+        flower(rnd.uniform(-10, 10), rnd.uniform(-3.6, -2.2), rnd.uniform(.45, 1.0), rnd.uniform(-.3, .3))
     cast = [
         dict(skin='#e8b894', top='#f4f4f4', bottom='#2b2f45', hair='#f0c14b', hair_style='spiky', arms=('hip', 'hip'), tie='#d62f3a', h=1.12, big=1.15),
         dict(skin='#f6d3bc', top='#9aa0b8', bottom='#1d2a3e', hair='#8f8ff0', hair_style='long', arms=('peace', 'peace'), tie='#d62f3a', h=.98),
@@ -549,6 +561,14 @@ elif CLIP == 'team':
     ys = [0, .35, .35, .8, .8, 1.2, 1.2, 1.6, 1.6]
     for c_, x, y in zip(cast, xs, ys):
         hh = c_.pop('h'); human(x, y, hh * 1.7, rotz=-x * .03, **c_)
+    if LAYER:
+        keep = set(GROUPS['front']) if LAYER == 'front' else set(GROUPS['mid']) if LAYER == 'mid' else None
+        drop = set(GROUPS['front'] + GROUPS['mid']) if LAYER == 'far' else None
+        for o in list(sc.objects):
+            if o.type in ('CAMERA', 'LIGHT'): continue
+            if keep is not None and o not in keep: o.hide_render = True
+            if drop is not None and o in drop: o.hide_render = True
+        if LAYER in ('front', 'mid'): sc.view_settings.view_transform = 'Standard'
     c = camera((0, -10, 1.5), (0, 2, 2.3), 30)
     key_cam(c, [(1, (0, -11.5, 1.3), (0, 2, 2.4)), (F, (0, -9.2, 1.6), (0, 2, 2.25))])
 
@@ -617,7 +637,7 @@ try:
         try: gl.inputs[nm].default_value = v
         except Exception: pass
     ng.links.new(rl.outputs['Image'], gl.inputs['Image']); ng.links.new(gl.outputs['Image'], out.inputs[0])
-    sc.compositing_node_group = ng
+    if not os.environ.get('LAYER'): sc.compositing_node_group = ng
     print('bloom ok')
 except Exception as e:
     print('bloom skipped', e)

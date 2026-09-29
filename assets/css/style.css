@@ -752,35 +752,74 @@ html:not(.js) .st .w{opacity:1;transform:none}
 }
 .st-go{white-space:nowrap}@media (max-width:420px){.st-go{font-size:13.5px;padding:11px 18px}}
 
-/* ================= Hamster Hub mascots acting out the story (over the pre-rendered backgrounds) ================= */
-.cast{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.cm{position:absolute;display:block;max-width:none;width:auto;height:auto;opacity:0;transform:translate3d(0,40px,0) scale(.85);
-  transition:opacity .35s ease,transform .7s cubic-bezier(.2,1.3,.35,1);will-change:transform;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}
-.story[data-step="3"] .cm[data-at="3"],.story[data-step="4"] .cm[data-at="4"],.story[data-step="6"] .cm[data-at="6"]{opacity:1;transform:none}
-.cm.t-a{transition-delay:.15s}.cm.t-b{transition-delay:.05s}.cm.t-c{transition-delay:.25s}.cm.p-b{transition-delay:.2s}.cm.p-star{transition-delay:.45s}
-/* idle bob once they've landed */
-.story[data-step="3"] .cm[data-at="3"],.story[data-step="4"] .cm[data-at="4"]{animation:bob 2.8s ease-in-out .9s infinite}
-.cm.t-a{animation-delay:1.2s!important}.cm.t-c{animation-delay:1.6s!important}
-@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -10px}}
-/* 3 · not alone: three friends in the sunflowers */
-.cm.t-a{left:12%;bottom:3%;height:min(38vh,42vw)}
-.cm.t-b{left:50%;bottom:2%;height:min(52vh,50vw);margin-left:calc(min(54vh,52vw) * -.34)}
-.cm.t-c{right:12%;bottom:3%;height:min(38vh,42vw)}
-/* 4 · passing the opportunity: the senior hands the glowing star to the junior */
-.cm.p-a{right:10%;bottom:-4%;height:min(66vh,70vw)}
-.cm.p-b{left:10%;bottom:-2%;height:min(40vh,46vw);scale:-1 1}
-.cm.p-star{left:44%;top:46%;width:min(14vh,18vw);height:min(14vh,18vw);color:#ffd23f;filter:drop-shadow(0 0 18px #ffd23f) drop-shadow(0 0 40px rgba(255,210,63,.8))}
-.story[data-step="4"] .cm.p-star{animation:handoff 2.6s ease-in-out .9s infinite alternate}
-@keyframes handoff{from{translate:4vw 0;rotate:-8deg}to{translate:-6vw -3vh;rotate:10deg}}
-/* 6 · you can be one too: the kick bursts in */
-.cm.k-a{left:0;bottom:-6%;height:min(78vh,52vw);transform:translate3d(-30%,10%,0) scale(.6) rotate(-8deg);transition:opacity .2s ease,transform .6s cubic-bezier(.2,1.5,.35,1)}
-.story[data-step="6"] .cm.k-a{animation:kick-idle 3.2s ease-in-out .8s infinite}
-@keyframes kick-idle{0%,100%{translate:0 0;rotate:0deg}50%{translate:0 -12px;rotate:-1.5deg}}
+
+
+/* ================= story scenes: pre-rendered 3D layers + 2D cast, parallax on scroll ================= */
+.sn{position:absolute;inset:0;overflow:hidden;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s}
+.sn.on{opacity:1;visibility:visible;transition-delay:0s}
+.sn picture,.sn .lay{position:absolute;inset:-6% 0;display:block;width:100%;height:112%;object-fit:cover;max-width:none}
+.sn .pl{will-change:transform}
+.sn video.clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:1;background:transparent;transition:opacity .5s ease}
+.sn-sky video.clip{opacity:0}.sn-sky video.clip.show.ready{opacity:1}
+.sn .clip.held{animation:drift-cam 16s ease-in-out infinite alternate}
+/* first screen: cartoon clouds drift forever (compositor-only) */
+.clouds{position:absolute;inset:-10% 0 0;pointer-events:none}
+.cl{position:absolute;left:0;top:var(--t);width:calc(var(--w) * 1vw);min-width:calc(var(--w) * 5px);max-width:none;height:auto;animation:drift-x var(--d) linear var(--dl) infinite}
+@keyframes drift-x{from{transform:translate3d(-40vw,0,0)}to{transform:translate3d(110vw,0,0)}}
+@media (max-aspect-ratio:1/1){.cl{width:calc(var(--w) * 2.2vw)}}
+/* 3 · not alone — a friend inside the field, two more in front */
+.ham{position:absolute;display:block;height:auto;max-width:none;filter:drop-shadow(0 10px 10px rgba(20,30,60,.28))}
+.sn-team .t-c{left:50%;top:39%;width:min(17vw,24vh);margin-left:calc(min(17vw,24vh) / -2)}
+.sn-team .t-l{left:14%;bottom:6%;width:min(24vw,34vh)}
+.sn-team .t-r{right:14%;bottom:6%;width:min(24vw,34vh)}
+.sn-team.on .ham{animation:bob 2.6s ease-in-out infinite}
+.sn-team .t-l{animation-delay:-.8s!important}.sn-team .t-r{animation-delay:-1.6s!important}
+@keyframes bob{0%,100%{translate:0 0}50%{translate:0 -2.2%}}
 @media (max-aspect-ratio:1/1){
-  .cm.t-b{bottom:22%;height:30vh;margin-left:-10vh;z-index:0}.cm.t-a{left:-3%;bottom:3%;height:21vh;z-index:1}.cm.t-c{right:-1%;bottom:3%;height:23vh;z-index:1}
-  .cm.p-a{right:-8%;bottom:0;height:40vh}.cm.p-b{left:0;bottom:4%;height:20vh}.cm.p-star{left:28%;top:44%;width:10vh;height:10vh}
-  .cm.k-a{left:50%;top:9%;bottom:auto;height:auto;width:96vw;margin-left:-50vw}
-  .st6{padding-bottom:9vh}
+  .sn-team .t-c{top:48%;width:24vw;margin-left:-12vw}
+  .sn-team .t-l{left:-2%;bottom:8%;width:46vw}.sn-team .t-r{right:-2%;bottom:8%;width:46vw}
 }
-.rm .cm{transition:opacity .3s;transform:none!important;animation:none!important}
-.lite .cm{animation:none!important;filter:none}
+/* 4 · pass the opportunity — the star travels hand to hand along a relay */
+.pass-sky{position:absolute;inset:0;background:linear-gradient(180deg,#2c2378 0%,#6a4bd8 30%,#ff8a6a 62%,#ffc86a 86%,#ffe3a0 100%)}
+.pass-rays{position:absolute;left:50%;top:62%;width:220vmax;height:220vmax;margin:-110vmax 0 0 -110vmax;opacity:.22;
+  background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.9) 0deg 5deg,transparent 5deg 15deg);
+  -webkit-mask-image:radial-gradient(closest-side,#000,transparent 70%);mask-image:radial-gradient(closest-side,#000,transparent 70%);animation:spin 90s linear infinite}
+.pass-stars i,.hero-sky+.pass-rays+.pass-stars i{position:absolute;width:calc(6px * var(--s));height:calc(6px * var(--s));border-radius:50%;background:#fff;box-shadow:0 0 8px #fff;animation:twinkle 3s ease-in-out var(--dl) infinite}
+.pass-hills{position:absolute;left:0;right:0;bottom:-4%;width:100%;height:62%}
+.pass-trail{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pass-trail path{stroke:#fff3c2;stroke-width:.45;stroke-dasharray:.6 1.6;stroke-linecap:round;opacity:.75;vector-effect:non-scaling-stroke;stroke-width:4;stroke-dasharray:2 12}
+.sn-pass .r1{left:9%;top:44%;width:min(7vw,10vh)}
+.sn-pass .r2{left:24%;top:52%;width:min(10vw,14vh)}
+.sn-pass .giver{left:40%;bottom:4%;width:min(24vw,40vh)}
+.sn-pass .recv{right:6%;bottom:2%;width:min(26vw,42vh)}
+.pass-star{position:absolute;left:0;top:0;width:min(7vw,10vh);height:min(7vw,10vh);margin:calc(min(7vw,10vh) / -2) 0 0 calc(min(7vw,10vh) / -2);color:#ffd23f;will-change:transform;z-index:3}
+.pass-star svg{width:100%;height:100%;display:block;overflow:visible;filter:drop-shadow(0 0 12px #ffd23f) drop-shadow(0 0 30px rgba(255,210,63,.9))}
+.pass-star::before{content:"";position:absolute;inset:-80%;border-radius:50%;background:radial-gradient(closest-side,rgba(255,230,140,calc(.35 + var(--glow,0) * .5)),transparent)}
+.sn-pass .recv{filter:drop-shadow(0 0 calc(var(--glow,0) * 28px) rgba(255,220,120,.9)) drop-shadow(0 10px 10px rgba(20,30,60,.28))}
+@media (max-aspect-ratio:1/1){
+  .sn-pass .r1{left:6%;top:47%;width:13vw}.sn-pass .r2{left:30%;top:52%;width:17vw}
+  .sn-pass .giver{left:-4%;bottom:5%;width:50vw}.sn-pass .recv{right:-4%;bottom:3%;width:52vw}
+  .pass-star{width:14vw;height:14vw;margin:-7vw 0 0 -7vw}
+}
+/* 6 · you can be one too — the paw reaching out to the viewer; the sky ends in the page's ink */
+.hero-sky{position:absolute;inset:0;background:radial-gradient(60% 50% at 62% 42%,rgba(255,210,120,.55),transparent 70%),linear-gradient(180deg,#3a2d9a 0%,#7a54e0 32%,#ff9a6a 58%,#3b2466 82%,#0a0a0f 100%)}
+.hero-rays{top:42%;left:62%;opacity:.18}
+.sn-hero .hero{left:50%;bottom:4%;width:min(46vw,76vh);margin-left:calc(min(46vw,76vh) * -.36);transform-origin:60% 80%}
+@media (min-aspect-ratio:1/1){.sn-hero .hero{left:38%}}
+@media (max-aspect-ratio:1/1){.sn-hero .hero{left:50%;top:6%;bottom:auto;width:84vw;margin-left:-40vw}}
+.st6 .st-big .hl{color:#ffd23f}
+/* the story's last frame is already ink: no seam into 3 TRACKS */
+.story-pin::after{height:22%;z-index:2}
+.rm .cl,.lite .cl{animation-duration:240s}
+.rm .pass-rays,.lite .pass-rays{animation:none}
+
+.sn-team .t-c{top:27%;width:min(19vw,30vh);margin-left:calc(min(19vw,30vh) / -2)}
+.sn-team .t-l,.sn-team .t-r{bottom:17%;width:min(22vw,33vh)}
+.sn-hero .hero{width:min(38vw,64vh);margin-left:calc(min(38vw,64vh) * -.4);bottom:5%}
+@media (min-aspect-ratio:1/1){.sn-hero .hero{left:36%}.st6{padding-right:6vw}}
+@media (max-aspect-ratio:1/1){
+  .sn-team .t-c{top:36%;width:32vw;margin-left:-16vw}
+  .sn-team .t-l{left:-2%;bottom:15%;width:42vw}.sn-team .t-r{right:-2%;bottom:15%;width:42vw}
+  .sn-hero .hero{top:2%;bottom:auto;width:66vw;margin-left:-30vw}
+  .st6{padding-bottom:5vh}
+}

@@ -76,61 +76,85 @@
   })();
 
 
-  /* ---------- 1b. story hero: pre-rendered (Blender) clips, one per beat of the story ----------
-     Scrolling picks the text step; each step plays its clip segment and holds on the last frame. */
+  /* ---------- 1b. story hero: layered scenes (pre-rendered 3D + 2D cast) driven by scroll ----------
+     Each text step owns a scene. Inside a step, q (0→1) is how far you've scrolled through it:
+     layers marked .pl slide at their own speed (parallax), clips play when their step starts,
+     and in the "pass the opportunity" scene the star travels hand to hand along the relay. */
   (function () {
     var st = document.getElementById('top'); if (!st || !st.classList.contains('story')) return;
-    var steps = $$('.st', st), vids = $$('.clip', st), N = steps.length, cur = -1, ticking = false;
-    var portrait = matchMedia('(max-aspect-ratio: 1/1)').matches, safe = root.classList.contains('safe');
-    // step → [clip index, stop time (s) or null = play to the end]
-    var byName = {}; vids.forEach(function (v, i) { byName[v.dataset.clip] = i; });
-    // step → [clip, stop time (s) or null = play to the end]
-    var PLAN = [['towers-idle', null], ['towers', null], ['desk', null], ['team', null], ['pass', null], ['kmitl', null], ['fist', null]].map(function (p) { return [byName[p[0]], p[1]]; });
-    vids.forEach(function (v) {
-      var n = v.dataset.clip, o = portrait ? 'p' : 'w';
-      v.poster = 'assets/video/' + n + '-' + o + '.jpg';
-      v.dataset.src = 'assets/video/' + n + '-' + o + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm');
-    });
-    function load(v) { if (!safe && !v.src) { v.src = v.dataset.src; v.load(); } }
-    function show(k) {
-      var plan = PLAN[k], v = vids[plan[0]], prev = cur < 0 ? null : PLAN[cur];
-      vids.forEach(function (x, i) { x.classList.toggle('on', i === plan[0]); });
-      load(v); var nx = PLAN[Math.min(k + 1, PLAN.length - 1)][0]; load(vids[nx]);          // preload the next clip
-      if (safe || reduced) return;
-      var sameClip = prev && prev[0] === plan[0];
-      if (!sameClip || k < cur) { try { v.currentTime = k > 0 && sameClip ? 0 : 0; } catch (e) {} }
-      v.dataset.stop = plan[1] == null ? '' : plan[1];
-      var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v.classList.add('held'); });    // blocked autoplay: poster + slow drift
-      vids.forEach(function (x, i) { if (i !== plan[0]) x.pause(); });
+    var steps = $$('.st', st), scenes = $$('.sn', st), N = steps.length, cur = -1, ticking = false;
+    var safe = root.classList.contains('safe'), still = reduced || safe;
+    var portrait = function () { return innerWidth <= innerHeight; };
+    var sceneOf = []; scenes.forEach(function (sn) { sn.dataset.s.split(' ').forEach(function (k) { sceneOf[+k] = sn; }); sn._pl = $$('.pl', sn); });
+    var vids = $$('video.clip', st);
+    function srcFor(v) {
+      return 'assets/video/' + v.dataset.clip + '-' + (portrait() ? 'p' : 'w') + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm');
+    }
+    function load(v) { if (!v) return; if (!v.poster) v.poster = 'assets/video/' + v.dataset.clip + '-' + (portrait() ? 'p' : 'w') + '.jpg'; if (!safe && !v.src) { v.src = srcFor(v); v.load(); } }
+    function play(v) {
+      if (!v || still) return;
+      try { v.currentTime = 0; } catch (e) {}
+      var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v.classList.add('held'); });
     }
     vids.forEach(function (v) {
-      v.addEventListener('timeupdate', function () {
-        var s = parseFloat(v.dataset.stop); if (s && v.currentTime >= s) { v.pause(); v.classList.add('held'); }
-      });
       v.addEventListener('ended', function () { v.classList.add('held'); });
-      v.addEventListener('play', function () { v.classList.remove('held'); });
+      v.addEventListener('playing', function () { v.classList.remove('held'); v.classList.add('ready'); });
+      v.addEventListener('error', function () { v.classList.add('held'); });
     });
+    load(vids[0]);
+    // relay path for the star (measured from the hamsters' paws)
+    var pass = $('.sn-pass', st), star = pass && $('.pass-star', pass), relay = [], trail = pass && $('#trail', pass);
+    var ANCH = { r1: [.5, .1], r2: [.5, .52], giver: [.66, .56], recv: [.2, .36] };
+    function measure() {
+      if (!pass) return;
+      var box = pass.getBoundingClientRect(); relay = [];
+      ['r1', 'r2', 'giver', 'recv'].forEach(function (c) {
+        var el = $('.' + c, pass), r = el.getBoundingClientRect(), a = ANCH[c];
+        relay.push([r.left - box.left + r.width * a[0], r.top - box.top + r.height * a[1]]);
+      });
+      if (trail) trail.setAttribute('d', 'M' + relay.map(function (p) { return (p[0] / box.width * 100).toFixed(2) + ' ' + (p[1] / box.height * 100).toFixed(2); }).join(' L'));
+    }
+    function starAt(q) {
+      if (!relay.length) return;
+      var t = clamp((q - .08) / .72, 0, 1) * (relay.length - 1), i = Math.min(relay.length - 2, Math.floor(t)), f = t - i;
+      var e = f < .5 ? 2 * f * f : 1 - Math.pow(-2 * f + 2, 2) / 2;        // ease each hand-off
+      var a = relay[i], b = relay[i + 1], hop = Math.sin(e * Math.PI) * Math.min(90, Math.abs(b[0] - a[0]) * .35 + 30);
+      star.style.transform = 'translate3d(' + (a[0] + (b[0] - a[0]) * e).toFixed(1) + 'px,' + (a[1] + (b[1] - a[1]) * e - hop).toFixed(1) + 'px,0) rotate(' + (t * 90).toFixed(0) + 'deg) scale(' + (.8 + i * .12 + e * .12).toFixed(3) + ')';
+      pass.style.setProperty('--glow', (t / (relay.length - 1)).toFixed(3));
+    }
+    function parallax(sn, q) {
+      if (still) q = .5;
+      for (var j = 0; j < sn._pl.length; j++) {
+        var el = sn._pl[j], y = +(el.dataset.y || 0), z = +(el.dataset.z || 0);
+        el.style.transform = 'translate3d(0,' + ((.5 - q) * y).toFixed(2) + 'vh,0)' + (z ? ' scale(' + (1 + q * z).toFixed(4) + ')' : '');
+      }
+    }
     function upd() {
       ticking = false;
       var r = st.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
-      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1);
-      var k = Math.min(N - 1, Math.floor(p * N));
+      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, .99999), f = p * N;
+      var k = Math.floor(f), q = f - k, sn = sceneOf[k];
       if (k !== cur) {
-        show(k); cur = k; st.dataset.step = k;
+        var prevScene = cur >= 0 ? sceneOf[cur] : null;
+        scenes.forEach(function (x) { x.classList.toggle('on', x === sn); });
         steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); });
+        st.dataset.step = k;
+        var v = $('video.clip', sn);
+        if (v) { load(v); if (k === 1) v.classList.add('show'); play(v); }
+        if (k === 0) { var tv = $('video.clip', sceneOf[1]); if (tv) { tv.classList.remove('show'); tv.pause(); } }
+        vids.forEach(function (x) { if (x !== v) x.pause(); });
+        var nx = sceneOf[k + 1] && $('video.clip', sceneOf[k + 1]); load(nx);
+        if (sn === pass) measure();
+        cur = k;
       }
+      parallax(sn, q);
+      if (sn === pass) starAt(still ? .9 : q);
     }
-    function retry() {
-      if (cur < 0 || safe || reduced) return;
-      var v = vids[PLAN[cur][0]];
-      if (v.paused && !v.ended && !v.classList.contains('held')) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v.classList.add('held'); }); }
-    }
+    function retry() { var v = cur >= 0 && $('video.clip', sceneOf[cur]); if (v && v.paused && !v.ended && !still) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } }
     ['touchend', 'pointerup', 'keydown'].forEach(function (e) { addEventListener(e, retry, { passive: true }); });
-    vids.forEach(function (v) { v.addEventListener('error', function () { v.classList.add('held'); }); });
     addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
-    addEventListener('resize', upd, { passive: true });
-    // pause everything when the hero is off screen (battery)
-    new IntersectionObserver(function (es) { if (!es[0].isIntersecting) vids.forEach(function (v) { v.pause(); }); else if (cur >= 0) { var v = vids[PLAN[cur][0]]; if (!v.ended && !(parseFloat(v.dataset.stop) && v.currentTime >= parseFloat(v.dataset.stop))) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } } }).observe(st);
+    addEventListener('resize', function () { measure(); upd(); }, { passive: true });
+    new IntersectionObserver(function (es) { if (!es[0].isIntersecting) vids.forEach(function (v) { v.pause(); }); }).observe(st);
     upd();
   })();
 

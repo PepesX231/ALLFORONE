@@ -751,3 +751,4 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .clip.held{animation:drift-cam 16s ease-in-out infinite alternate}
 @keyframes drift-cam{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.06) translate3d(-1.2%,-.8%,0)}}
 .rm .clip.held,.lite .clip.held{animation:none}
+.story-pin::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14%;z-index:0;pointer-events:none;background:linear-gradient(transparent,var(--ink))}

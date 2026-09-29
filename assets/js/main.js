@@ -85,7 +85,8 @@
     var steps = $$('.st', st), scenes = $$('.sn', st), N = steps.length, cur = -1, ticking = false;
     var safe = root.classList.contains('safe'), still = reduced || safe;
     var portrait = function () { return innerWidth <= innerHeight; };
-    var sceneOf = []; scenes.forEach(function (sn) { sn.dataset.s.split(' ').forEach(function (k) { sceneOf[+k] = sn; }); sn._pl = $$('.pl', sn); });
+    var sceneOf = []; scenes.forEach(function (sn) { sn.dataset.s.split(' ').forEach(function (k) { sceneOf[+k] = sn; }); sn._pl = $$('.pl', sn); sn._k0 = +sn.dataset.s.split(' ')[0]; sn._n = sn.dataset.s.split(' ').length; sn._tw = $('.tw', sn); });
+    function twMeasure() { scenes.forEach(function (sn) { if (sn._tw) sn._twr = Math.max(0, sn._tw.offsetHeight - sn.offsetHeight); }); }
     var vids = $$('video.clip', st);
     function srcFor(v) {
       return 'assets/video/' + v.dataset.clip + '-' + (portrait() ? 'p' : 'w') + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm');
@@ -122,7 +123,12 @@
       star.style.transform = 'translate3d(' + (a[0] + (b[0] - a[0]) * e).toFixed(1) + 'px,' + (a[1] + (b[1] - a[1]) * e - hop).toFixed(1) + 'px,0) rotate(' + (t * 90).toFixed(0) + 'deg) scale(' + (.8 + i * .12 + e * .12).toFixed(3) + ')';
       pass.style.setProperty('--glow', (t / (relay.length - 1)).toFixed(3));
     }
-    function parallax(sn, q) {
+    function parallax(sn, q, k) {
+      if (sn._tw) {                                   // keyed towers pan down across the scene's steps (clouds stay behind)
+        if (sn._twr == null) twMeasure();
+        var g = still ? .5 : (k - sn._k0 + q) / sn._n, e = g < .5 ? 2 * g * g : 1 - Math.pow(-2 * g + 2, 2) / 2;
+        sn._tw.style.transform = 'translate3d(0,' + (-e * sn._twr).toFixed(1) + 'px,0)';
+      }
       if (still) q = .5;
       for (var j = 0; j < sn._pl.length; j++) {
         var el = sn._pl[j], y = +(el.dataset.y || 0), z = +(el.dataset.z || 0);
@@ -147,13 +153,14 @@
         if (sn === pass) measure();
         cur = k;
       }
-      parallax(sn, q);
+      parallax(sn, q, k);
       if (sn === pass) starAt(still ? .9 : q);
     }
     function retry() { var v = cur >= 0 && $('video.clip', sceneOf[cur]); if (v && v.paused && !v.ended && !still) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } }
     ['touchend', 'pointerup', 'keydown'].forEach(function (e) { addEventListener(e, retry, { passive: true }); });
     addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
-    addEventListener('resize', function () { measure(); upd(); }, { passive: true });
+    addEventListener('resize', function () { measure(); twMeasure(); upd(); }, { passive: true });
+    scenes.forEach(function (sn) { if (sn._tw) sn._tw.addEventListener('load', function () { twMeasure(); cur = -1; upd(); }); });
     new IntersectionObserver(function (es) { if (!es[0].isIntersecting) vids.forEach(function (v) { v.pause(); }); }).observe(st);
     upd();
   })();

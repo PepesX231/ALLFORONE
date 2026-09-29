@@ -867,3 +867,54 @@ html:not(.js) .st .w{opacity:1;transform:none}
 @keyframes pk-tw{0%,100%{scale:.7;rotate:0deg}50%{scale:1.15;rotate:45deg}}
 @media (prefers-reduced-motion:reduce){.peek{--t:1!important}.pk-spark{animation:none}}
 .sn-hero img.hero{min-height:0;height:auto;padding:0;overflow:visible;display:block}
+
+/* ---------- 1c. story v3: sky → clouds → keyed towers (pan), character poses per step, flower-garden finale ---------- */
+.sky-grad{position:absolute;inset:0;background:radial-gradient(95% 75% at 50% 12%,#1a4fc4 0%,#2f6fe0 32%,#4f97ec 62%,#a9d6ff 88%,#d7ecff 100%)}
+.sn-sky .clouds{inset:-6% 0 0}
+.tw{position:absolute;left:50%;top:0;width:max(100vw,calc(135svh * 1.13));height:auto;max-width:none;margin-left:calc(max(100vw,calc(135svh * 1.13)) / -2);will-change:transform;pointer-events:none}
+@media (max-aspect-ratio:1/1){.tw{width:max(100vw,calc(135svh * .5));margin-left:calc(max(100vw,calc(135svh * .5)) / -2)}}
+.cast{position:absolute;display:block;height:auto;max-width:none;pointer-events:none;opacity:0;transform-origin:50% 100%;
+  translate:0 26%;scale:.82;filter:drop-shadow(0 12px 14px rgba(10,20,50,.28));
+  transition:opacity .35s ease,translate .8s cubic-bezier(.2,1.35,.4,1),scale .8s cubic-bezier(.2,1.35,.4,1)}
+.story[data-step="0"] .cast[data-at="0"],.story[data-step="1"] .cast[data-at="1"],.story[data-step="2"] .cast[data-at="2"],
+.story[data-step="3"] .cast[data-at="3"],.story[data-step="4"] .cast[data-at="4"],.story[data-step="5"] .cast[data-at="5"]{opacity:1;translate:0 0;scale:1;animation:wig 3.2s ease-in-out .8s infinite}
+@keyframes wig{0%,100%{rotate:0deg}50%{rotate:-2.2deg}}
+.c-pal2{animation-delay:1.6s!important}.c-pal1{animation-delay:.3s!important}
+.c-wave{left:5%;bottom:3%;width:min(14vw,25vh)}
+.c-jump{right:6%;bottom:5%;width:min(19vw,33vh)}
+.c-study{left:4%;bottom:-1%;width:min(27vw,46vh)}
+.c-group{left:50%;bottom:10%;width:min(44vw,70vh);margin-left:calc(min(44vw,70vh) / -2)}
+.c-grad{right:9%;bottom:4%;width:min(17vw,31vh)}
+/* finale: flower garden, the orange one points at YOU, friends cheer from the path */
+.sn-hero .lay{object-position:50% 70%}
+.c-point{left:27%;bottom:5%;width:min(28vw,54vh);margin-left:calc(min(28vw,54vh) / -2);filter:drop-shadow(0 16px 18px rgba(20,40,20,.3))}
+.c-pal{width:min(9vw,17vh);filter:drop-shadow(0 6px 8px rgba(20,40,20,.25))}
+.c-pal1{left:4%;bottom:30%}.c-pal2{left:43%;bottom:34%;width:min(7.5vw,14vh)}
+.fl-front{position:absolute;left:-3%;bottom:-6%;width:106%;height:auto;max-width:none;pointer-events:none}
+.petals i{position:absolute;top:-6%;left:calc(var(--x) * 1%);width:12px;height:8px;border-radius:60% 0 60% 0;background:#ffb3cf;opacity:.85;animation:petal var(--d) linear var(--dl) infinite}
+.petals i:nth-child(1){--x:8;--d:9s;--dl:-2s}.petals i:nth-child(2){--x:22;--d:12s;--dl:-7s}.petals i:nth-child(3){--x:37;--d:10s;--dl:-4s;background:#fff}
+.petals i:nth-child(4){--x:51;--d:13s;--dl:-9s}.petals i:nth-child(5){--x:64;--d:11s;--dl:-1s;background:#ffe27a}.petals i:nth-child(6){--x:76;--d:9.5s;--dl:-6s}
+.petals i:nth-child(7){--x:88;--d:12.5s;--dl:-3s;background:#fff}.petals i:nth-child(8){--x:95;--d:10.5s;--dl:-8s}
+@keyframes petal{to{transform:translate3d(-18vw,112vh,0) rotate(540deg)}}
+.story[data-step="5"] .scene-shade{background:linear-gradient(90deg,rgba(10,24,60,0) 38%,rgba(10,24,60,.32) 100%)}
+.st5 .st-big .hl{color:#ffe27a;text-shadow:0 4px 0 #c2410c,0 16px 34px rgba(0,0,0,.35)}
+@media (max-aspect-ratio:1/1){
+  .c-wave{left:2%;bottom:1%;width:min(30vw,20vh)}
+  .c-jump{right:1%;bottom:2%;width:min(42vw,28vh)}
+  .c-study{left:50%;bottom:-1%;width:min(66vw,40vh);margin-left:calc(min(66vw,40vh) / -2)}
+  .c-group{bottom:14%;width:min(94vw,56vh);margin-left:calc(min(94vw,56vh) / -2)}
+  .c-grad{right:3%;bottom:2%;width:min(40vw,28vh)}
+  .c-point{left:50%;top:10%;bottom:auto;width:min(60vw,36vh);margin-left:calc(min(60vw,36vh) / -2)}
+  .c-pal{width:min(22vw,14vh)}.c-pal1{left:1%;top:27%;bottom:auto}.c-pal2{left:auto;right:1%;top:28%;bottom:auto;width:min(21vw,13vh)}
+  .fl-front{bottom:-2%;width:170%;left:-35%}
+  .story[data-step="5"] .scene-shade{background:linear-gradient(180deg,rgba(10,24,60,0) 42%,rgba(10,24,60,.55) 100%)}
+}
+.rm .cast,.lite .cast{animation:none!important}.rm .petals,.lite .petals{display:none}
+/* tracks peek: the gray one pops up in the middle */
+.pk-c{left:50%;height:clamp(110px,21vw,220px);margin-left:calc(clamp(110px,21vw,220px) * -.39);bottom:clamp(76px,14vw,160px);z-index:1;
+  transform:translate3d(0,calc((1 - min(1,var(--t)*1.3))*140%),0)}
+.c-group{bottom:15%}
+.c-point{left:30%}
+.c-pal1{left:1%;bottom:26%}.c-pal2{left:9%;bottom:47%;width:min(6vw,11vh)}
+@media (max-aspect-ratio:1/1){.c-group{bottom:22%}.c-point{left:50%}.c-pal1{left:1%}.c-pal2{left:auto;width:min(21vw,13vh)}}
+@media (min-aspect-ratio:1/1){.fl-front{bottom:-19vh}.c-point{bottom:11%}.c-pal1{bottom:30%}}

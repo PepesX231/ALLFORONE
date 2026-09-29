@@ -199,52 +199,40 @@
     if (!document.hidden) { tick(); cdTimer = setInterval(tick, 1000); }
   });
 
-  /* ---------- 3. timeline road: status per stop, draw the road up to "now" ---------- */
+  /* ---------- 3. timeline: vertical road; scroll fills it and walks the hamster down; stops pop in ---------- */
   (function () {
-    var road = $('#road'), stops = $$('.stop', road), now = new Date(), cur = -1, nextSet = false;
-    stops.forEach(function (li, i) {
-      var st = new Date(li.dataset.start + 'T00:00:00+07:00'), en = new Date(li.dataset.end + 'T23:59:59+07:00');
-      var bd = $('.bd', li);
-      if (now > en) { li.classList.add('done'); cur = i; }
-      else if (now >= st) { li.classList.add('now'); bd.textContent = 'ตอนนี้'; cur = i; }
+    var road = $('#road'); if (!road) return;
+    var stops = $$('.stop', road), line = $('.tl-line', road), fill = $('.tl-fill', road), walker = $('.tl-walker', road);
+    var now = new Date(), nextSet = false;
+    stops.forEach(function (li) {
+      var st = new Date(li.dataset.start + 'T00:00:00+07:00'), en = new Date(li.dataset.end + 'T23:59:59+07:00'), bd = $('.bd', li);
+      if (now > en) li.classList.add('done');
+      else if (now >= st) { li.classList.add('now'); bd.textContent = 'ตอนนี้'; }
       else if (!nextSet) { li.classList.add('next'); bd.textContent = 'ถัดไป'; nextSet = true; }
     });
-    // stops sit at 0, 1/3, 2/3, 1 of the road; draw a little past the current one
-    var frac = cur < 0 ? 0 : Math.min(1, (cur + (stops[cur].classList.contains('now') ? .35 : 1)) / (stops.length - 1));
-    // the road SVG stretches (preserveAspectRatio="none", non-scaling stroke), so dashes are in screen px:
-    // measure the on-screen length of the visible path and draw that fraction of it
-    function screenLen(p) {
-      var m = p.getScreenCTM(); if (!m) return 0;
-      var L = p.getTotalLength(), n = 80, len = 0, prev = null;
-      for (var k = 0; k <= n; k++) {
-        var q = p.getPointAtLength(L * k / n), x = m.a * q.x + m.c * q.y, y = m.b * q.x + m.d * q.y;
-        if (prev) len += Math.hypot(x - prev[0], y - prev[1]);
-        prev = [x, y];
-      }
-      return len;
-    }
-    road.style.setProperty('--fill', frac.toFixed(3));
-    var shown = false;
-    function layout(animate) {
-      $$('.prog', road).forEach(function (p) {
-        if (!p.getBoundingClientRect().width) return;            // hidden layout (mobile vs desktop path)
-        var len = Math.ceil(screenLen(p)) + 2;
-        p.style.transition = animate ? '' : 'none';
-        p.style.strokeDasharray = len + ' ' + len;
-        p.style.strokeDashoffset = String(shown && animate ? len * (1 - frac) : (shown ? len * (1 - frac) : len));
-        p.style.opacity = '1';
-      });
-    }
-    layout(false);
     var io = new IntersectionObserver(function (es) {
-      if (!es[0].isIntersecting) return;
-      io.disconnect();
-      road.classList.add('in');
-      raf(function () { shown = true; layout(true); });
-    }, { threshold: .2 });
-    var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { layout(false); }, 150); }, { passive: true });
-    io.observe(road);
-    new IntersectionObserver(function (es) { road.classList.toggle('paused', !es[0].isIntersecting); }).observe(road);
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -12% 0px', threshold: .2 });
+    stops.forEach(function (li) { io.observe(li); });
+    var H = 0, dots = [], active = false, ticking = false, last = -1, idle;
+    function measure() {
+      H = line.offsetHeight; var top = line.offsetTop;
+      dots = stops.map(function (li) { var d = $('.tl-dot', li); return li.offsetTop + d.offsetTop - top; });
+    }
+    function upd() {
+      ticking = false; if (!active) return;
+      var r = line.getBoundingClientRect(), p = clamp((innerHeight * .58 - r.top) / Math.max(1, r.height), 0, 1);
+      if (reduced) p = 1;
+      if (Math.abs(p - last) < .0005) return; last = p;
+      fill.style.transform = 'scaleY(' + p.toFixed(4) + ')';
+      walker.style.transform = 'translate3d(0,' + (p * H).toFixed(1) + 'px,0)';
+      stops.forEach(function (li, i) { li.classList.toggle('passed', p * H >= dots[i] - 4); });
+      walker.classList.add('go'); clearTimeout(idle); idle = setTimeout(function () { walker.classList.remove('go'); }, 180);
+    }
+    new IntersectionObserver(function (es) { active = es[0].isIntersecting; if (active) { measure(); last = -1; upd(); } }).observe(road);
+    addEventListener('scroll', function () { if (active && !ticking) { ticking = true; raf(upd); } }, { passive: true });
+    addEventListener('resize', function () { measure(); last = -1; upd(); }, { passive: true });
+    if (reduced) stops.forEach(function (li) { li.classList.add('in'); });
   })();
 
   /* ---------- 4a. header swap + scroll-spy ---------- */

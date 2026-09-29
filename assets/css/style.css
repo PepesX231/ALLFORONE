@@ -982,3 +982,59 @@ html:not(.js) .st .w{opacity:1;transform:none}
   .pk-c{height:clamp(90px,15vh,190px);margin-left:calc(clamp(90px,15vh,190px) * -.39);bottom:clamp(52px,9.5vh,130px)}
   .pk-glow{width:min(80vw,calc(30vh * 2.4))}
 }
+
+/* ================= story v4: no pinning — the page really scrolls DOWN through the world =================
+   Each beat is a real screen (the sky beat is two, the camera slides down the towers). Layers drift at their
+   own speed (data-f: >0 lags behind = far away, <0 runs ahead = close) so it reads as a camera moving down. */
+.js .story,.story{height:auto}
+.beat{--S:calc(100svh - var(--hdr));position:relative;height:calc(100vh - var(--hdr));height:var(--S);min-height:540px;overflow:hidden;isolation:isolate;background:var(--ink);contain:layout paint}
+.bt-sky{height:calc((100vh - var(--hdr)) * 2);height:calc(var(--S) * 2);min-height:1080px}
+.ly{position:absolute;left:0;right:0;top:-32%;bottom:-32%;will-change:transform}
+.ly picture,.ly .lay,.ly video.clip{position:absolute;inset:0;display:block;width:100%;height:100%;max-width:none;object-fit:cover}
+.ly video.clip{opacity:1;background:transparent}
+.bt-sky .sky-grad,.bt-sky .ly-cl{top:-40%;bottom:-40%}
+.bt-sky .ly-cl .clouds{position:absolute;inset:0}
+.bt-sky .ly-cl .cl{top:calc(var(--t) * .55 + 34%)}
+.ly-tw{top:-10%;bottom:-6%}
+.ly-tw .tw{position:absolute;left:50%;bottom:0;top:auto;height:100%;width:auto;min-width:100%;margin:0;max-width:none;translate:-50% 0;object-fit:cover}
+.beat .st{inset:auto;top:0;left:0;right:0;height:var(--S);min-height:540px;visibility:visible;z-index:5;will-change:transform}
+.beat .st1{top:var(--S)}
+.beat .st.past .w{opacity:1;transform:none}
+.beat+.beat::before,.beat::after{content:"";position:absolute;left:0;right:0;z-index:4;height:18%;pointer-events:none}
+.beat+.beat::before{top:0;background:linear-gradient(var(--ink),rgba(11,11,16,0))}
+.beat::after{bottom:0;background:linear-gradient(rgba(11,11,16,0),var(--ink))}
+.bt-sky::after{height:9%}
+.beat .cast{z-index:3}
+.cast.on{opacity:1;translate:0 0;scale:1;animation:wig 3.2s ease-in-out .8s infinite}
+.bt-sky .c-wave{bottom:calc(50% + 4%)}
+.bt-sky .c-jump{bottom:6%}
+.bt-desk .c-study{bottom:4%}
+.bt-meadow .fl-front{bottom:-8vh}
+.bt-dawn .ly-bg{top:-45%;bottom:-6%}
+.bt-dawn .ly-bg .lay{top:0;height:100%;object-position:50% 100%}
+.bt-dawn .dawn-sun,.bt-dawn .dawn-rays{left:64%;top:79%}
+.bt-dawn .motes{position:absolute;inset:0;z-index:2}
+.bt-dawn .dawn-hill{z-index:2}
+@media (max-aspect-ratio:1/1){
+  .bt-sky{height:calc((100vh - var(--hdr)) * 1.8);height:calc(var(--S) * 1.8)}
+  .bt-sky .c-wave{bottom:calc(55.5% + 2%)}
+  .bt-dawn .dawn-sun,.bt-dawn .dawn-rays{left:54%;top:83%}
+  .fl-mid{bottom:18%}
+}
+/* the old pinned-scene machinery is gone */
+.story-pin,.scene-shade{display:none}
+.beat .st1{top:calc(100% - var(--S))}
+.bt-sky .c-wave,.bt-sky .c-wave{bottom:calc(100% - var(--S) + 3%)}
+/* timeline v2.1: phones — the character stands on its pedestal (no icon + character pile-up), slimmer rail */
+.s1 .tl-ham{width:calc(var(--w) * .8)}
+@media (max-width:760px){
+  .tl-line{left:20px}
+  .tl-walker{left:20px;width:40px;margin:-54px 0 0 -20px}
+  .stop,.stop.l,.stop.r{padding:18px 0 0 40px;column-gap:14px}
+  .tl-dot{left:20px;top:calc(18px + var(--w) * .55);width:14px;height:14px;margin:-7px}
+  .stop .art{visibility:hidden}
+  .isle{height:calc(var(--w) * .72)}
+  .stop.r .tl-ham,.stop.l .tl-ham,.s1 .tl-ham,.stop.r.s1 .tl-ham{left:50%;right:auto;bottom:20%;width:calc(var(--w) * .92);margin-left:calc(var(--w) * -.46)}
+}
+/* shadows/glow are baked into the cast images: CSS filters on moving images were the #1 scroll cost on phones */
+.cast,.tl-ham,.tl-walker,.pkh,.sn-dawn .c-point,.sn-dawn .c-pal,.bt-dawn .c-point{filter:none!important}

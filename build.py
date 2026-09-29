@@ -17,8 +17,8 @@ def data_uri(path):
 def css_inline(path):
     css = read(path)
     return re.sub(r'url\(\.\./img/([^)]+)\)', lambda m: 'url(' + data_uri('assets/img/' + m.group(1)) + ')', css)
-html = re.sub(r'<link rel="stylesheet" href="(assets/[^"]+\.css)">', lambda m: '<style>\n' + css_inline(m.group(1)) + '\n</style>', html)
-html = re.sub(r'<script src="(assets/[^"]+\.js)" defer></script>', '', html)          # moved to end of body
+html = re.sub(r'<link rel="stylesheet" href="(assets/[^"?]+\.css)(?:\?v=\w+)?">', lambda m: '<style>\n' + css_inline(m.group(1)) + '\n</style>', html)
+html = re.sub(r'<script src="(assets/[^"?]+\.js)(?:\?v=\w+)?" defer></script>', '', html)          # moved to end of body
 scripts = re.findall(r'assets/js/[\w.-]+\.js', read('index.html'))
 body_js = ''.join('<script>\n' + read(s) + '\n</script>\n' for s in scripts)
 html = html.replace('</body>', body_js + '</body>')

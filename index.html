@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/style.css?v=34f00fe0">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -65,9 +65,9 @@
   "image": ["https://media.mediaquest.uk/uploads/1790485996187-ChatGPT_Image_Sep_27_2026_12_13_07_PM.webp"]
 }
 </script>
-<script src="assets/js/data.js" defer></script>
-<script src="assets/js/main.js" defer></script>
-<script src="assets/js/tracks3d.js" defer></script>
+<script src="assets/js/data.js?v=ae8c617b" defer></script>
+<script src="assets/js/main.js?v=e2e122ec" defer></script>
+<script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
 <div class="sky" id="sky" aria-hidden="true"></div>
@@ -251,36 +251,14 @@
 <main id="main">
 <!-- ============ HERO ============ -->
 <section class="story" id="top" aria-labelledby="heroTitle">
-  <div class="story-pin">
-    <div class="scene" aria-hidden="true">
-      <div class="sn sn-sky on" data-s="0 1">
-        <div class="sky-grad"></div>
-        <div class="clouds"><img class="cl" src="assets/img/cast/cloud-a.svg" alt="" style="--t:8%;--w:26;--d:95s;--dl:-59.2s;opacity:1"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:22%;--w:15;--d:70s;--dl:-51.9s;opacity:0.95"><img class="cl" src="assets/img/cast/cloud-c.svg" alt="" style="--t:36%;--w:32;--d:120s;--dl:-95.4s;opacity:1"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:52%;--w:12;--d:60s;--dl:-56.5s;opacity:0.9"><img class="cl" src="assets/img/cast/cloud-a.svg" alt="" style="--t:64%;--w:20;--d:85s;--dl:-62.9s;opacity:1"><img class="cl" src="assets/img/cast/cloud-c.svg" alt="" style="--t:16%;--w:22;--d:140s;--dl:-129.1s;opacity:0.85"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:44%;--w:17;--d:78s;--dl:-2.3s;opacity:0.95"></div>
-        <picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/towers-p.webp"><img class="tw" src="assets/img/scene/towers-w.webp" alt="" decoding="async"></picture>
-        <img class="cast c-wave" data-at="0" src="assets/img/cast/p-wave.webp" alt="" width="517" height="662" decoding="async">
-        <img class="cast c-jump" data-at="1" src="assets/img/cast/p-jump.webp" alt="" width="471" height="674" decoding="async">
-      </div>
-      <div class="sn" data-s="2"><video class="clip" data-clip="desk" muted playsinline preload="none"></video><img class="cast c-study" data-at="2" src="assets/img/cast/p-study.webp" alt="" width="591" height="624" loading="lazy" decoding="async"></div>
-      <div class="sn sn-team sn-meadow" data-s="3">
-        <picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/meadow-p.webp"><img class="lay pl" data-y="3" data-z=".05" src="assets/img/scene/meadow-w.webp" alt="" loading="lazy" decoding="async"></picture>
-        <div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <img class="fl-mid pl" data-y="8" src="assets/img/cast/flowers-b.webp" alt="" loading="lazy" decoding="async">
-        <img class="cast c-group pl" data-at="3" data-y="12" src="assets/img/cast/p-group.webp" alt="" width="756" height="495" loading="lazy" decoding="async">
-        <img class="fl-front pl" data-y="20" src="assets/img/cast/flowers.webp" alt="" loading="lazy" decoding="async">
-      </div>
-      <div class="sn" data-s="4"><video class="clip" data-clip="kmitl" muted playsinline preload="none"></video><img class="cast c-grad" data-at="4" src="assets/img/cast/p-grad.webp" alt="" width="456" height="669" loading="lazy" decoding="async"></div>
-      <div class="sn sn-hero sn-dawn" data-s="5">
-        <picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/dawn-p.webp"><img class="lay pl" data-y="3" data-z=".06" src="assets/img/scene/dawn-w.webp" alt="" loading="lazy" decoding="async"></picture>
-        <div class="dawn-rays" aria-hidden="true"></div><div class="dawn-sun" aria-hidden="true"></div>
-        <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
-        <svg class="dawn-hill pl" data-y="6" viewBox="0 0 1600 400" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="dh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a52"/><stop offset="1" stop-color="#0a0a0f"/></linearGradient></defs><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190 L1600 400 L0 400Z" fill="url(#dh)"/><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190" fill="none" stroke="#ffd98a" stroke-width="3" opacity=".75"/></svg>
-        <img class="cast c-pal c-pal1 pl" data-at="5" data-y="7" src="assets/img/cast/p-cheer.webp" alt="" width="456" height="669" loading="lazy" decoding="async">
-        <img class="cast c-pal c-pal2 pl" data-at="5" data-y="7" src="assets/img/cast/p-wave.webp" alt="" width="517" height="662" loading="lazy" decoding="async">
-        <img class="cast c-point pl" data-at="5" data-y="9" data-z=".05" src="assets/img/cast/p-point.webp" alt="" width="521" height="709" loading="lazy" decoding="async">
-      </div>
-      <div class="scene-shade"></div>
-    </div>
-    <div class="st st0 on">
+  <!-- one continuous camera move DOWN: each beat is a real screen you scroll through; layers drift at their own speed (data-f) -->
+  <div class="beat bt-sky" data-k="0">
+    <div class="ly sky-grad" data-f=".5"></div>
+    <div class="ly ly-cl" data-f=".42"><div class="clouds"><img class="cl" src="assets/img/cast/cloud-a.svg" alt="" style="--t:8%;--w:26;--d:95s;--dl:-59.2s;opacity:1"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:22%;--w:15;--d:70s;--dl:-51.9s;opacity:0.95"><img class="cl" src="assets/img/cast/cloud-c.svg" alt="" style="--t:36%;--w:32;--d:120s;--dl:-95.4s;opacity:1"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:52%;--w:12;--d:60s;--dl:-56.5s;opacity:0.9"><img class="cl" src="assets/img/cast/cloud-a.svg" alt="" style="--t:64%;--w:20;--d:85s;--dl:-62.9s;opacity:1"><img class="cl" src="assets/img/cast/cloud-c.svg" alt="" style="--t:16%;--w:22;--d:140s;--dl:-129.1s;opacity:0.85"><img class="cl" src="assets/img/cast/cloud-b.svg" alt="" style="--t:44%;--w:17;--d:78s;--dl:-2.3s;opacity:0.95"></div></div>
+    <div class="ly ly-tw" data-f=".14"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/towers-p.webp"><img class="tw" src="assets/img/scene/towers-w.webp" alt="" decoding="async" fetchpriority="high"></picture></div>
+    <img class="cast c-wave" data-f="-.06" src="assets/img/cast/p-wave.webp" alt="" width="517" height="662" decoding="async">
+    <img class="cast c-jump" data-f="-.06" src="assets/img/cast/p-jump.webp" alt="" width="471" height="674" loading="lazy" decoding="async">
+    <div class="st st0 on" data-f=".1">
       <div class="orgs w" style="--i:0">
         <span class="org-hh"><img src="assets/img/mascot-sm.webp" alt="Hamster Hub" width="128" height="128"><span>HAMSTER HUB</span></span>
         <span class="sep" aria-hidden="true"></span>
@@ -293,25 +271,48 @@
       <p class="st-tag w" style="--i:2" id="heroTitle">ขอให้ได้มหาลัยซักที่</p>
       <p class="st-cue w" style="--i:4">เลื่อนลงเพื่อเริ่มเรื่อง <svg class="ic"><use href="#i-arrow"/></svg></p>
     </div>
-    <div class="st st1 night">
+    <div class="st st1 night" data-f=".1">
       <span class="w st-s" style="--i:0">การแข่งขันเทคโนโลยี</span>
       <p class="st-big"><span class="w " style="--i:1">รายการแข่ง</span><span class="w hl" style="--i:2">สุดมัน</span><br><span class="w hl2" style="--i:3">แห่งปี</span></p>
       <span class="w st-s" style="--i:4">สำหรับนักเรียนมัธยมทั่วประเทศ</span>
     </div>
-    <div class="st st2 night">
+  </div>
+  <div class="beat bt-desk" data-k="2">
+    <div class="ly ly-bg" data-f=".28"><video class="clip" data-clip="desk" muted playsinline preload="none"></video></div>
+    <img class="cast c-study" data-f="-.05" src="assets/img/cast/p-study.webp" alt="" width="591" height="624" loading="lazy" decoding="async">
+    <div class="st st2 night" data-f=".1">
       <span class="w st-s" style="--i:0">ทุกคืนที่นั่งทำจนดึก ทุกไอเดียที่ยังไม่มีใครเห็น</span>
       <p class="st-big"><span class="w" style="--i:1">ทุกความพยายาม</span><br><span class="w hl" style="--i:2">ที่ผ่านมา</span></p>
     </div>
-    <div class="st st3 night">
+  </div>
+  <div class="beat bt-meadow sn-meadow" data-k="3">
+    <div class="ly ly-bg" data-f=".3"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/meadow-p.webp"><img class="lay" src="assets/img/scene/meadow-w.webp" alt="" loading="lazy" decoding="async"></picture></div>
+    <div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <img class="fl-mid" data-f=".12" src="assets/img/cast/flowers-b.webp" alt="" loading="lazy" decoding="async">
+    <img class="cast c-group" data-f=".04" src="assets/img/cast/p-group.webp" alt="" width="756" height="495" loading="lazy" decoding="async">
+    <img class="fl-front" data-f="-.16" src="assets/img/cast/flowers.webp" alt="" loading="lazy" decoding="async">
+    <div class="st st3 night" data-f=".1">
       <span class="w st-s" style="--i:0">มีเพื่อน มีพวกพ้อง ในคอมมูนิตี้เดียวกัน</span>
       <p class="st-big"><span class="w" style="--i:1">ไม่ต้อง</span><span class="w hl" style="--i:2">สู้คนเดียว</span></p>
     </div>
-    <div class="st st4">
+  </div>
+  <div class="beat bt-kmitl" data-k="4">
+    <div class="ly ly-bg" data-f=".28"><video class="clip" data-clip="kmitl" muted playsinline preload="none"></video></div>
+    <img class="cast c-grad" data-f="-.05" src="assets/img/cast/p-grad.webp" alt="" width="456" height="669" loading="lazy" decoding="async">
+    <div class="st st4" data-f=".1">
       <span class="w st-s" style="--i:0">ชิงโอกาส</span>
       <p class="st-big"><span class="w hl" style="--i:1">รอบสัมภาษณ์</span><br><span class="w " style="--i:2">มหาวิทยาลัย</span></p>
       <span class="w st-s" style="--i:3">ท็อป 2 ของแต่ละสาย ได้ขึ้นเวทีรอบชิงที่ IoTE สจล.</span>
     </div>
-    <div class="st st5 night">
+  </div>
+  <div class="beat bt-dawn sn-dawn" data-k="5">
+    <div class="ly ly-bg" data-f=".3"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/dawn-p.webp"><img class="lay" src="assets/img/scene/dawn-w.webp" alt="" loading="lazy" decoding="async"></picture><div class="dawn-rays" aria-hidden="true"></div><div class="dawn-sun" aria-hidden="true"></div></div>
+    <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <svg class="dawn-hill" data-f=".06" viewBox="0 0 1600 400" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="dh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a52"/><stop offset="1" stop-color="#0a0a0f"/></linearGradient></defs><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190 L1600 400 L0 400Z" fill="url(#dh)"/><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190" fill="none" stroke="#ffd98a" stroke-width="3" opacity=".75"/></svg>
+    <img class="cast c-pal c-pal1" data-f=".02" src="assets/img/cast/p-cheer.webp" alt="" width="456" height="669" loading="lazy" decoding="async">
+    <img class="cast c-pal c-pal2" data-f=".02" src="assets/img/cast/p-wave.webp" alt="" width="517" height="662" loading="lazy" decoding="async">
+    <img class="cast c-point" data-f="-.04" src="assets/img/cast/p-point-glow.webp" alt="" width="629" height="817" loading="lazy" decoding="async">
+    <div class="st st5 night" data-f=".1">
       <span class="w st-s" style="--i:0">เริ่มจากศูนย์ก็ไปถึง</span>
       <p class="st-big"><span class="w" style="--i:1">นายน่ะ</span><br><span class="w hl" style="--i:2">ก็เป็นได้นะ!</span></p>
       <a class="w st-go" style="--i:3" href="#tracks">เลือกเส้นทางของนายใน 3 TRACKS <svg class="ic"><use href="#i-arrow"/></svg></a>
@@ -408,12 +409,12 @@
       <ol class="stops">
       <li class="stop s1 r" data-start="2026-09-28" data-end="2026-10-20">
         <i class="tl-dot" aria-hidden="true"></i>
-        <span class="isle" aria-hidden="true"><img class="tl-ham" src="assets/img/cast/p-group.webp" alt="" width="756" height="495" loading="lazy" decoding="async"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-1"/></svg></span>
+        <span class="isle" aria-hidden="true"><img class="tl-ham" src="assets/img/cast/t-sign.webp" alt="" width="654" height="675" loading="lazy" decoding="async"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-1"/></svg></span>
         <span class="lab"><span class="n">01<span class="bd"></span></span><span class="d">28 ก.ย. – 20 ต.ค.</span><b>สมัคร &amp; รวมทีม</b><span class="t">ทีม 2–3 คน หรือสมัครคนเดียว</span></span>
       </li>
       <li class="stop s2 l" data-start="2026-10-22" data-end="2026-10-25">
         <i class="tl-dot" aria-hidden="true"></i>
-        <span class="isle" aria-hidden="true"><img class="tl-ham" src="assets/img/cast/p-study.webp" alt="" width="591" height="624" loading="lazy" decoding="async"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-2"/></svg></span>
+        <span class="isle" aria-hidden="true"><img class="tl-ham" src="assets/img/cast/t-pitch.webp" alt="" width="470" height="605" loading="lazy" decoding="async"><span class="ped"></span><svg class="art" viewBox="0 0 150 104"><use href="#il-2"/></svg></span>
         <span class="lab"><span class="n">02<span class="bd"></span></span><span class="d">22 – 25 ต.ค.</span><b>รอบคัดเลือกออนไลน์</b><span class="t">รับโจทย์ + นำเสนอไอเดีย</span></span>
       </li>
       <li class="stop s3 r" data-start="2026-10-26" data-end="2026-11-12">

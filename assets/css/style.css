@@ -918,3 +918,53 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .c-pal1{left:1%;bottom:26%}.c-pal2{left:9%;bottom:47%;width:min(6vw,11vh)}
 @media (max-aspect-ratio:1/1){.c-group{bottom:22%}.c-point{left:50%}.c-pal1{left:1%}.c-pal2{left:auto;width:min(21vw,13vh)}}
 @media (min-aspect-ratio:1/1){.fl-front{bottom:-19vh}.c-point{bottom:11%}.c-pal1{bottom:30%}}
+
+/* ---------- 1d. meadow (not alone) + dawn of hope (finale) ---------- */
+.sn-meadow .lay{object-position:50% 60%}
+.fl-mid{position:absolute;left:-4%;bottom:14%;width:72%;height:auto;max-width:none;opacity:.95;filter:saturate(.9) blur(.6px);pointer-events:none}
+.sn-meadow .fl-mid{left:auto;right:-6%}
+.sn-meadow .c-group{bottom:13%}
+.sn-meadow .fl-front{bottom:-19vh}
+.sn-dawn .lay{object-position:50% 75%}
+.dawn-sun{position:absolute;left:36%;top:83%;width:min(70vw,120vh);aspect-ratio:1;translate:-50% -50%;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,248,220,.95),rgba(255,214,130,.55) 22%,rgba(255,190,110,.18) 50%,rgba(255,190,110,0) 72%);mix-blend-mode:screen;animation:sunpulse 5s ease-in-out infinite}
+@keyframes sunpulse{50%{scale:1.08;opacity:.85}}
+.dawn-rays{position:absolute;left:36%;top:83%;width:260vmax;aspect-ratio:1;translate:-50% -50%;pointer-events:none;mix-blend-mode:soft-light;opacity:.55;
+  background:repeating-conic-gradient(from 0deg,rgba(255,244,210,.9) 0deg 3deg,rgba(255,244,210,0) 3deg 11deg);
+  -webkit-mask-image:radial-gradient(closest-side,#000 8%,transparent 62%);mask-image:radial-gradient(closest-side,#000 8%,transparent 62%);animation:spin 90s linear infinite}
+@keyframes spin{to{rotate:360deg}}
+.motes i{position:absolute;bottom:-4%;left:calc(var(--x) * 1%);width:var(--s,6px);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#fff8dc,rgba(255,220,140,0) 70%);opacity:0;animation:mote var(--d) linear var(--dl) infinite}
+.motes i:nth-child(1){--x:6;--d:11s;--dl:-1s;--s:8px}.motes i:nth-child(2){--x:14;--d:14s;--dl:-6s}.motes i:nth-child(3){--x:23;--d:12s;--dl:-9s;--s:10px}
+.motes i:nth-child(4){--x:31;--d:15s;--dl:-3s}.motes i:nth-child(5){--x:40;--d:10s;--dl:-7s;--s:9px}.motes i:nth-child(6){--x:48;--d:13s;--dl:-11s}
+.motes i:nth-child(7){--x:57;--d:12s;--dl:-2s;--s:7px}.motes i:nth-child(8){--x:65;--d:16s;--dl:-8s;--s:11px}.motes i:nth-child(9){--x:73;--d:11s;--dl:-5s}
+.motes i:nth-child(10){--x:81;--d:14s;--dl:-12s;--s:9px}.motes i:nth-child(11){--x:89;--d:12s;--dl:-4s}.motes i:nth-child(12){--x:96;--d:15s;--dl:-10s;--s:8px}
+@keyframes mote{10%{opacity:.9}80%{opacity:.6}to{opacity:0;transform:translate3d(3vw,-95vh,0)}}
+.dawn-hill{position:absolute;left:0;right:0;bottom:-2%;width:100%;height:30%}
+.sn-dawn .c-point{bottom:9%;filter:drop-shadow(0 0 3px #fff3c4) drop-shadow(0 0 22px rgba(255,215,130,.85)) drop-shadow(0 16px 18px rgba(20,10,40,.35))}
+.sn-dawn .c-pal{filter:drop-shadow(0 0 12px rgba(255,215,130,.6)) drop-shadow(0 8px 10px rgba(20,10,40,.3))}
+.sn-dawn .c-pal1{left:2%;bottom:19%}.sn-dawn .c-pal2{left:12%;bottom:24%;width:min(7vw,13vh)}
+.story[data-step="5"] .scene-shade{background:linear-gradient(90deg,rgba(10,16,50,0) 40%,rgba(10,16,50,.28) 100%)}
+@media (max-aspect-ratio:1/1){
+  .fl-mid{width:150%;right:-30%;bottom:20%}
+  .sn-meadow .fl-front{bottom:-6%}
+  .dawn-sun,.dawn-rays{left:54%;top:80%}
+  .dawn-hill{height:20%}
+  .sn-dawn .c-point{top:11%;bottom:auto}
+  .sn-dawn .c-pal1{left:1%;top:27%;bottom:auto}.sn-dawn .c-pal2{right:1%;left:auto;top:28%;bottom:auto;width:min(21vw,13vh)}
+  .story[data-step="5"] .scene-shade{background:linear-gradient(180deg,rgba(10,16,50,0) 50%,rgba(10,16,50,.6) 100%)}
+}
+.rm .motes,.lite .motes,.rm .dawn-rays,.lite .dawn-rays{animation:none}.lite .motes{display:none}
+@media (min-aspect-ratio:1/1){
+  .dawn-sun,.dawn-rays{left:64%;top:84%}
+  .dawn-hill{height:19%}
+  .sn-dawn .c-point{left:26%;bottom:7%}
+}
+.dawn-rays{opacity:.32;background:repeating-conic-gradient(from 0deg,rgba(255,244,210,.8) 0deg 2deg,rgba(255,244,210,0) 6deg 14deg)}
+.dawn-sun{width:min(60vw,100vh)}
+@media (min-aspect-ratio:1/1){
+  .sn-dawn .lay{top:-42%;height:142%;object-position:50% 100%}
+  .dawn-sun,.dawn-rays{top:73%}
+  .dawn-hill{height:24%}
+}
+.dawn-sun{background:radial-gradient(closest-side,rgba(255,252,235,1),rgba(255,226,150,.7) 18%,rgba(255,200,120,.25) 45%,rgba(255,190,110,0) 70%)}
+@media (min-aspect-ratio:1/1){.sn-dawn .c-pal2{left:43%;bottom:17%;width:min(6.5vw,12vh)}}

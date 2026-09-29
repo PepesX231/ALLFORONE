@@ -170,6 +170,8 @@ def M(hexcol, shade=.38):
 def human(x, y, h=1.0, rotz=0.0, skin='#f2c7a5', top='#ffffff', bottom='#23305e', hair='#222a44', hair_style='spiky',
           arms=('down', 'down'), legs='stand', tie=None, face=True, stripe=None, big=1.0):
     """Builds one character facing -Y. Returns the root empty. Units: metres-ish, h scales everything."""
+    if os.environ.get('NOCAST'):
+        bpy.ops.object.empty_add(location=(x, y, 0)); return bpy.context.object
     bpy.ops.object.empty_add(location=(x, y, 0), rotation=(0, 0, rotz)); root = bpy.context.object
     kids = []
     def P(dx, dz, dy=0.0): return (dx * h, dy * h, dz * h)

@@ -713,7 +713,7 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .st .st-s{color:#fff;text-shadow:0 2px 12px rgba(0,0,0,.55)}
 .st-big{transform:none}
 .scene-shade{transition:background .6s}
-.story[data-step="6"] .scene-shade{background:radial-gradient(70% 45% at 50% 50%,rgba(6,8,26,.72),rgba(6,8,26,.25) 70%,rgba(6,8,26,.45))}
+.story[data-step="6"] .scene-shade{background:linear-gradient(180deg,rgba(8,10,30,0) 40%,rgba(8,10,30,.7) 100%)}
 .st-big{text-shadow:0 4px 0 #1d4fbf,0 0 24px rgba(0,0,0,.45)}
 
 /* ---------- timeline on phones: clean vertical rail, art left, text right (no overlapping) ---------- */
@@ -734,21 +734,20 @@ html:not(.js) .st .w{opacity:1;transform:none}
   .s4 .lab b{font-size:18px}
 }
 
-/* ---------- tracks on phones: 3 models stacked, name beside each ---------- */
-@media (max-width:719px){
-  .trio-wrap{padding-bottom:0}
-  .trio{aspect-ratio:auto;height:min(calc(100svh - var(--hdr) - 170px),640px);min-height:440px;background:radial-gradient(60% 50% at 30% 50%,rgba(61,139,255,.18),transparent 75%)}
-  .trio-hit button{left:0;width:100%;top:calc(var(--y) - 16%);bottom:auto;height:32%;transform:none;flex-direction:column;align-items:flex-start;justify-content:center;padding:0 var(--gut) 0 56%;text-align:left}
-  .trio-hit button::before{left:4%;right:48%;top:4%;bottom:4%}
-  .trio-hit b{font-size:clamp(22px,7vw,30px)}
-  .trio-hit b::after{margin:8px 0 0}
-  .trio-hit small{font-size:14px;text-align:left}
-  .trio-hit small::after{content:"แตะเพื่อดู →";display:block;margin-top:6px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.55)}
-  .trio-hit img,.trio-hit .ph{left:4%;right:auto;width:44%;top:50%}
-  .trio-hit .ph{left:26%}
-}
 /* a held last frame keeps breathing: slow camera drift so the scene never looks frozen */
 .clip.held{animation:drift-cam 16s ease-in-out infinite alternate}
 @keyframes drift-cam{0%{transform:scale(1) translate3d(0,0,0)}100%{transform:scale(1.06) translate3d(-1.2%,-.8%,0)}}
 .rm .clip.held,.lite .clip.held{animation:none}
 .story-pin::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14%;z-index:0;pointer-events:none;background:linear-gradient(transparent,var(--ink))}
+
+/* track names hug the ring */
+.trio-wrap,.trio-wrap[style]{padding-bottom:var(--pb,72px)!important}
+.trio-hit button{justify-content:flex-start;padding-top:calc(var(--ry,78%) + 8px)}
+.st-go{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:12px 22px;border-radius:999px;background:#fff;color:#0b0b10;font-weight:800;font-size:15px;box-shadow:0 10px 26px -10px rgba(0,0,0,.6)}
+.st-go .ic{width:18px;height:18px;transform:rotate(90deg)}
+.st6{justify-content:flex-end;padding-bottom:12vh}
+@media (min-aspect-ratio:1/1){
+  .st6{align-items:flex-end;justify-content:center;text-align:right;padding:0 8vw 0 0}
+  .st6 .st-big{text-align:right}
+}
+.st-go{white-space:nowrap}@media (max-width:420px){.st-go{font-size:13.5px;padding:11px 18px}}

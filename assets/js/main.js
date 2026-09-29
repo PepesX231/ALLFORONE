@@ -83,7 +83,9 @@
     var steps = $$('.st', st), vids = $$('.clip', st), N = steps.length, cur = -1, ticking = false;
     var portrait = matchMedia('(max-aspect-ratio: 1/1)').matches, safe = root.classList.contains('safe');
     // step → [clip index, stop time (s) or null = play to the end]
-    var PLAN = [[5, null], [0, null], [1, null], [2, null], [3, null], [4, 1.9], [4, null]];   // clip 5 = looping idle sky
+    var byName = {}; vids.forEach(function (v, i) { byName[v.dataset.clip] = i; });
+    // step → [clip, stop time (s) or null = play to the end]
+    var PLAN = [['towers-idle', null], ['towers', null], ['desk', null], ['team', null], ['pass', null], ['kmitl', null], ['fist', null]].map(function (p) { return [byName[p[0]], p[1]]; });
     vids.forEach(function (v) {
       var n = v.dataset.clip, o = portrait ? 'p' : 'w';
       v.poster = 'assets/video/' + n + '-' + o + '.jpg';
@@ -98,7 +100,7 @@
       var sameClip = prev && prev[0] === plan[0];
       if (!sameClip || k < cur) { try { v.currentTime = k > 0 && sameClip ? 0 : 0; } catch (e) {} }
       v.dataset.stop = plan[1] == null ? '' : plan[1];
-      var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v.classList.add('held'); });    // blocked autoplay: poster + slow drift
       vids.forEach(function (x, i) { if (i !== plan[0]) x.pause(); });
     }
     vids.forEach(function (v) {
@@ -118,6 +120,13 @@
         steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); });
       }
     }
+    function retry() {
+      if (cur < 0 || safe || reduced) return;
+      var v = vids[PLAN[cur][0]];
+      if (v.paused && !v.ended && !v.classList.contains('held')) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () { v.classList.add('held'); }); }
+    }
+    ['touchend', 'pointerup', 'keydown'].forEach(function (e) { addEventListener(e, retry, { passive: true }); });
+    vids.forEach(function (v) { v.addEventListener('error', function () { v.classList.add('held'); }); });
     addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
     addEventListener('resize', upd, { passive: true });
     // pause everything when the hero is off screen (battery)

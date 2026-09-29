@@ -290,7 +290,7 @@
       this.r.setPixelRatio(DPR()); this.r.setSize(w, h, false);
       var cam = this.cam; cam.aspect = w / h;
       var vfov = cam.fov * Math.PI / 180, hfov = 2 * Math.atan(Math.tan(vfov / 2) * cam.aspect);
-      var tall = this.kind === 'hero' && cam.aspect < .9;           // phones: stack the 3 models in a column
+      var tall = false;                                               // 3 models always side by side
       if (this.kind === 'hero' && this.mdl && this.mdl.parts) {
         this.mdl.parts.forEach(function (p, k) {
           p.bx = tall ? -1.45 : (k - 1) * 3.15; p.by = tall ? (1 - k) * 3.05 : (k === 1 ? .3 : 0); p.bz = tall ? 0 : (k === 1 ? -.5 : 0);
@@ -314,6 +314,10 @@
           btns[k].style.setProperty('--x', ((v.x + 1) * 50).toFixed(2) + '%');
           btns[k].style.setProperty('--y', ((1 - v.y) * 50).toFixed(2) + '%');
         });
+        // names sit just under the front edge of the ring (no big empty gap)
+        var rf = new THREE.Vector3(0, -1.1, 3.45).project(cam);
+        this.host.parentNode.style.setProperty('--ry', (((1 - rf.y) * 50) / 100 * h).toFixed(1) + 'px');
+        this.host.parentNode.style.setProperty('--pb', Math.max(0, (1 - rf.y) * 50 / 100 * h + 8 + (innerWidth < 720 ? 64 : 76) - h).toFixed(0) + 'px');
       }
       this.dirty = true; kick();
     };

@@ -142,6 +142,133 @@ def petals(center, size, count, frames, m):
     ps.object_align_factor = (.3, 0, -.2)
     return em
 
+# ---------------------------------------------------------------- original anime-style characters
+def toon(name, hexcol, shade=.38, rough=.7):
+    """flat-ish cel look under Cycles: base colour + some self-emission so shadows stay colourful"""
+    c = hexc(hexcol)
+    return mat(name, c, rough, emit=c, estr=shade)
+
+def skinobj(verts, edges, radii, m, name, sub=2):
+    me = bpy.data.meshes.new(name); me.from_pydata(verts, edges, []); ob = bpy.data.objects.new(name, me)
+    sc.collection.objects.link(ob)
+    ob.modifiers.new('skin', 'SKIN')
+    for i, r in enumerate(radii):
+        rr = r if isinstance(r, tuple) else (r, r * .85)
+        ob.data.skin_vertices[0].data[i].radius = rr
+    ob.data.skin_vertices[0].data[0].use_root = True
+    sd = ob.modifiers.new('sub', 'SUBSURF'); sd.levels = sub; sd.render_levels = sub
+    me.materials.append(m)
+    bpy.context.view_layer.objects.active = ob
+    return ob
+
+MATS = {}
+def M(hexcol, shade=.38):
+    k = (hexcol, shade)
+    if k not in MATS: MATS[k] = toon('t' + hexcol + str(shade), hexcol, shade)
+    return MATS[k]
+
+def human(x, y, h=1.0, rotz=0.0, skin='#f2c7a5', top='#ffffff', bottom='#23305e', hair='#222a44', hair_style='spiky',
+          arms=('down', 'down'), legs='stand', tie=None, face=True, stripe=None, big=1.0):
+    """Builds one character facing -Y. Returns the root empty. Units: metres-ish, h scales everything."""
+    bpy.ops.object.empty_add(location=(x, y, 0), rotation=(0, 0, rotz)); root = bpy.context.object
+    kids = []
+    def P(dx, dz, dy=0.0): return (dx * h, dy * h, dz * h)
+    wide = big                     # shoulder / chest bulk
+    # ---- legs + hips (bottom colour)
+    if legs == 'stand':
+        LV = [P(0, .92), P(-.11, .87), P(-.12, .47), P(-.12, .06), P(-.12, .02, -.1), P(.11, .87), P(.12, .47), P(.12, .06), P(.12, .02, -.1)]
+    else:                          # kneeling on one knee, leaning forward
+        LV = [P(0, .62, .05), P(-.12, .58, .05), P(-.12, .2, -.35), P(-.12, .08, -.05), P(-.12, .02, -.15), P(.12, .58, .05), P(.14, .08, .15), P(.14, .06, .55), P(.14, .02, .6)]
+    LE = [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5), (5, 6), (6, 7), (7, 8)]
+    LR = [.17 * wide, .12, .1, .075, .06, .12, .1, .075, .06]
+    kids.append(skinobj(LV, LE, LR, M(bottom), 'legs'))
+    base = LV[0][2] / h
+    lean = .28 if legs == 'kneel' else 0.0
+    def T(dx, dz, dy=0.0): return P(dx, base + dz, dy - lean * dz)
+    # ---- torso + arms (top colour)
+    TV = [T(0, 0), T(0, .25), T(0, .48), T(0, .6), T(-.21 * wide, .52), T(.21 * wide, .52)]
+    TE = [(0, 1), (1, 2), (2, 3), (2, 4), (2, 5)]
+    TR = [(.18 * wide, .13), (.17 * wide, .12), (.22 * wide, .15), .065, .09 * wide, .09 * wide]
+    hands = []
+    for side, pose in zip((-1, 1), arms):
+        s0 = 4 if side < 0 else 5
+        if pose == 'down':   pts = [T(side * .27 * wide, .26), T(side * .29 * wide, .02)]
+        elif pose == 'hip':  pts = [T(side * .4 * wide, .32, .02), T(side * .22 * wide, .1, -.03)]
+        elif pose == 'up':   pts = [T(side * .3, .82), T(side * .36, 1.1)]
+        elif pose == 'peace':pts = [T(side * .3, .52, -.12), T(side * .12, .76, -.2)]
+        elif pose == 'hug':  pts = [T(side * .45, .54, .02), T(side * .78, .55, .04)]
+        elif pose == 'fist': pts = [T(side * .22, .5, -.26), T(side * .1, .52, -.6)]      # punch straight at camera
+        elif pose == 'cross':pts = [T(side * .24, .36, -.14), T(-side * .14, .38, -.18)]
+        else:                pts = [T(side * .27, .26), T(side * .29, .02)]
+        i0 = len(TV); TV.extend(pts); TE.extend([(s0, i0), (i0, i0 + 1)]); TR.extend([.088 * wide, .074 * wide])
+        hands.append((pts[-1], pose))
+    torso = skinobj(TV, TE, TR, M(top), 'torso'); kids.append(torso)
+    for (hp, pose) in hands:
+        r = (.11 if pose == 'fist' else .065) * h
+        hd = sphere(r, hp, M(skin), 'hand', 16); hd.scale = (1, 1.1, .9); kids.append(hd)
+        if pose == 'fist':             # knuckles
+            for k in range(4):
+                kn = sphere(r * .34, (hp[0] + (k - 1.5) * r * .45, hp[1] - r * .75, hp[2] + r * .25), M(skin), 'kn', 10); kids.append(kn)
+    if stripe:                          # sporty jacket stripe down the sleeves / chest
+        kids.append(box((.06 * h, .01 * h, .45 * h), T(-.07, .3, -.2 * wide), M(stripe, .5)))
+        kids.append(box((.06 * h, .01 * h, .45 * h), T(.07, .3, -.2 * wide), M(stripe, .5)))
+    if tie:
+        kids.append(box((.05 * h, .02 * h, .3 * h), T(0, .4, -.19 * wide), M(tie, .5)))
+    # ---- neck + head
+    kids.append(cyl(.05 * h, .12 * h, T(0, .66), M(skin)))
+    hc = T(0, .83)
+    head = sphere(.14 * h, hc, M(skin), 'head', 24); head.scale = (1, .95, 1.12); kids.append(head)
+    if face:
+        for sx in (-1, 1):
+            e = sphere(.024 * h, (hc[0] + sx * .052 * h, hc[1] - .128 * h, hc[2] + .01 * h), M('#1a1433', .9), 'eye', 10); e.scale = (.8, .5, 1.35); kids.append(e)
+            hl = sphere(.008 * h, (hc[0] + sx * .048 * h, hc[1] - .142 * h, hc[2] + .025 * h), M('#ffffff', 1.2), 'hl', 8); kids.append(hl)
+        mo = sphere(.03 * h, (hc[0], hc[1] - .128 * h, hc[2] - .07 * h), M('#fff4ee', .8), 'mouth', 10); mo.scale = (1.6, .4, .55); kids.append(mo)
+    # ---- hair
+    hm = M(hair, .45)
+    cap = sphere(.152 * h, (hc[0], hc[1] + .012 * h, hc[2] + .03 * h), hm, 'hair', 24); cap.scale = (1.05, 1.02, .98); kids.append(cap)
+    if hair_style == 'spiky':
+        for k in range(11):
+            a = -1.3 + k * .26
+            loc = (hc[0] + math.sin(a) * .12 * h, hc[1] + .03 * h, hc[2] + .08 * h + math.cos(a) * .08 * h)
+            bpy.ops.mesh.primitive_cone_add(radius1=.05 * h, depth=.2 * h, location=loc, rotation=(-.35, a * 1.05, 0), vertices=8)
+            o = bpy.context.object; o.data.materials.append(hm); kids.append(o)
+        for k in range(4):                        # fringe spikes over the forehead
+            bpy.ops.mesh.primitive_cone_add(radius1=.035 * h, depth=.13 * h, location=(hc[0] + (k - 1.5) * .06 * h, hc[1] - .12 * h, hc[2] + .08 * h), rotation=(2.6, (k - 1.5) * .25, 0), vertices=6)
+            o = bpy.context.object; o.data.materials.append(hm); kids.append(o)
+    elif hair_style == 'long':
+        kids.append(skinobj([(hc[0], hc[1] + .1 * h, hc[2] + .05 * h), (hc[0], hc[1] + .14 * h, hc[2] - .25 * h), (hc[0], hc[1] + .12 * h, hc[2] - .6 * h)], [(0, 1), (1, 2)], [(.15 * h, .08 * h), (.16 * h, .07 * h), (.1 * h, .04 * h)], hm, 'long'))
+        for sx in (-1, 1):
+            b = sphere(.07 * h, (hc[0] + sx * .12 * h, hc[1] - .02 * h, hc[2] - .08 * h), hm, 'side', 12); b.scale = (.6, .8, 1.8); kids.append(b)
+    elif hair_style == 'bob':
+        for sx in (-1, 1):
+            b = sphere(.09 * h, (hc[0] + sx * .12 * h, hc[1] + .01 * h, hc[2] - .03 * h), hm, 'side', 12); b.scale = (.7, 1, 1.3); kids.append(b)
+    elif hair_style == 'wild':                   # big swept-back mane (mentor)
+        for k in range(9):
+            a = -1.1 + k * .275
+            loc = (hc[0] + math.sin(a) * .13 * h, hc[1] + .06 * h, hc[2] + .1 * h + math.cos(a) * .06 * h)
+            bpy.ops.mesh.primitive_cone_add(radius1=.07 * h, depth=.32 * h, location=loc, rotation=(-.95, a * 1.2, 0), vertices=8)
+            o = bpy.context.object; o.data.materials.append(hm); kids.append(o)
+    for o in kids:
+        o.parent = root
+    return root
+
+def star_mascot(loc, s, emit=0.0):
+    import bmesh
+    me = bpy.data.meshes.new('mstar'); bm = bmesh.new(); pts = []
+    for k in range(10):
+        r = 1.0 if k % 2 == 0 else .5; a = math.pi / 2 + k * math.pi / 5
+        pts.append(bm.verts.new((math.cos(a) * r, 0, math.sin(a) * r)))
+    f = bm.faces.new(pts); ex = bmesh.ops.extrude_face_region(bm, geom=[f])
+    bmesh.ops.translate(bm, vec=(0, .35, 0), verts=[v for v in ex['geom'] if isinstance(v, bmesh.types.BMVert)])
+    bm.to_mesh(me); ob = bpy.data.objects.new('mstar', me); sc.collection.objects.link(ob)
+    me.materials.append(mat('mst', hexc('#ffd23f'), .5, emit=hexc('#ffd23f'), estr=.45 + emit))
+    bv = ob.modifiers.new('bev', 'BEVEL'); bv.width = .08; bv.segments = 3
+    ob.location = loc; ob.scale = (s, s, s)
+    for sx in (-1, 1):
+        e = sphere(.09 * s, (loc[0] + sx * .2 * s, loc[1] - .02 * s, loc[2] + .05 * s), M('#1a1433', .9), 'se', 12); e.scale = (.8, .4, 1.2)
+        ch = sphere(.07 * s, (loc[0] + sx * .36 * s, loc[1] - .02 * s, loc[2] - .12 * s), M('#ff8fa3', .9), 'ck', 10); ch.scale = (1.3, .3, .7)
+    return ob
+
 # ---------------------------------------------------------------- clips
 F = FPS * SECONDS
 if CLIP == 'towers':
@@ -383,6 +510,97 @@ elif CLIP == 'kmitl':
         box((4, .06, hgt), (15.05, 6, z - (0 if col != '#2a2f7f' else 0)), mat(f'f{i}', hexc(col), .7))
     c = camera((0, -22, 2.4), (0, 20, 9), 24)
     key_cam(c, [(1, (-5, -26, 2.2), (0, 20, 9.5)), (F, (2, -17, 2.8), (0, 20, 10.5))])
+
+
+elif CLIP == 'team':
+    # "not alone": a big line-up of original students in a sunflower field, the star mascot towering behind
+    rmp, _ = flat_sky(hexc('#2a62d8'), hexc('#cfeaff'), 1.0)
+    rmp.color_ramp.elements[0].position = .02; rmp.color_ramp.elements[1].position = .6
+    sun(48, 200, 2.4)
+    cm = mat('cloud', (1, 1, 1), .9, emit=(1, 1, 1), estr=.45)
+    for x, y, z, s_ in ((-26, 60, 22, 6), (20, 70, 28, 7), (38, 55, 16, 5), (-6, 80, 34, 8)):
+        cloud((x, y, z), s_, cm)
+    ground = mat('field', hexc('#6fb04a'), .9); bpy.ops.mesh.primitive_plane_add(size=300); bpy.context.object.data.materials.append(ground)
+    star_mascot((0, 9, 4.2), 4.2)
+    # sunflowers: one master + linked duplicates
+    stem = M('#3f8f3a', .3); pet = M('#ffc81f', .45); ctr = M('#6b3f1f', .3)
+    def flower(x, y, hgt, rz):
+        cyl(.05, hgt, (x, y, hgt / 2), stem, v=6)
+        hd = cyl(.34, .08, (x, y, hgt), pet, rot=(1.35, 0, rz), v=14)
+        cc = cyl(.17, .1, (x, y - .03, hgt), ctr, rot=(1.35, 0, rz), v=12)
+    for i in range(60):
+        flower(rnd.uniform(-11, 11), rnd.uniform(2.2, 7), rnd.uniform(1.6, 2.6), rnd.uniform(-.3, .3))
+    for i in range(34):
+        flower(rnd.uniform(-9, 9), rnd.uniform(-3.4, -2.2), rnd.uniform(.5, .9), rnd.uniform(-.3, .3))
+    cast = [
+        dict(skin='#e8b894', top='#f4f4f4', bottom='#2b2f45', hair='#f0c14b', hair_style='spiky', arms=('hip', 'hip'), tie='#d62f3a', h=1.12, big=1.15),
+        dict(skin='#f6d3bc', top='#9aa0b8', bottom='#1d2a3e', hair='#8f8ff0', hair_style='long', arms=('peace', 'peace'), tie='#d62f3a', h=.98),
+        dict(skin='#c98d67', top='#ffcc33', bottom='#3a2d1d', hair='#1b1b1b', hair_style='bob', arms=('cross', 'cross'), h=1.02),
+        dict(skin='#f1c9ab', top='#2e3c8f', bottom='#1b2244', hair='#1c2a55', hair_style='spiky', arms=('down', 'up'), h=1.04),
+        dict(skin='#f4d2bb', top='#ffffff', bottom='#1f7a5a', hair='#39b37a', hair_style='bob', arms=('down', 'down'), tie='#d62f3a', h=.95),
+        dict(skin='#e2b08e', top='#ff6000', bottom='#20294a', hair='#ff9f3d', hair_style='spiky', arms=('hip', 'down'), h=1.06),
+        dict(skin='#f6d8c4', top='#6b3fa0', bottom='#221a3c', hair='#e9e9f5', hair_style='long', arms=('cross', 'cross'), h=.97),
+        dict(skin='#d9a27f', top='#3fb4d8', bottom='#1b3b52', hair='#10253f', hair_style='spiky', arms=('up', 'down'), h=1.03),
+        dict(skin='#f2c7a5', top='#e33b4f', bottom='#2a1b2e', hair='#5a2d1a', hair_style='bob', arms=('down', 'hip'), h=.99),
+    ]
+    xs = [0, -1.25, 1.25, -2.5, 2.5, -3.75, 3.75, -5.0, 5.0]
+    ys = [0, .35, .35, .8, .8, 1.2, 1.2, 1.6, 1.6]
+    for c_, x, y in zip(cast, xs, ys):
+        hh = c_.pop('h'); human(x, y, hh * 1.7, rotz=-x * .03, **c_)
+    c = camera((0, -10, 1.5), (0, 2, 2.3), 30)
+    key_cam(c, [(1, (0, -11.5, 1.3), (0, 2, 2.4)), (F, (0, -9.2, 1.6), (0, 2, 2.25))])
+
+elif CLIP == 'pass':
+    # "passing the opportunity": a mentor stands in a blaze of golden light, a student kneels, speed lines rush past
+    rmp, _ = flat_sky(hexc('#ffb347'), hexc('#fff0c0'), 1.25)
+    ground = mat('ground', hexc('#e79a4a'), .9, emit=hexc('#e79a4a'), estr=.15); bpy.ops.mesh.primitive_plane_add(size=200); bpy.context.object.data.materials.append(ground)
+    sun(20, 250, 3.0, (1, .8, .55))
+    # a ruined wall behind them, washed out by the light
+    wallm = mat('wall', hexc('#d8743a'), .9, emit=hexc('#f0a060'), estr=.25)
+    for i in range(7):
+        box((1.6, .6, rnd.uniform(2.5, 5)), (-5 + i * 1.7, 7, 1.5), wallm, rot=(0, 0, rnd.uniform(-.05, .05)))
+    human(2.1, 0, 1.95, rotz=.35, skin='#8a5a44', top='#5a4a6a', bottom='#2b2240', hair='#c9962e', hair_style='wild', arms=('down', 'down'), big=1.25, face=False)
+    human(-2.0, .4, 1.7, rotz=-.5, skin='#8a5a44', top='#1c2033', bottom='#1c2033', hair='#1f3b8a', hair_style='spiky', arms=('down', 'down'), legs='kneel', face=False)
+    # speed lines
+    nofs = bpy.data.collections.new('nofs'); sc.collection.children.link(nofs)
+    ls.select_by_collection = True; ls.collection = nofs; ls.collection_negation = 'EXCLUSIVE'
+    lm = mat('line', (1, 1, 1), .5, emit=hexc('#fff6dc'), estr=2.5)
+    om = mat('line2', (1, 1, 1), .5, emit=hexc('#ff8a3d'), estr=3)
+    for i in range(160):
+        L = rnd.uniform(3, 11); m_ = lm if rnd.random() < .7 else om
+        b = box((L, .015, rnd.uniform(.015, .05)), (0, 0, 0), m_, rot=(0, math.radians(-18), 0), name='sl')
+        for col in b.users_collection: col.objects.unlink(b)
+        nofs.objects.link(b)
+        x0, z0, yy = rnd.uniform(-12, 8), rnd.uniform(-.5, 6), rnd.uniform(-2.5, 5)
+        dx = rnd.uniform(10, 22)
+        for f_, off in ((1, 0), (F, 1)):
+            b.location = (x0 + off * dx * .95, yy, z0 - off * dx * .31)
+            b.keyframe_insert('location', frame=f_)
+        if b.animation_data and hasattr(b.animation_data.action, 'fcurves'):
+            for fc in b.animation_data.action.fcurves:
+                for k in fc.keyframe_points: k.interpolation = 'LINEAR'
+    c = camera((0, -9, 1.3), (0, 2, 1.5), 30)
+    key_cam(c, [(1, (-.6, -9.6, 1.2), (0, 2, 1.45)), (F, (.4, -8.4, 1.4), (0, 2, 1.6))])
+
+elif CLIP == 'fist':
+    # "you can be one too": a mentor at sunset thrusts his fist straight at the viewer
+    rmp, _ = flat_sky(hexc('#d9482a'), hexc('#ffc44a'), 1.0)
+    rmp.color_ramp.elements[0].position = .05; rmp.color_ramp.elements[1].position = .7
+    sd = mat('sundisc', (1, 1, 1), .5, emit=hexc('#fff3c2'), estr=12); sphere(5, (-14, 40, 4), sd)
+    sun(6, 60, 2.2, (1, .7, .4))
+    bpy.ops.object.light_add(type='AREA', location=(0, -6, 3), rotation=(math.radians(-70), 0, 0)); fl = bpy.context.object; fl.data.energy = 110; fl.data.color = (1, .78, .55); fl.data.size = 5
+    leaf = [M('#3e7a3a', .25), M('#58963f', .3)]; trunk = M('#4b3020', .2)
+    for x, y, s_ in ((10, 18, 2.4), (15, 22, 2.8), (7, 26, 2.1), (-18, 30, 2.2)):
+        tree(x, y, s_, leaf, trunk)
+    cm = mat('cloud', hexc('#ff9a6a'), .9, emit=hexc('#ffb08a'), estr=1.0)
+    for x, y, z, s_ in ((-10, 50, 16, 5), (12, 55, 20, 6), (4, 60, 26, 7)):
+        cloud((x, y, z), s_, cm)
+    hero = human(.55, 1.5, 2.4, rotz=-.6, skin='#e3a57a', top='#ff6000', bottom='#1d2a55', hair='#f5c542', hair_style='wild',
+                 arms=('down', 'fist'), stripe='#2f6fe0', big=1.35)
+    for f_, rz in ((1, -.62), (F, -.5)):
+        hero.rotation_euler = (0, 0, rz); hero.keyframe_insert('rotation_euler', frame=f_)
+    c = camera((0, -4.2, 2.7), (0, 1.5, 3.6), 30)
+    key_cam(c, [(1, (-.8, -4.9, 2.5), (.2, 1.5, 3.55)), (F, (.2, -3.9, 2.75), (.2, 1.5, 3.65))])
 
 # ---------------------------------------------------------------- bloom (compositor glare)
 try:

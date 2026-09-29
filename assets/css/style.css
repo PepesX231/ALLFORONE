@@ -717,3 +717,14 @@ html:not(.js) .st .w{opacity:1;transform:none}
 .st:not(.night)::before{content:"";position:absolute;left:50%;top:0;width:min(1000px,130vw);height:62%;transform:translateX(-50%);z-index:-1;pointer-events:none;background:radial-gradient(closest-side,rgba(236,247,255,.7),rgba(236,247,255,0));opacity:0;transition:opacity .6s}
 .st.on:not(.night)::before{opacity:1}
 .st-cue{padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.85);box-shadow:0 6px 16px -8px rgba(16,39,94,.4)}
+/* logo pill: fit narrow phones */
+.st0 .orgs{max-width:calc(100vw - 2 * var(--gut));gap:10px;padding:7px 14px}
+@media (max-width:560px){
+  .st0 .org-hh span{display:none}
+  .st0 .orgs{gap:9px;padding:6px 12px}
+  .st0 .org-hh img{width:26px;height:26px}
+  .st0 .orgs .lg-edu{height:15px}
+  .st0 .orgs .lg-iote{height:21px}
+  .st0 .orgs .sep{height:18px}
+}
+.st0 .orgs{background:rgba(255,255,255,.94)}

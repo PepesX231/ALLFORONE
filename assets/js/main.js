@@ -76,48 +76,50 @@
   })();
 
 
-  /* ---------- 1b. story hero: scroll drives the scene (--p 0→1) and which step is showing ---------- */
+  /* ---------- 1b. story hero: pre-rendered (Blender) clips, one per beat of the story ----------
+     Scrolling picks the text step; each step plays its clip segment and holds on the last frame. */
   (function () {
     var st = document.getElementById('top'); if (!st || !st.classList.contains('story')) return;
-    var steps = $$('.st', st), shots = $$('.shot', st), cur = 0, ticking = false, N = steps.length;
-    // which shot plays under each text step, and each shot's step range [first, last]
-    var SHOT = [0, 0, 1, 2, 3, 4, 4], RANGE = [[0, 1], [2, 2], [3, 3], [4, 4], [5, 6]], curShot = 0;
+    var steps = $$('.st', st), vids = $$('.clip', st), N = steps.length, cur = -1, ticking = false;
+    var portrait = matchMedia('(max-aspect-ratio: 1/1)').matches, safe = root.classList.contains('safe');
+    // step → [clip index, stop time (s) or null = play to the end]
+    var PLAN = [[0, 1.9], [0, null], [1, null], [2, null], [3, null], [4, 1.9], [4, null]];
+    vids.forEach(function (v) {
+      var n = v.dataset.clip, o = portrait ? 'p' : 'w';
+      v.poster = 'assets/video/' + n + '-' + o + '.jpg';
+      v.dataset.src = 'assets/video/' + n + '-' + o + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm');
+    });
+    function load(v) { if (!safe && !v.src) { v.src = v.dataset.src; v.load(); } }
+    function show(k) {
+      var plan = PLAN[k], v = vids[plan[0]], prev = cur < 0 ? null : PLAN[cur];
+      vids.forEach(function (x, i) { x.classList.toggle('on', i === plan[0]); });
+      load(v); if (vids[plan[0] + 1]) load(vids[plan[0] + 1]);          // preload the next clip
+      if (safe || reduced) return;
+      var sameClip = prev && prev[0] === plan[0];
+      if (!sameClip || k < cur) { try { v.currentTime = k > 0 && sameClip ? 0 : 0; } catch (e) {} }
+      v.dataset.stop = plan[1] == null ? '' : plan[1];
+      var pr = v.play(); if (pr && pr.catch) pr.catch(function () {});
+      vids.forEach(function (x, i) { if (i !== plan[0]) x.pause(); });
+    }
+    vids.forEach(function (v) {
+      v.addEventListener('timeupdate', function () {
+        var s = parseFloat(v.dataset.stop); if (s && v.currentTime >= s) v.pause();
+      });
+    });
     function upd() {
       ticking = false;
       var r = st.getBoundingClientRect(); if (r.bottom < 0 || r.top > innerHeight) return;
-      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1), f = p * N;
-      var k = Math.min(N - 1, Math.floor(f)), sh = SHOT[k], rg = RANGE[sh];
-      var q = clamp((f - rg[0]) / (rg[1] - rg[0] + 1), 0, 1);
-      shots[sh].style.setProperty('--q', q.toFixed(4));
-      if (sh === 4) {                                   // campus: day → night drives the old --p ramps
-        var t = f - 5, kp = t < 1 ? .62 * clamp(t, 0, 1) : .62 + .38 * clamp(t - 1, 0, 1);
-        st.style.setProperty('--p', kp.toFixed(4));
-      } else st.style.setProperty('--p', 0);
-      if (sh !== curShot) {
-        curShot = sh;
-        shots.forEach(function (s, i) { s.classList.toggle('on', i === sh); s.classList.toggle('ld', Math.abs(i - sh) <= 1); });
+      var p = clamp(-r.top / Math.max(1, st.offsetHeight - innerHeight), 0, 1);
+      var k = Math.min(N - 1, Math.floor(p * N));
+      if (k !== cur) {
+        show(k); cur = k; st.dataset.step = k;
+        steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); });
       }
-      if (k !== cur) { hit(k > cur ? 1 : -1); cur = k; st.dataset.step = k; steps.forEach(function (s, i) { s.classList.toggle('on', i === k); s.classList.toggle('past', i < k); }); }
-    }
-    // anime-OP "cut": speed lines + white flash + slash bands + camera kick on every step change
-    var scene = $('.scene', st), hitT;
-    shots.forEach(function (s, i) { s.classList.toggle('ld', i <= 1); });
-    function hit(dir) {
-      if (reduced) return;
-      st.classList.remove('hit'); void st.offsetWidth; st.classList.add('hit');
-      st.style.setProperty('--dir', dir);
-      clearTimeout(hitT); hitT = setTimeout(function () { st.classList.remove('hit'); }, 900);
-      if (canAnimate) scene.animate([{ transform: 'scale(1.09) rotate(' + dir * -1.2 + 'deg)' }, { transform: 'none' }], { duration: 650, easing: 'cubic-bezier(.16,1,.3,1)' });
-    }
-    // opening shot: camera flies out of the sky onto the campus, logo slams in
-    if (!reduced && canAnimate && scrollY < 40) {
-      st.classList.add('intro');
-      scene.animate([{ transform: 'translate3d(0,-18%,0) scale(1.55)', filter: 'brightness(1.6)' }, { transform: 'none', filter: 'none' }], { duration: 1500, easing: 'cubic-bezier(.2,.9,.2,1)' });
-      setTimeout(function () { hit(1); }, 900);
-      setTimeout(function () { st.classList.remove('intro'); }, 1800);
     }
     addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
     addEventListener('resize', upd, { passive: true });
+    // pause everything when the hero is off screen (battery)
+    new IntersectionObserver(function (es) { if (!es[0].isIntersecting) vids.forEach(function (v) { v.pause(); }); else if (cur >= 0) { var v = vids[PLAN[cur][0]]; if (!v.ended && !(parseFloat(v.dataset.stop) && v.currentTime >= parseFloat(v.dataset.stop))) { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); } } }).observe(st);
     upd();
   })();
 

@@ -1081,9 +1081,6 @@ svg.ly.tr-svg{height:148%;width:100%}
   .fl-a{width:180%;left:-40%}
   .tr-clouds img{transform:scale(1.8);transform-origin:50% 50%}
 }
-.cap{position:absolute;left:0;right:0;z-index:4;height:18vh;pointer-events:none}
-.cap.top{top:0;background:linear-gradient(var(--c),rgba(0,0,0,0))}
-.cap.bot{bottom:0;background:linear-gradient(rgba(0,0,0,0),var(--c))}
 .tr-screen .tr-grad{background:linear-gradient(#1d2139 0%,#1d2a6e 36%,#3d6fc4 62%,#8cc8f1 84%,#9dd4f3 100%)}
 .tr-screen .tr-clouds img{bottom:auto!important}
 .tr-screen .tr-clouds img:nth-child(1){top:74%}.tr-screen .tr-clouds img:nth-child(2){top:80%}.tr-screen .tr-clouds img:nth-child(3){top:72%}
@@ -1111,7 +1108,7 @@ svg.ly.tr-svg{height:148%;width:100%}
    tower → fly into a lit window = the desk room · code on the laptop turns into the meadow, push into the screen ·
    pull back from a campus screen showing the meadow to KMITL · tilt up into the night sky → dawn.
    Each .xs overlaps the last screen of the scene before and the first screen of the scene after, so it dissolves in and out. */
-.beat.tr,.cap{display:none!important}
+.beat.tr{display:none!important}
 .xs{--S:calc(100svh - var(--hdr));position:relative;z-index:6;height:calc(var(--S) * 3);margin:calc(var(--S) * -1) 0;pointer-events:none}
 .xs-pin{position:sticky;top:var(--hdr);height:calc(100vh - var(--hdr));height:var(--S);overflow:hidden}
 .xs canvas{display:block;width:100%;height:100%;opacity:0}
@@ -1136,3 +1133,35 @@ canvas.seq{display:block;width:100%;height:100%}
 .beat.mid .st{z-index:5}
 .bt-dawn .ly-bg{transform-origin:40% 80%;scale:calc(1 + var(--q, 0) * .1)}
 .bt-dawn.mid{height:calc(var(--S) * 1.8)}
+
+/* ================= cutscene player (v7) =================
+   The first screens scroll normally. From "รายการแข่งสุดมันแห่งปี" on, the story plays like a short film:
+   tap / scroll / swipe → the next 3D camera move plays to its end, the scene's words and hamsters pop in, then it waits.
+   "ข้ามคัตซีน" jumps straight to 3 TRACKS. After the film (or a skip) the page scrolls normally. */
+.cut{position:fixed;left:0;right:0;top:var(--hdr);bottom:0;z-index:35;background:#0b0b10;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none;cursor:pointer}
+.cut[hidden]{display:none}
+.cut-v{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .3s ease;background:#0b0b10}
+.cut-v.on{opacity:1}
+.cut-sc{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .6s ease,visibility 0s .6s;pointer-events:none}
+.cut-sc.on{opacity:1;visibility:visible;transition-delay:0s}
+.cut-sc .ly{top:0;bottom:0}
+.cut-sc .ly.cam{scale:1}
+.cut-sc.on .ly.cam{animation:campush 9s cubic-bezier(.25,.1,.25,1) forwards}
+.sc-dawn .ly-bg{top:-45%;bottom:-6%;transform-origin:40% 80%}
+.sc-dawn.on .ly-bg{animation:campush 9s cubic-bezier(.25,.1,.25,1) forwards}
+@keyframes campush{from{scale:1}to{scale:1.1}}
+.cut-sc .st{z-index:5}
+.cut-sc .st5 .st-go{pointer-events:auto}
+.sc-meadow .fl-front{bottom:-8vh}
+.cut-ui{position:absolute;inset:0;z-index:10;pointer-events:none}
+.cut-skip{position:absolute;right:14px;top:12px;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:0;border-radius:999px;background:rgba(10,12,30,.55);color:#fff;font:700 13.5px/1 var(--font);pointer-events:auto;cursor:pointer;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 0 1px rgba(255,255,255,.18)}
+.cut-skip .ic{width:15px;height:15px}
+.cut-dots{position:absolute;left:50%;bottom:16px;display:flex;gap:7px;translate:-50% 0}
+.cut-dots i{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.35);transition:width .3s,background .3s}
+.cut-dots i.on{width:22px;border-radius:4px;background:#ffd23f}
+.cut-next{position:absolute;left:50%;bottom:40px;padding:9px 18px;border-radius:999px;background:#fff;color:#0b0b10;font-weight:800;font-size:14.5px;translate:-50% 12px;opacity:0;transition:opacity .35s,translate .35s}
+.cut.ready .cut-next{opacity:1;translate:-50% 0;animation:nudge 1.6s ease-in-out .4s infinite}
+@keyframes nudge{50%{translate:-50% -5px}}
+.cut.last .cut-next{display:none}
+.cut-go{border:0;cursor:pointer}
+html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}

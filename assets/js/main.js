@@ -223,6 +223,115 @@
     });
   })();
 
+
+  /* ---------- 1d. cutscene player ---------- */
+  (function () {
+    var cut = document.getElementById('cut'), sky = $('.bt-sky'); if (!cut || !sky) return;
+    var vids = $$('.cut-v', cut), scs = $$('.cut-sc', cut), dots = $$('.cut-dots i', cut), N = vids.length;
+    var SHOW = [2.55, 0, 2.55, 0];                    // seconds into the clip when the scene's words/hamsters appear (0 = at the end)
+    var idx = 0, busy = false, done = false, lastNav = 0, o = '';
+    function orient() { return innerWidth <= innerHeight ? 'p' : 'w'; }
+    function prep(v) {
+      if (v.dataset.o === o) return; v.dataset.o = o;
+      v.poster = 'assets/cut/' + v.dataset.c + '-' + o + '-start.jpg'; v.src = 'assets/cut/' + v.dataset.c + '-' + o + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm'); v.preload = 'auto'; v.load();
+    }
+    function warm(k) { o = o || orient(); for (var i = 0; i < k && i < N; i++) prep(vids[i]); }
+    function reveal(i, on) {
+      var sc = scs[i]; sc.classList.toggle('on', on);
+      $$('.st, .cast', sc).forEach(function (el) { el.classList.toggle('on', on); });
+    }
+    function ready() { busy = false; cut.classList.add('ready'); }
+    function show(i, atEnd) {
+      idx = i; cut.classList.remove('ready'); cut.classList.toggle('last', i === N - 1);
+      dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
+      scs.forEach(function (sc, k) { if (k !== i) reveal(k, false); });
+      if (i + 1 < N) prep(vids[i + 1]);
+      var v = vids[i]; prep(v);
+      vids.forEach(function (w, k) { if (k !== i) { w.classList.remove('on'); w.pause(); } });
+      v.classList.add('on');
+      var shown = false;
+      function pop() { if (!shown) { shown = true; reveal(i, true); } }
+      v.ontimeupdate = function () { if (SHOW[i] && v.currentTime >= SHOW[i]) pop(); };
+      v.onended = function () { pop(); ready(); };
+      if (atEnd || reduced) {
+        var go = function () { try { v.currentTime = Math.max(0, (v.duration || 5) - .05); } catch (e) {} pop(); ready(); };
+        if (v.readyState >= 1) go(); else v.addEventListener('loadedmetadata', go, { once: true });
+        return;
+      }
+      busy = true;
+      try { v.currentTime = 0; } catch (e) {}
+      var pr = v.play(); if (pr && pr.catch) pr.catch(function () { go2(); });
+      function go2() { pop(); ready(); }
+    }
+    var lockY = 0;
+    function lock(on) { lockY = scrollY; root.classList.toggle('cut-lock', on); }
+    function start(i) {
+      if (!cut.hidden) return; o = orient(); warm(2);
+      cut.hidden = false; lock(true); show(i || 0);
+    }
+    function exit(toTracks) {
+      cut.hidden = true; lock(false); vids.forEach(function (v) { v.pause(); }); scs.forEach(function (sc, k) { reveal(k, false); });
+      if (toTracks) { done = true; var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
+      else { scrollTo({ top: skyEnd() - innerHeight - 4, behavior: 'instant' }); }
+    }
+    function next() {
+      var now = Date.now(); if (now - lastNav < 450) return; lastNav = now;
+      if (busy) { var v = vids[idx]; try { v.currentTime = Math.max(0, (v.duration || 5) - .05); } catch (e) {} return; }
+      if (idx < N - 1) show(idx + 1); else exit(true);
+    }
+    function prev() {
+      var now = Date.now(); if (now - lastNav < 450) return; lastNav = now;
+      if (idx > 0) show(idx - 1, true); else exit(false);
+    }
+    function skyEnd() { var r = sky.getBoundingClientRect(); return r.bottom + scrollY; }
+    function atSkyEnd() { return !done && cut.hidden && scrollY + innerHeight >= skyEnd() - 6; }
+    // entering: scroll / swipe / key past the last sky screen, or tap the button
+    $$('.cut-go').forEach(function (b) { b.addEventListener('click', function () { done = false; scrollTo({ top: skyEnd() - innerHeight, behavior: 'instant' }); start(0); }); });
+    var wLast = 0;                                   // one wheel/trackpad gesture (incl. its inertia) = one step
+    addEventListener('wheel', function (e) {
+      var now = Date.now(), fresh = now - wLast > 320; wLast = now;
+      if (!cut.hidden) { e.preventDefault(); if (!fresh || busy || Math.abs(e.deltaY) < 4) return; (e.deltaY > 0 ? next : prev)(); return; }
+      if (e.deltaY > 0 && atSkyEnd()) { e.preventDefault(); start(0); }
+    }, { passive: false });
+    var ty = null;
+    addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; }, { passive: true });
+    addEventListener('touchmove', function (e) {
+      if (!cut.hidden) { e.preventDefault(); return; }
+      if (ty !== null && ty - e.touches[0].clientY > 12 && atSkyEnd()) { e.preventDefault(); ty = null; start(0); }
+    }, { passive: false });
+    cut.addEventListener('touchend', function (e) {
+      if (ty === null) return; var dy = ty - e.changedTouches[0].clientY; ty = null;
+      if (Math.abs(dy) > 40) { e.preventDefault(); if (!busy) (dy > 0 ? next : prev)(); }
+    });
+    cut.addEventListener('click', function (e) {
+      if (e.target.closest('.cut-skip')) { exit(true); return; }
+      if (e.target.closest('a')) { e.preventDefault(); exit(true); return; }
+      next();
+    });
+    addEventListener('keydown', function (e) {
+      if (!cut.hidden) {
+        if (/^(ArrowDown|ArrowRight|PageDown| |Enter|Spacebar)$/.test(e.key)) { e.preventDefault(); next(); }
+        else if (/^(ArrowUp|ArrowLeft|PageUp)$/.test(e.key)) { e.preventDefault(); prev(); }
+        else if (e.key === 'Escape') exit(true);
+        return;
+      }
+      if (/^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && atSkyEnd()) { e.preventDefault(); start(0); }
+    });
+    // scrollbar drags / momentum past the sky: hold at its last screen and start the film
+    addEventListener('scroll', function () {
+      if (!cut.hidden) { if (Math.abs(scrollY - lockY) > 1) scrollTo({ top: lockY, behavior: 'instant' }); return; }
+      if (done) return;
+      var lim = skyEnd() - innerHeight;
+      if (scrollY > lim + 8 && scrollY < lim + innerHeight * 1.5) { scrollTo({ top: lim, behavior: 'instant' }); start(0); }
+    }, { passive: true });
+    // header / in-page links skip the film
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a || a.closest('#cut')) return;
+      if (a.getAttribute('href') !== '#top') { done = true; if (!cut.hidden) { cut.hidden = true; lock(false); vids.forEach(function (v) { v.pause(); }); } }
+    }, true);
+    addEventListener('load', function () { setTimeout(function () { warm(1); }, 1200); });
+  })();
+
   /* ---------- 2. countdown (+ status) ---------- */
   var OPEN = new Date(CFG.regOpen), CLOSE = new Date(CFG.regClose), lastPhase = '';
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };

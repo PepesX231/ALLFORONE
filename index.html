@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=21a46d7a">
+<link rel="stylesheet" href="assets/css/style.css?v=69d6a377">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -65,8 +65,8 @@
   "image": ["https://media.mediaquest.uk/uploads/1790485996187-ChatGPT_Image_Sep_27_2026_12_13_07_PM.webp"]
 }
 </script>
-<script src="assets/js/data.js?v=ae8c617b" defer></script>
-<script src="assets/js/main.js?v=57bd2628" defer></script>
+<script src="assets/js/data.js?v=8aab37e4" defer></script>
+<script src="assets/js/main.js?v=6729538a" defer></script>
 <script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
@@ -256,6 +256,7 @@
     <div class="ly sky-grad" data-f=".5"></div>
     <div class="sky-cl" aria-hidden="true"><img class="cl cl1" src="assets/img/sky/gc-1.webp" alt="" decoding="async"><img class="cl cl2" src="assets/img/sky/gc-2.webp" alt="" decoding="async"><img class="cl cl3" src="assets/img/sky/gc-3.webp" alt="" decoding="async"><img class="cl cl4" src="assets/img/sky/gc-4.webp" alt="" decoding="async"><img class="cl cl5" src="assets/img/sky/gc-5.webp" alt="" decoding="async"><img class="cl cl6" src="assets/img/sky/gc-6.webp" alt="" decoding="async"></div>
     <div class="ly ly-tw"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/towers-p.webp"><img class="tw" src="assets/img/scene/towers-w.webp" alt="" decoding="async" fetchpriority="high"></picture></div>
+    <div class="sk-trees" aria-hidden="true"><img class="skt skt1" src="assets/img/sky/sakura-2.webp" alt="" loading="lazy" decoding="async"><img class="skt skt2" src="assets/img/sky/sakura-1.webp" alt="" loading="lazy" decoding="async"><img class="skt skt3" src="assets/img/sky/sakura-1.webp" alt="" loading="lazy" decoding="async"><img class="skt skt4" src="assets/img/sky/sakura-2.webp" alt="" loading="lazy" decoding="async"></div>
     <div class="sakura" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="dig" aria-hidden="true"></div>
     <div class="under" aria-hidden="true">
@@ -519,6 +520,57 @@
   </div>
 </section>
 </main>
+
+<dialog class="rg" id="regDlg" aria-labelledby="rgTitle">
+  <div class="rg-back" data-rg-close></div>
+  <form class="rg-card" id="rgForm" novalidate>
+    <button class="rg-x" type="button" data-rg-close aria-label="ปิด"><svg class="ic"><use href="#i-x"/></svg></button>
+    <img class="rg-ham" src="assets/img/cast/st-1.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+    <div class="rg-step" data-step="1">
+      <h2 id="rgTitle" class="rg-h">สมัครเข้าร่วม</h2>
+      <p class="rg-sub">All for One University เริ่มจากศูนย์ ก็สร้างผลงานที่พาน้องเข้าใกล้มหาวิทยาลัยได้</p>
+      <p class="rg-date">22 – 25 ต.ค. · <b data-rg-price>190</b> บาท/คน</p>
+      <div class="rg-seg" role="tablist">
+        <button type="button" role="tab" class="on" data-mode="solo" aria-selected="true">สมัครคนเดียว</button>
+        <button type="button" role="tab" data-mode="group" aria-selected="false">สมัครเป็นกลุ่ม</button>
+      </div>
+      <fieldset class="rg-tracks"><legend>เลือกสาย</legend>
+        <label><input type="radio" name="track" value="game" checked><span style="--c:#3ddc97">🎮<b>เกม</b></span></label>
+        <label><input type="radio" name="track" value="software"><span style="--c:#ff8a3d">📱<b>แอป / เว็บ</b></span></label>
+        <label><input type="radio" name="track" value="iot"><span style="--c:#4d9fff">💡<b>IoT</b></span></label>
+      </fieldset>
+      <div class="rg-group" hidden>
+        <div class="rg-gh"><span>สมาชิกกลุ่ม 3+ คน</span><b><i data-rg-price>190</i>/คน</b></div>
+        <div class="rg-avs" id="rgAvs"></div>
+      </div>
+      <div class="rg-member" id="rgMember">
+        <div class="rg-mh" hidden><b id="rgMemTitle">สมาชิก คนที่ 1</b><button type="button" class="rg-link" id="rgClear">ล้าง</button></div>
+        <label class="rg-f"><span>ชื่อ–นามสกุล</span><input name="name" autocomplete="name" placeholder="กรอกชื่อ–นามสกุล" required></label>
+        <label class="rg-f"><span>ชื่อเล่น <small class="rg-opt">(ถ้ามี)</small></span><input name="nick" placeholder="กรอกชื่อเล่น"></label>
+        <label class="rg-f"><span>เบอร์โทรศัพท์</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="0XX-XXX-XXXX" required></label>
+        <label class="rg-f rg-code"><span>โค้ด <small class="rg-opt">(ถ้ามี)</small></span><input name="code" placeholder="กรอกโค้ดส่วนลด / โค้ดแนะนำ"></label>
+      </div>
+      <p class="rg-err" id="rgErr" role="alert"></p>
+      <button class="rg-go" type="submit" id="rgNext">สมัครเข้าร่วม <svg class="ic"><use href="#i-arrow"/></svg></button>
+    </div>
+    <div class="rg-step" data-step="2" hidden>
+      <h2 class="rg-h">สรุปรายชื่อ</h2>
+      <p class="rg-sub" id="rgSumSub"></p>
+      <ol class="rg-sum" id="rgSum"></ol>
+      <div class="rg-total"><span>ยอดรวม</span><b id="rgTotal">0</b></div>
+      <p class="rg-note" id="rgNote"></p>
+      <button class="rg-go" type="button" id="rgConfirm">ยืนยันและชำระเงิน <svg class="ic"><use href="#i-arrow"/></svg></button>
+      <button class="rg-back2" type="button" id="rgEdit">← แก้ไขข้อมูล</button>
+    </div>
+    <div class="rg-step" data-step="3" hidden>
+      <img class="rg-yay" src="assets/img/cast/st-4.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
+      <h2 class="rg-h">เกือบเสร็จแล้ว!</h2>
+      <p class="rg-sub" id="rgDoneTxt"></p>
+      <a class="rg-go" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">ไปหน้าชำระเงิน <svg class="ic"><use href="#i-arrow"/></svg></a>
+      <a class="rg-back2" data-line href="https://page.line.me/jkm4247u?openQrModal=true" target="_blank" rel="noopener">มีคำถาม? ทักทาง LINE</a>
+    </div>
+  </form>
+</dialog>
 
 <footer class="ftr">
   <div class="wrap">

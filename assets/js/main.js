@@ -1035,3 +1035,105 @@
     raf = requestAnimationFrame(function () { raf = 0; m.style.setProperty('--mx', x.toFixed(3)); m.style.setProperty('--my', y.toFixed(3)); });
   }, { passive: true });
 })();
+
+/* ---------- registration dialog: solo / group (3+), summary, then payment page ---------- */
+(function () {
+  var AFO = window.AFO, CFG = AFO.CFG, dlg = document.getElementById('regDlg');
+  if (!dlg) return;
+  var q = function (s, r) { return (r || dlg).querySelector(s); }, qa = function (s, r) { return [].slice.call((r || dlg).querySelectorAll(s)); };
+  var PRICE = CFG.price || 190, mode = 'solo', members = [{}], cur = 0;
+  var FIELDS = ['name', 'nick', 'phone', 'code'];
+  var TRK = { game: 'สายเกม', software: 'สายแอป / เว็บ', iot: 'สาย IoT' };
+  qa('[data-rg-price]').forEach(function (e) { e.textContent = PRICE; });
+  function step(n) { qa('.rg-step').forEach(function (s) { s.hidden = s.dataset.step != n; }); q('.rg-card').scrollTop = 0; }
+  function save() { var m = members[cur]; FIELDS.forEach(function (f) { var i = q('[name=' + f + ']'); if (i) m[f] = i.value.trim(); }); }
+  function load() { var m = members[cur]; FIELDS.forEach(function (f) { var i = q('[name=' + f + ']'); if (i) i.value = m[f] || ''; });
+    q('#rgMemTitle').textContent = 'สมาชิก คนที่ ' + (cur + 1); }
+  function avatars() {
+    var h = members.map(function (m, i) {
+      return '<button type="button" class="rg-av' + (i === cur ? ' on' : '') + (m.name ? ' ok' : '') + '" data-i="' + i + '"><i>' + (i + 1) + '</i>' + (m.name ? '<b>' + m.name.split(' ')[0].slice(0, 6) + '</b>' : '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="4" fill="currentColor"/><path d="M4 21c1-4.5 4.4-6.5 8-6.5s7 2 8 6.5" fill="currentColor"/></svg>') + '</button>';
+    }).join('') + (members.length < 6 ? '<button type="button" class="rg-av add" data-add aria-label="เพิ่มสมาชิก">+</button>' : '');
+    q('#rgAvs').innerHTML = h;
+  }
+  function setMode(m) {
+    mode = m; qa('.rg-seg button').forEach(function (b) { var on = b.dataset.mode === m; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+    q('.rg-seg').classList.toggle('g', m === 'group');
+    q('.rg-group').hidden = m !== 'group'; q('.rg-mh').hidden = m !== 'group'; q('.rg-code').hidden = m === 'group';
+    save();
+    if (m === 'group') { while (members.length < 3) members.push({}); } else { members = [members[0]]; cur = 0; }
+    load(); avatars(); q('#rgNext').firstChild.nodeValue = m === 'group' ? 'สรุปรายชื่อ ' : 'สมัครเข้าร่วม ';
+    q('#rgErr').textContent = '';
+  }
+  function valid(m) { return m.name && m.name.length > 1 && /^0\d{8,9}$/.test((m.phone || '').replace(/\D/g, '')); }
+  function problem() {
+    for (var i = 0; i < members.length; i++) if (!valid(members[i])) return i;
+    return -1;
+  }
+  qa('.rg-seg button').forEach(function (b) { b.addEventListener('click', function () { setMode(b.dataset.mode); }); });
+  q('#rgAvs').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; save();
+    if (b.hasAttribute('data-add')) { members.push({}); cur = members.length - 1; } else cur = +b.dataset.i;
+    load(); avatars(); q('[name=name]').focus();
+  });
+  q('#rgClear').addEventListener('click', function () {
+    if (members.length > 3) { members.splice(cur, 1); cur = Math.min(cur, members.length - 1); } else members[cur] = {};
+    load(); avatars();
+  });
+  q('[name=phone]').addEventListener('input', function (e) {
+    var d = e.target.value.replace(/\D/g, '').slice(0, 10);
+    e.target.value = d.length > 6 ? d.slice(0, 3) + '-' + d.slice(3, 6) + '-' + d.slice(6) : d.length > 3 ? d.slice(0, 3) + '-' + d.slice(3) : d;
+  });
+  q('#rgMember').addEventListener('input', function () { save(); if (mode === 'group') avatars(); });
+  function summary() {
+    var trk = (q('[name=track]:checked') || {}).value;
+    q('#rgSumSub').textContent = (mode === 'group' ? 'สมัครเป็นกลุ่ม ' + members.length + ' คน' : 'สมัครคนเดียว') + ' · ' + TRK[trk];
+    q('#rgSum').innerHTML = members.map(function (m, i) {
+      return '<li><i>' + (i + 1) + '</i><div><b>' + esc(m.name) + (m.nick ? ' <small>(' + esc(m.nick) + ')</small>' : '') + '</b><span>' + esc(m.phone) + '</span></div></li>';
+    }).join('');
+    q('#rgTotal').textContent = (PRICE * members.length).toLocaleString('th-TH') + ' บาท';
+    q('#rgNote').textContent = mode === 'solo' ? 'สมัครคนเดียวได้ ทีมงานจะช่วยจับคู่ทีม 2–3 คนให้' : 'ทุกคนในกลุ่มจะอยู่ทีมเดียวกัน (ทีมละ 2–3 คน ถ้าเกินจะแบ่งให้)';
+  }
+  function esc(s) { return String(s || '').replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  q('#rgForm').addEventListener('submit', function (e) {
+    e.preventDefault(); save();
+    var bad = problem();
+    if (bad >= 0) {
+      if (mode === 'group' && bad !== cur) { cur = bad; load(); avatars(); }
+      q('#rgErr').textContent = (mode === 'group' ? 'สมาชิกคนที่ ' + (bad + 1) + ': ' : '') + 'กรอกชื่อและเบอร์โทร (10 หลัก) ให้ครบนะ';
+      q(valid({ name: members[bad].name, phone: '0000000000' }) ? '[name=phone]' : '[name=name]').focus(); return;
+    }
+    q('#rgErr').textContent = ''; summary(); step(2);
+  });
+  q('#rgEdit').addEventListener('click', function () { step(1); });
+  q('#rgConfirm').addEventListener('click', function () {
+    var data = { mode: mode, track: (q('[name=track]:checked') || {}).value, members: members, total: PRICE * members.length, at: new Date().toISOString() };
+    var txt = 'สมัคร All for One University\n' + q('#rgSumSub').textContent + '\n' + members.map(function (m, i) { return (i + 1) + '. ' + m.name + (m.nick ? ' (' + m.nick + ')' : '') + ' ' + m.phone + (m.code ? ' โค้ด ' + m.code : ''); }).join('\n');
+    var done = function (sent) {
+      q('#rgDoneTxt').textContent = sent ? 'ส่งใบสมัครแล้ว! ชำระค่าสมัคร ' + data.total.toLocaleString('th-TH') + ' บาท ที่หน้า Hamster Hub เพื่อยืนยันที่นั่ง'
+        : 'คัดลอกรายชื่อไว้ให้แล้ว — ไปที่หน้าสมัครของ Hamster Hub วางข้อมูล แล้วชำระ ' + data.total.toLocaleString('th-TH') + ' บาท เพื่อยืนยันที่นั่ง';
+      step(3);
+    };
+    if (CFG.regEndpoint) {
+      fetch(CFG.regEndpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(data) })
+        .then(function () { done(true); }, function () { copy(txt); done(false); });
+    } else { copy(txt); done(false); }
+  });
+  function copy(t) { try { navigator.clipboard.writeText(t); } catch (e) {} }
+  function open(trackId) {
+    if (trackId) { var r = q('[name=track][value=' + trackId + ']'); if (r) r.checked = true; }
+    step(1); setMode(mode);
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+    document.documentElement.style.overflow = 'hidden';
+  }
+  function close() { if (dlg.open) { if (dlg.close) dlg.close(); else dlg.removeAttribute('open'); } document.documentElement.style.overflow = ''; }
+  dlg.addEventListener('close', function () { document.documentElement.style.overflow = ''; });
+  qa('[data-rg-close]').forEach(function (b) { b.addEventListener('click', close); });
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-reg]'); if (!a || dlg.contains(a)) return;
+    e.preventDefault();
+    var tr = null, sh = document.getElementById('sheet');
+    if (sh && sh.contains(a)) { var t = sh.querySelector('.tab[aria-selected="true"]'); if (t) tr = AFO.TRACKS[+t.dataset.i].id; if (sh.open && sh.close) sh.close(); }
+    open(tr);
+  }, true);
+  if (location.hash === '#apply') open();
+})();

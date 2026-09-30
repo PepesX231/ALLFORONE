@@ -6,6 +6,8 @@ window.AFO = {
 
   CFG: {
     registerUrl: 'https://www.hamsterhub.co/allforone',
+    regEndpoint: '',          // ใส่ URL (เช่น Google Apps Script / API) เพื่อรับใบสมัครจากฟอร์มในเว็บ — ถ้าว่าง จะพาไปหน้าสมัครทางการพร้อมคัดลอกข้อมูลให้
+    price:       190,
     lineUrl:     'https://page.line.me/jkm4247u?openQrModal=true',
     regOpen:     '2026-09-28T00:00:00+07:00',
     regClose:    '2026-10-20T23:59:59+07:00',

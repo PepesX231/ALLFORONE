@@ -1137,3 +1137,14 @@
   }, true);
   if (location.hash === '#apply') open();
 })();
+
+/* perf: pause every decorative CSS loop while its block is off-screen (sky/clouds/petals, stars, cutscene scenes) */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(document.querySelectorAll('.bt-sky .sky-cl, .bt-sky .sakura, #register .stars, .stars, .peek, .tl'));
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { e.target.classList.toggle('paused', !e.isIntersecting); });
+  }, { rootMargin: '15% 0px' });
+  els.forEach(function (el) { io.observe(el); });
+  document.addEventListener('visibilitychange', function () { document.documentElement.classList.toggle('paused', document.hidden); });
+})();

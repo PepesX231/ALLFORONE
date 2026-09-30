@@ -1565,6 +1565,18 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .rg-yay{display:block;width:130px;height:auto;margin:0 auto 8px;animation:wig 2.4s ease-in-out infinite}
 .rg-step[data-step="3"]{text-align:center}.rg-step[data-step="3"] .rg-h{padding:0}
 .rg-step[data-step="1"] .rg-sub{padding-right:64px}.rg-ham{width:74px;right:56px;top:2px}
+/* ===== perf pass: compositor-only motion, nothing animates off-screen, lighter phones ===== */
+.cl{animation:clfloat var(--d) ease-in-out var(--dl) infinite alternate!important;will-change:transform}
+@keyframes clfloat{0%{transform:translate3d(-9vw,0,0)}50%{transform:translate3d(0,1.2vh,0)}100%{transform:translate3d(9vw,0,0)}}
+.paused,.paused *,.paused *::before,.paused *::after{animation-play-state:paused!important}
+.lb-bg{-webkit-backdrop-filter:none!important;backdrop-filter:none!important;background:rgba(6,6,10,.96)!important}
+.mob .sakura i:nth-child(n+9){display:none}
+.mob .cl5,.mob .cl6{display:none}
+.mob .sc-meadow.on .dp{animation:none!important;will-change:auto}
+.mob .sc-meadow .dp,.mob .sc-meadow .ly-bg{transition:none;translate:none}
+.mob .bk{display:none}
+.mob .cl{will-change:auto}
+#perks,#journey,#posters,#faq,.ftr{content-visibility:auto;contain-intrinsic-size:auto 900px}
 
 </style>
 <script>
@@ -3380,6 +3392,17 @@ window.AFO = {
     open(tr);
   }, true);
   if (location.hash === '#apply') open();
+})();
+
+/* perf: pause every decorative CSS loop while its block is off-screen (sky/clouds/petals, stars, cutscene scenes) */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  var els = [].slice.call(document.querySelectorAll('.bt-sky .sky-cl, .bt-sky .sakura, #register .stars, .stars, .peek, .tl'));
+  var io = new IntersectionObserver(function (es) {
+    es.forEach(function (e) { e.target.classList.toggle('paused', !e.isIntersecting); });
+  }, { rootMargin: '15% 0px' });
+  els.forEach(function (el) { io.observe(el); });
+  document.addEventListener('visibilitychange', function () { document.documentElement.classList.toggle('paused', document.hidden); });
 })();
 
 </script>

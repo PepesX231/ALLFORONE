@@ -323,6 +323,90 @@
     addEventListener('load', function () { setTimeout(function () { warm(1); }, 1200); });
   })();
 
+
+  /* ---------- 1e. underground life: the hamster's cable, sparks from the broken wire, flickering lamps ----------
+     Everything is drawn in the render's own coordinates (the Blender camera is orthographic), so the
+     cable ends meet the painted clamps and the sparks sit exactly on the frayed copper. */
+  (function () {
+    var svg = $('.ug-fx'); if (!svg) return;
+    var NS = 'http://www.w3.org/2000/svg', INK = '#1b1540';
+    var CAM = { w: { W: 64, H: 36, iw: 1920, ih: 1080 }, p: { W: 36 * 1080 / 1600, H: 36, iw: 1080, ih: 1600 } }, TOP = 6.5;
+    var LAMPS = [[-28, -4.95], [-15.5, -4.55], [-9.5, -5.55], [9.5, -5.15], [15.5, -4.75], [28, -5.75]];
+    var ENDS = [[-4.2, -12.6], [5.4, -13.8]], ANCH = [[-21, -6], [21, -6]], GRIP = [.4, -9.6], GRIPS = { w: [-11.5, -9.3], p: [-6.6, -9.0] };
+    var o, k, el = {}, t0 = 0, running = false, visible = false, still = reduced || root.classList.contains('safe');
+    function P(x, z) { var c = CAM[o]; return [(x + c.W / 2) / c.W * c.iw, (TOP - z) / c.H * c.ih]; }
+    function mk(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var a in at) e.setAttribute(a, at[a]); (parent || svg).appendChild(e); return e; }
+    function build() {
+      o = innerWidth <= innerHeight ? 'p' : 'w'; var c = CAM[o]; k = c.iw / c.W; GRIP = GRIPS[o];   // px per metre
+      svg.setAttribute('viewBox', '0 0 ' + c.iw + ' ' + c.ih); svg.innerHTML = '';
+      var d = mk('defs', {});
+      var rg = mk('radialGradient', { id: 'ugl' }, d); mk('stop', { offset: '0', 'stop-color': '#ffd36a', 'stop-opacity': '.75' }, rg); mk('stop', { offset: '.45', 'stop-color': '#ffb52e', 'stop-opacity': '.25' }, rg); mk('stop', { offset: '1', 'stop-color': '#ffb52e', 'stop-opacity': '0' }, rg);
+      var sg = mk('radialGradient', { id: 'ugs' }, d); mk('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '1' }, sg); mk('stop', { offset: '.3', 'stop-color': '#8ff0ff', 'stop-opacity': '.7' }, sg); mk('stop', { offset: '1', 'stop-color': '#3fc6e0', 'stop-opacity': '0' }, sg);
+      el.lamps = LAMPS.map(function (L) {
+        var p = P(L[0], L[1]), g = mk('g', {});
+        return { glow: mk('circle', { cx: p[0], cy: p[1], r: 2.6 * k, fill: 'url(#ugl)' }, g), off: mk('circle', { cx: p[0], cy: p[1], r: .74 * k, fill: '#3a2a2a', opacity: 0 }, g), base: .8 + Math.random() * .2, next: 2 + Math.random() * 6, until: 0 };
+      });
+      var w = 1.1 * k;
+      el.cab = [mk('path', { fill: 'none', stroke: INK, 'stroke-width': w + .16 * k, 'stroke-linecap': 'round' }), mk('path', { fill: 'none', stroke: '#3fc6e0', 'stroke-width': w, 'stroke-linecap': 'round' }), mk('path', { fill: 'none', stroke: '#b6f6ff', 'stroke-width': w * .22, 'stroke-linecap': 'round', opacity: .8 })];
+      ANCH.forEach(function (a) { var q = P(a[0], a[1]); mk('rect', { x: q[0] - .75 * k, y: q[1] - .7 * k, width: 1.5 * k, height: 1.4 * k, rx: .25 * k, fill: '#2a2f45', stroke: INK, 'stroke-width': .14 * k }); mk('circle', { cx: q[0], cy: q[1], r: .26 * k, fill: '#c7d0e2', stroke: INK, 'stroke-width': .08 * k }); });
+      el.ham = mk('image', { href: 'assets/img/cast/h-brown-hang.webp', width: 7 * k, height: 7 * k * 999 / 712, preserveAspectRatio: 'none' });
+      el.spark = mk('g', {}); el.flash = ENDS.map(function (E) { var p = P(E[0], E[1]); return mk('circle', { cx: p[0], cy: p[1], r: 2.2 * k, fill: 'url(#ugs)', opacity: 0 }); });
+      el.burst = 0; el.nextBurst = .6; draw(0);
+    }
+    function rot(v, a) { var c = Math.cos(a), s = Math.sin(a); return [v[0] * c - v[1] * s, v[0] * s + v[1] * c]; }
+    function draw(t) {
+      var th = still ? 0 : .13 * Math.sin(t * 2.6) + .03 * Math.sin(t * 5.3);
+      var g0 = P(GRIP[0], GRIP[1]), G = [g0[0] + Math.sin(th) * .9 * k, g0[1] + Math.abs(Math.sin(th)) * .18 * k];
+      var hw = 7 * k, hh = hw * 999 / 712, gx = .497 * hw, gy = .095 * hh, half = .272 * hw;
+      el.ham.setAttribute('transform', 'translate(' + G[0].toFixed(1) + ' ' + G[1].toFixed(1) + ') rotate(' + (th * 57.3).toFixed(2) + ') translate(' + (-gx).toFixed(1) + ' ' + (-gy).toFixed(1) + ')');
+      var r1 = rot([-half, 0], th), r2 = rot([half, 0], th), p1 = [G[0] + r1[0], G[1] + r1[1] + .1 * k], p2 = [G[0] + r2[0], G[1] + r2[1] + .1 * k];
+      var A = P(ANCH[0][0], ANCH[0][1]), B = P(ANCH[1][0], ANCH[1][1]);
+      var dpath = 'M' + A[0] + ' ' + A[1] + ' Q' + ((A[0] + p1[0]) / 2).toFixed(1) + ' ' + (Math.max(A[1], p1[1]) + .6 * k).toFixed(1) + ' ' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) +
+        ' L' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + ' Q' + ((B[0] + p2[0]) / 2).toFixed(1) + ' ' + (Math.max(B[1], p2[1]) + .6 * k).toFixed(1) + ' ' + B[0] + ' ' + B[1];
+      el.cab.forEach(function (c, i) { c.setAttribute('d', dpath); if (i === 2) c.setAttribute('transform', 'translate(0 ' + (-.24 * k).toFixed(1) + ')'); });
+    }
+    function bolt(a, b) {                                   // jagged arc between the two frayed ends, with a couple of branches
+      var n = 7, pts = [a], i, dx = (b[0] - a[0]) / n, dy = (b[1] - a[1]) / n;
+      for (i = 1; i < n; i++) pts.push([a[0] + dx * i + (Math.random() - .5) * .9 * k, a[1] + dy * i + (Math.random() - .5) * 1.4 * k - Math.sin(i / n * Math.PI) * .8 * k]);
+      pts.push(b); var d = 'M' + pts.map(function (p) { return p[0].toFixed(1) + ' ' + p[1].toFixed(1); }).join(' L');
+      var s = '';
+      for (i = 0; i < 2; i++) { var q = pts[1 + ((Math.random() * (n - 2)) | 0)], ang = Math.random() * 6.28, L = (.8 + Math.random() * 1.2) * k;
+        s += 'M' + q[0].toFixed(1) + ' ' + q[1].toFixed(1) + ' l' + (Math.cos(ang) * L * .5).toFixed(1) + ' ' + (Math.sin(ang) * L * .5).toFixed(1) + ' l' + (Math.cos(ang + .6) * L * .5).toFixed(1) + ' ' + (Math.sin(ang + .6) * L * .5).toFixed(1); }
+      return d + ' ' + s;
+    }
+    var lastBolt = 0;
+    function frame(ts) {
+      running = false; if (!visible) return;
+      var t = ts / 1000; draw(t);
+      // lamps: gentle breathing + an occasional stutter
+      el.lamps.forEach(function (L) {
+        var on = 1;
+        if (t > L.next) { L.until = t + .35 + Math.random() * .5; L.next = t + 3 + Math.random() * 7; }
+        if (t < L.until) on = Math.random() < .45 ? 0 : 1;
+        var v = on ? L.base * (.9 + .1 * Math.sin(t * 9 + L.base * 10) * Math.random()) : .05;
+        L.glow.setAttribute('opacity', v.toFixed(2)); L.off.setAttribute('opacity', on ? 0 : .72);
+      });
+      // sparks: short bursts between the broken ends
+      if (t > el.nextBurst) { el.burst = t + .18 + Math.random() * .35; el.nextBurst = t + .7 + Math.random() * 2.2; }
+      var live = t < el.burst;
+      if (live && ts - lastBolt > 55) {
+        lastBolt = ts; var a = P(ENDS[0][0], ENDS[0][1]), b = P(ENDS[1][0], ENDS[1][1]);
+        el.spark.innerHTML = '';
+        var d = bolt(a, b);
+        mk('path', { d: d, fill: 'none', stroke: '#3fc6e0', 'stroke-width': .5 * k, opacity: .45, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, el.spark);
+        mk('path', { d: d, fill: 'none', stroke: '#fff', 'stroke-width': .14 * k, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, el.spark);
+        for (var i = 0; i < 6; i++) { var e = Math.random() < .5 ? a : b, an = Math.random() * 6.28, L = (.4 + Math.random()) * k;
+          mk('line', { x1: e[0], y1: e[1], x2: (e[0] + Math.cos(an) * L).toFixed(1), y2: (e[1] + Math.sin(an) * L).toFixed(1), stroke: '#ffe27a', 'stroke-width': .1 * k, 'stroke-linecap': 'round' }, el.spark); }
+      }
+      if (!live && el.spark.firstChild) el.spark.innerHTML = '';
+      el.flash.forEach(function (f) { f.setAttribute('opacity', live ? (.55 + Math.random() * .45).toFixed(2) : 0); });
+      if (!still) { running = true; raf(frame); }
+    }
+    build();
+    new IntersectionObserver(function (es) { visible = es[0].isIntersecting; if (visible && !running) { running = true; raf(frame); } }, { rootMargin: '10% 0px' }).observe(svg);
+    var lastO = o; addEventListener('resize', function () { var no = innerWidth <= innerHeight ? 'p' : 'w'; if (no !== lastO) { lastO = no; build(); } }, { passive: true });
+  })();
+
   /* ---------- 2. countdown (+ status) ---------- */
   var OPEN = new Date(CFG.regOpen), CLOSE = new Date(CFG.regClose), lastPhase = '';
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };

@@ -745,22 +745,43 @@ if os.environ.get('TALL') and CLIP == 'towers':
             L = x1 - x0; cyl(1.25, L, ((x0 + x1) / 2, FY - .4, z), pipe, rot=(0, math.radians(90), 0), v=20)
             for k in range(3): cyl(1.42, .6, (x0 + 3 + k * (L - 6) / 2, FY - .4, z), band, rot=(0, math.radians(90), 0), v=20)
         cyl(1.25, 10, (33, FY - .4, -9.2), pipe, v=20); cyl(1.42, .6, (33, FY - .4, -6.5), band, v=20)
-        def cable(pts, col, r=.32):
-            cu = bpy.data.curves.new('cab', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = r; cu.bevel_resolution = 3
+        def cable(pts, col, r=.32, rough=.35, name='cab'):
+            cu = bpy.data.curves.new(name, 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = r; cu.bevel_resolution = 4; cu.use_fill_caps = True
             sp = cu.splines.new('BEZIER'); sp.bezier_points.add(len(pts) - 1)
             for bp, p in zip(sp.bezier_points, pts): bp.co = p; bp.handle_left_type = bp.handle_right_type = 'AUTO'
-            o = bpy.data.objects.new('cab', cu); sc.collection.objects.link(o); o.data.materials.append(mat('c' + col, hexc(col), .45)); return o
+            o = bpy.data.objects.new(name, cu); sc.collection.objects.link(o)
+            o.data.materials.append(mat('c' + col + name, hexc(col), rough, emit=hexc(col), estr=.35)); return o
         y = FY - .9
-        cable([(-66, y, -3.4), (-34, y, -8.2), (-8, y, -9.4), (8, y, -9.4), (34, y, -8.0), (66, y, -3.2)], '#3fc6e0', .55)   # teal: the hamster's cable (flat in the middle)
-        cable([(-66, y - .2, -2.4), (-40, y - .2, -9.6), (-14, y - .2, -6.0), (16, y - .2, -12.2), (44, y - .2, -6.4), (66, y - .2, -3.0)], '#ff8a3d', .48)
-        cable([(-66, y + .2, -4.0), (-28, y + .2, -13.0), (2, y + .2, -14.2), (30, y + .2, -11.6), (66, y + .2, -4.4)], '#9b7bff', .42)
-        glass = mat('bulb', hexc('#ffc94a'), .3, emit=hexc('#ffb52e'), estr=2.2); cage = mat('cage', hexc('#3a3040'), .6)
-        for x, drop in ((-24, 4.2), (-11, 2.0), (14, 5.4), (26, 3.0), (-40, 5.0), (41, 4.0)):
-            cyl(.07, drop, (x, FY - 1.0, -1.2 - drop / 2), cage, v=6)
-            sphere(.8, (x, FY - 1.0, -1.4 - drop - .5), glass, seg=14)
-            cyl(.7, .45, (x, FY - 1.0, -1.4 - drop + .2), cage, v=12)
-            for a_ in range(4): cyl(.05, 1.6, (x + .82 * math.cos(a_ * 1.57), FY - 1.0 + .82 * math.sin(a_ * 1.57) * 0, -1.4 - drop - .5), cage, v=5)
-            bpy.ops.object.light_add(type='POINT', location=(x, FY - 2.5, -1.4 - drop - .4)); l = bpy.context.object; l.data.energy = 260; l.data.color = (1, .78, .45); l.data.shadow_soft_size = .5
+        clip = mat('clip', hexc('#2a2f45'), .5, .4); copper = mat('copper', hexc('#e08a3a'), .3, .8, emit=hexc('#ff9a3a'), estr=.6)
+        # conduit bundle along the ceiling, clipped every few metres
+        for dz, col in ((0, '#3a4058'), (.75, '#4a5070')):
+            cable([(-40, y + .3, -1.9 - dz), (0, y + .3, -2.1 - dz), (40, y + .3, -1.9 - dz)], col, .34, .6, 'duct')
+        for x in range(-30, 31, 10): box((.5, .6, 1.9), (x, y - .1, -2.4), clip)
+        # broken orange cable: two ends droop towards each other with frayed copper tips (sparks are added on the page)
+        cable([(-40, y - .3, -4.2), (-24, y - .3, -8.6), (-10, y - .3, -11.2), (-4.2, y - .3, -12.6)], '#ff8a3d', .6, .3, 'orL')
+        cable([(40, y - .3, -4.0), (24, y - .3, -9.0), (11, y - .3, -12.4), (5.4, y - .3, -13.8)], '#ff8a3d', .6, .3, 'orR')
+        for (x, z, rz) in ((-4.2, -12.6, -.35), (5.4, -13.8, .45)):
+            for k in range(5):
+                cyl(.07, .9, (x + (k - 2) * .12, y - .35, z + rnd.uniform(-.2, .2)), copper, rot=(0, math.radians(90) + rnd.uniform(-.7, .7), 0), v=5)
+            cyl(.66, .35, (x, y - .3, z), clip, rot=(0, math.radians(90) + rz, 0), v=14)
+        # purple cable, low and calm
+        cable([(-40, y + .2, -9.5), (-18, y + .2, -15.2), (0, y + .2, -16.0), (18, y + .2, -15.0), (40, y + .2, -9.2)], '#8f6bff', .5, .35, 'pur')
+        # clamps where the hamster's teal cable (drawn live on the page) is fixed
+        for x in (-21.0, 21.0):
+            cyl(.08, 3.6, (x, y - .1, -2.2 - 1.8), clip, v=6)
+            box((1.3, .9, 1.1), (x, y - .2, -6.0), clip); sphere(.28, (x, y - .75, -6.0), mat('bolt', hexc('#c7d0e2'), .3, .8), seg=8)
+        glass = mat('bulb', hexc('#ffc94a'), .3, emit=hexc('#ffb52e'), estr=2.6); cage = mat('cage', hexc('#3a3040'), .6)
+        for x, drop in ((-28, 1.6), (-9.5, 2.2), (9.5, 1.8), (28, 2.4), (-15.5, 1.2), (15.5, 1.4)):
+            cyl(.07, drop, (x, y - .2, -2.6 - drop / 2), cage, v=6)
+            bz = -2.6 - drop - .75
+            sphere(.72, (x, y - .2, bz), glass, seg=14)
+            cyl(.66, .4, (x, y - .2, bz + .72), cage, v=12)
+            for a_ in (-1, 1): cyl(.05, 1.5, (x + a_ * .72, y - .7, bz), cage, v=5)
+            bpy.ops.object.light_add(type='POINT', location=(x, FY - 2.5, bz)); l = bpy.context.object; l.data.energy = 220; l.data.color = (1, .78, .45); l.data.shadow_soft_size = .5
+        # soil speckle
+        spk = [mat('sp1', hexc('#a8704a'), .9, emit=hexc('#a8704a'), estr=.5), mat('sp2', hexc('#3a2436'), .9), mat('sp3', hexc('#7a5a88'), .9, emit=hexc('#7a5a88'), estr=.4)]
+        for i in range(260):
+            z = rnd.uniform(-22, -1); o = sphere(rnd.uniform(.08, .22), (rnd.uniform(-34, 34), FY - .05, z), spk[0] if z > -8 else rnd.choice(spk[1:]), seg=6); o.scale = (1, .3, 1)
         bpy.ops.object.light_add(type='AREA', location=(0, FY - 30, -6), rotation=(math.radians(90), 0, 0)); fl = bpy.context.object
         fl.data.energy = 5000; fl.data.size = 120; fl.data.color = (1, .92, .85)
         # grass tufts along the lawn edge

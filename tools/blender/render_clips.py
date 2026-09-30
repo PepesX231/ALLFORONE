@@ -712,7 +712,8 @@ if os.environ.get('TALL') and CLIP == 'towers':
     TW, TH = [int(v) for v in os.environ['TALL'].split('x')]
     sc.render.resolution_x, sc.render.resolution_y = TW, TH
     c.animation_data_clear(); c.data.sensor_fit = 'VERTICAL'; c.data.lens = float(os.environ.get('LENS', '13'))
-    c.location = (0, -30, 2.2); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
+    c.location = (0, float(os.environ.get('TCY', '-30')), float(os.environ.get('TCZ', '2.2'))); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
+    if os.environ.get('SHIFT'): aim(c, (0, 0, c.location.z)); c.data.shift_y = float(os.environ['SHIFT'])
     sc.render.line_thickness = float(os.environ.get('LINE', '2')); sc.cycles.samples = 24
     if os.environ.get('UNDER'):
         # cut-away diorama: the street is sliced open at y=FY, showing soil, pipes, cables and lamps under the towers
@@ -755,21 +756,21 @@ if os.environ.get('TALL') and CLIP == 'towers':
         clip = mat('clip', hexc('#2a2f45'), .5, .4); copper = mat('copper', hexc('#e08a3a'), .3, .8, emit=hexc('#ff9a3a'), estr=.6)
         # conduit bundle along the ceiling, clipped every few metres
         for dz, col in ((0, '#3a4058'), (.75, '#4a5070')):
-            cable([(-40, y + .3, -1.9 - dz), (0, y + .3, -2.1 - dz), (40, y + .3, -1.9 - dz)], col, .34, .6, 'duct')
+            cable([(-40, y + .3, -1.9 - dz), (0, y + .3, -2.1 - dz), (40, y + .3, -1.9 - dz)], col, .2, .6, 'duct')
         for x in range(-30, 31, 10): box((.5, .6, 1.9), (x, y - .1, -2.4), clip)
         # broken orange cable: two ends droop towards each other with frayed copper tips (sparks are added on the page)
-        cable([(-40, y - .3, -4.2), (-24, y - .3, -8.6), (-10, y - .3, -11.2), (-4.2, y - .3, -12.6)], '#ff8a3d', .6, .3, 'orL')
-        cable([(40, y - .3, -4.0), (24, y - .3, -9.0), (11, y - .3, -12.4), (5.4, y - .3, -13.8)], '#ff8a3d', .6, .3, 'orR')
+        cable([(-40, y - .3, -4.2), (-24, y - .3, -8.6), (-10, y - .3, -11.2), (-4.2, y - .3, -12.6)], '#ff8a3d', .26, .3, 'orL')
+        cable([(40, y - .3, -4.0), (24, y - .3, -9.0), (11, y - .3, -12.4), (5.4, y - .3, -13.8)], '#ff8a3d', .26, .3, 'orR')
         for (x, z, rz) in ((-4.2, -12.6, -.35), (5.4, -13.8, .45)):
             for k in range(5):
                 cyl(.07, .9, (x + (k - 2) * .12, y - .35, z + rnd.uniform(-.2, .2)), copper, rot=(0, math.radians(90) + rnd.uniform(-.7, .7), 0), v=5)
-            cyl(.66, .35, (x, y - .3, z), clip, rot=(0, math.radians(90) + rz, 0), v=14)
+            cyl(.34, .3, (x, y - .3, z), clip, rot=(0, math.radians(90) + rz, 0), v=14)
         # purple cable, low and calm
-        cable([(-40, y + .2, -9.5), (-18, y + .2, -15.2), (0, y + .2, -16.0), (18, y + .2, -15.0), (40, y + .2, -9.2)], '#8f6bff', .5, .35, 'pur')
+        cable([(-40, y + .2, -9.5), (-18, y + .2, -15.2), (0, y + .2, -16.0), (18, y + .2, -15.0), (40, y + .2, -9.2)], '#8f6bff', .22, .35, 'pur')
         # clamps where the hamster's teal cable (drawn live on the page) is fixed
         for x in (-21.0, 21.0):
-            cyl(.08, 3.6, (x, y - .1, -2.2 - 1.8), clip, v=6)
-            box((1.3, .9, 1.1), (x, y - .2, -6.0), clip); sphere(.28, (x, y - .75, -6.0), mat('bolt', hexc('#c7d0e2'), .3, .8), seg=8)
+            cyl(.06, 3.6, (x, y - .1, -2.2 - 1.8), clip, v=6)
+            box((.8, .9, .7), (x, y - .6, -6.0), clip); sphere(.18, (x, y - 1.1, -6.0), mat('bolt', hexc('#c7d0e2'), .3, .8), seg=8)
         glass = mat('bulb', hexc('#ffc94a'), .3, emit=hexc('#ffb52e'), estr=2.6); cage = mat('cage', hexc('#3a3040'), .6)
         for x, drop in ((-28, 1.6), (-9.5, 2.2), (9.5, 1.8), (28, 2.4), (-15.5, 1.2), (15.5, 1.4)):
             cyl(.07, drop, (x, y - .2, -2.6 - drop / 2), cage, v=6)
@@ -778,6 +779,26 @@ if os.environ.get('TALL') and CLIP == 'towers':
             cyl(.66, .4, (x, y - .2, bz + .72), cage, v=12)
             for a_ in (-1, 1): cyl(.05, 1.5, (x + a_ * .72, y - .7, bz), cage, v=5)
             bpy.ops.object.light_add(type='POINT', location=(x, FY - 2.5, bz)); l = bpy.context.object; l.data.energy = 220; l.data.color = (1, .78, .45); l.data.shadow_soft_size = .5
+
+        # the hamster's teal cable (3D, thin): from clamp to clamp with a dip where the hamster hangs
+        cable([(-40, y - .5, -3.2), (-21, y - .5, -6.0), (-6.5, y - .5, -9.2), (21, y - .5, -6.0), (40, y - .5, -3.4)], '#3fc6e0', .24, .3, 'teal')
+        # details: glowing mushrooms, a fossil bone, a junction box, dangling wire ties
+        shroom = [mat('mc1', hexc('#ff7fb0'), .4, emit=hexc('#ff7fb0'), estr=1.4), mat('mc2', hexc('#8ff0ff'), .4, emit=hexc('#8ff0ff'), estr=1.4)]
+        stem = mat('stem', hexc('#fff4e2'), .6, emit=hexc('#fff4e2'), estr=.4)
+        for cx, cz, n in ((-30, -17.8, 3), (26, -16.6, 4), (-4, -20.2, 3), (13, -19.4, 2)):
+            for i in range(n):
+                x = cx + i * .9 + rnd.uniform(-.2, .2); h = rnd.uniform(.5, 1.1); m_ = shroom[(i + int(cx)) % 2]
+                cyl(.11, h, (x, FY - .3, cz + h / 2), stem, v=8); o = sphere(.42 + rnd.uniform(0, .2), (x, FY - .3, cz + h), m_, seg=12); o.scale = (1, .6, .55)
+        bone = mat('bone', hexc('#efe6d6'), .7, emit=hexc('#efe6d6'), estr=.25)
+        for bx, bz, rot in ((-19, -13.6, .3), (30, -21.5, -.4)):
+            cyl(.22, 2.4, (bx, FY - .1, bz), bone, rot=(0, math.radians(90) + rot, 0), v=10)
+            for e in (-1, 1):
+                for d in (-1, 1): sphere(.34, (bx + e * 1.15 * math.cos(rot), FY - .1, bz - e * 1.15 * math.sin(rot) + d * .22), bone, seg=10)
+        jb = mat('jbox', hexc('#3c4466'), .5, .3); led = mat('led', hexc('#57e6a8'), .3, emit=hexc('#57e6a8'), estr=6)
+        box((2.4, .8, 1.8), (27.5, FY - .6, -8.4), jb); sphere(.16, (26.8, FY - 1.05, -8.0), led, seg=8); sphere(.16, (27.4, FY - 1.05, -8.0), mat('led2', hexc('#ffd23f'), .3, emit=hexc('#ffd23f'), estr=6), seg=8)
+        box((1.6, .1, .12), (27.5, FY - 1.02, -8.8), mat('slot', hexc('#1b1540'), .8))
+        for x in (-33, -3, 24):
+            cyl(.05, 1.2, (x, FY - .95, -2.9), mat('tie', hexc('#e33b4f'), .5), v=5)
         # soil speckle
         spk = [mat('sp1', hexc('#a8704a'), .9, emit=hexc('#a8704a'), estr=.5), mat('sp2', hexc('#3a2436'), .9), mat('sp3', hexc('#7a5a88'), .9, emit=hexc('#7a5a88'), estr=.4)]
         for i in range(260):

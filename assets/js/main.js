@@ -332,7 +332,7 @@
     var NS = 'http://www.w3.org/2000/svg', INK = '#1b1540';
     var CAM = { w: { W: 64, H: 36, iw: 1920, ih: 1080 }, p: { W: 36 * 1080 / 1600, H: 36, iw: 1080, ih: 1600 } }, TOP = 6.5;
     var LAMPS = [[-28, -4.95], [-15.5, -4.55], [-9.5, -5.55], [9.5, -5.15], [15.5, -4.75], [28, -5.75]];
-    var ENDS = [[-4.2, -12.6], [5.4, -13.8]], ANCH = [[-21, -6], [21, -6]], GRIP = [.4, -9.6], GRIPS = { w: [-11.5, -9.3], p: [-6.6, -9.0] };
+    var ENDS = [[-4.2, -12.6], [5.4, -13.8]], ANCH = [[-21, -6], [21, -6]], GRIP = [.4, -9.6], GRIPS = { w: [-6.5, -9.2], p: [-6.5, -9.2] };
     var o, k, el = {}, t0 = 0, running = false, visible = false, still = reduced || root.classList.contains('safe');
     function P(x, z) { var c = CAM[o]; return [(x + c.W / 2) / c.W * c.iw, (TOP - z) / c.H * c.ih]; }
     function mk(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var a in at) e.setAttribute(a, at[a]); (parent || svg).appendChild(e); return e; }
@@ -346,24 +346,14 @@
         var p = P(L[0], L[1]), g = mk('g', {});
         return { glow: mk('circle', { cx: p[0], cy: p[1], r: 2.6 * k, fill: 'url(#ugl)' }, g), off: mk('circle', { cx: p[0], cy: p[1], r: .74 * k, fill: '#3a2a2a', opacity: 0 }, g), base: .8 + Math.random() * .2, next: 2 + Math.random() * 6, until: 0 };
       });
-      var w = 1.1 * k;
-      el.cab = [mk('path', { fill: 'none', stroke: INK, 'stroke-width': w + .16 * k, 'stroke-linecap': 'round' }), mk('path', { fill: 'none', stroke: '#3fc6e0', 'stroke-width': w, 'stroke-linecap': 'round' }), mk('path', { fill: 'none', stroke: '#b6f6ff', 'stroke-width': w * .22, 'stroke-linecap': 'round', opacity: .8 })];
-      ANCH.forEach(function (a) { var q = P(a[0], a[1]); mk('rect', { x: q[0] - .75 * k, y: q[1] - .7 * k, width: 1.5 * k, height: 1.4 * k, rx: .25 * k, fill: '#2a2f45', stroke: INK, 'stroke-width': .14 * k }); mk('circle', { cx: q[0], cy: q[1], r: .26 * k, fill: '#c7d0e2', stroke: INK, 'stroke-width': .08 * k }); });
       el.ham = mk('image', { href: 'assets/img/cast/h-brown-hang.webp', width: 7 * k, height: 7 * k * 999 / 712, preserveAspectRatio: 'none' });
       el.spark = mk('g', {}); el.flash = ENDS.map(function (E) { var p = P(E[0], E[1]); return mk('circle', { cx: p[0], cy: p[1], r: 2.2 * k, fill: 'url(#ugs)', opacity: 0 }); });
       el.burst = 0; el.nextBurst = .6; draw(0);
     }
     function rot(v, a) { var c = Math.cos(a), s = Math.sin(a); return [v[0] * c - v[1] * s, v[0] * s + v[1] * c]; }
-    function draw(t) {
-      var th = still ? 0 : .13 * Math.sin(t * 2.6) + .03 * Math.sin(t * 5.3);
-      var g0 = P(GRIP[0], GRIP[1]), G = [g0[0] + Math.sin(th) * .9 * k, g0[1] + Math.abs(Math.sin(th)) * .18 * k];
-      var hw = 7 * k, hh = hw * 999 / 712, gx = .497 * hw, gy = .095 * hh, half = .272 * hw;
-      el.ham.setAttribute('transform', 'translate(' + G[0].toFixed(1) + ' ' + G[1].toFixed(1) + ') rotate(' + (th * 57.3).toFixed(2) + ') translate(' + (-gx).toFixed(1) + ' ' + (-gy).toFixed(1) + ')');
-      var r1 = rot([-half, 0], th), r2 = rot([half, 0], th), p1 = [G[0] + r1[0], G[1] + r1[1] + .1 * k], p2 = [G[0] + r2[0], G[1] + r2[1] + .1 * k];
-      var A = P(ANCH[0][0], ANCH[0][1]), B = P(ANCH[1][0], ANCH[1][1]);
-      var dpath = 'M' + A[0] + ' ' + A[1] + ' Q' + ((A[0] + p1[0]) / 2).toFixed(1) + ' ' + (Math.max(A[1], p1[1]) + .6 * k).toFixed(1) + ' ' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) +
-        ' L' + p2[0].toFixed(1) + ' ' + p2[1].toFixed(1) + ' Q' + ((B[0] + p2[0]) / 2).toFixed(1) + ' ' + (Math.max(B[1], p2[1]) + .6 * k).toFixed(1) + ' ' + B[0] + ' ' + B[1];
-      el.cab.forEach(function (c, i) { c.setAttribute('d', dpath); if (i === 2) c.setAttribute('transform', 'translate(0 ' + (-.24 * k).toFixed(1) + ')'); });
+    function draw() {                                        // the hamster just hangs from the (rendered) teal cable
+      var G = P(GRIP[0], GRIP[1]), hw = 7 * k, hh = hw * 999 / 712;
+      el.ham.setAttribute('transform', 'translate(' + (G[0] - .497 * hw).toFixed(1) + ' ' + (G[1] - .085 * hh).toFixed(1) + ')');
     }
     function bolt(a, b) {                                   // jagged arc between the two frayed ends, with a couple of branches
       var n = 7, pts = [a], i, dx = (b[0] - a[0]) / n, dy = (b[1] - a[1]) / n;
@@ -377,7 +367,7 @@
     var lastBolt = 0;
     function frame(ts) {
       running = false; if (!visible) return;
-      var t = ts / 1000; draw(t);
+      var t = ts / 1000;
       // lamps: gentle breathing + an occasional stutter
       el.lamps.forEach(function (L) {
         var on = 1;
@@ -678,8 +668,9 @@
       ['users', 'ทีม 2–3 คน', 'ฝึกทำงานเป็นทีม']
     ];
     var SHORT = ['GAME DEV', 'SOFTWARE', 'IOT'];
+    var EMO = { '01': 5, '02': 3, '03': 1, '04': 6 };
     var row = function (no, h, body, note) {
-      return '<section class="dl-row"><h3 class="dl-h">' + h + (note ? '<small>' + note + '</small>' : '') + '</h3><div class="dl-body">' + body + '</div></section>';
+      return '<section class="dl-row"><h3 class="dl-h"><img class="dl-emo" src="assets/img/cast/emo-' + EMO[no] + '.webp" alt="" width="240" height="240" loading="lazy" decoding="async">' + h + (note ? '<small>' + note + '</small>' : '') + '</h3><div class="dl-body">' + body + '</div></section>';
     };
     el.innerHTML =
       '<div class="sh-hero">' +
@@ -691,7 +682,7 @@
             '<p class="sh-desc" data-pop>' + t.desc + '</p>' +
             '<span class="dl-out" data-pop>' + icon('folder') + 'ผลลัพธ์: ' + t.output + '</span>' +
           '</div>' +
-          '<div class="sh-img"><span class="ph" aria-hidden="true">' + icon(t.icon) + '</span></div>' +
+          '<div class="sh-img"><span class="ph" aria-hidden="true">' + icon(t.icon) + '</span><img class="sh-peek" src="assets/img/cast/st-' + [6, 2, 3][i] + '.webp" alt="" loading="lazy" decoding="async"></div>' +
         '</div>' +
       '</div>' +
       '<div class="dl-rows">' +

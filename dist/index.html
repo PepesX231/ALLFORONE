@@ -1920,7 +1920,7 @@ window.AFO = {
       for (var i = 1; i <= NF; i++) {
         var im = new Image(); im.decoding = 'async';
         im.onload = function () { x._last = -1; if (!ticking) { ticking = true; raf(upd); } };
-        if (i === 1 && o === 'p') im.onerror = function () { x._fb = true; load(x, 'w'); };
+        if (i === 1) im.onerror = o === 'p' ? function () { x._fb = true; load(x, 'w'); } : function () { x.style.display = 'none'; };
         im.src = 'assets/xs/x' + x.dataset.x + '-' + o + '/' + (i < 10 ? '0' : '') + i + '.webp'; x._fr.push(im);
       }
     }

@@ -720,7 +720,7 @@
 
   function render(i) {
     var t = TRACKS[i];
-    content.style.setProperty('--c', t.c); content.style.setProperty('--c2', t.c2);
+    content.style.setProperty('--c', t.c); content.style.setProperty('--c2', t.c2); panel.style.setProperty('--c', t.c);
     $$('.tab', tabsEl).forEach(function (b, k) { b.setAttribute('aria-selected', k === i ? 'true' : 'false'); });
     content.textContent = '';
     content.appendChild(tpl(i).content.cloneNode(true));
@@ -1022,4 +1022,16 @@
   }
   addEventListener('scroll', function () { if (!on) { on = true; rq(upd); } }, { passive: true });
   addEventListener('resize', upd); upd();
+})();
+
+/* meadow multiplane: planes follow the mouse (desktop only; phones get the dolly-in only) */
+(function () {
+  var cut = document.getElementById('cut'), m = document.querySelector('.sc-meadow');
+  if (!cut || !m || !window.matchMedia('(pointer:fine)').matches) return;
+  var raf = 0, x = 0, y = 0;
+  cut.addEventListener('pointermove', function (e) {
+    x = (e.clientX / innerWidth - .5) * 2; y = (e.clientY / innerHeight - .5) * 2;
+    if (raf) return;
+    raf = requestAnimationFrame(function () { raf = 0; m.style.setProperty('--mx', x.toFixed(3)); m.style.setProperty('--my', y.toFixed(3)); });
+  }, { passive: true });
 })();

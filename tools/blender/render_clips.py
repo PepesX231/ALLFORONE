@@ -732,13 +732,6 @@ if os.environ.get('TALL') and CLIP == 'towers':
         bush = [mat('b1', hexc('#4fae5a'), .8), mat('b2', hexc('#6cc36b'), .8)]
         for i in range(22):
             x = -26 + i * 2.5 + rnd.uniform(-.4, .4); o = sphere(rnd.uniform(.9, 1.3), (x, -13.2, .7), rnd.choice(bush), seg=12); o.scale = (1.2, .9, .8)
-        pole = mat('lamp', hexc('#2a2f45'), .5, .4); lampg = mat('lampg', hexc('#fff1c9'), .3, emit=hexc('#ffe7a0'), estr=6)
-        for x in (-22, -12, 12, 22):
-            cyl(.12, 5.5, (x, -16, 2.75), pole, v=8); sphere(.45, (x, -16, 5.7), lampg, seg=10)
-        flagc = ['#ff6000', '#ffd23f', '#2fd08b', '#4d9fff']
-        for i, x in enumerate((-18, -6, 6, 18)):
-            cyl(.08, 10, (x, -12.2, 13), pole, v=6)
-            box((3.2, .08, 1.9), (x + 1.65, -12.2, 16.8), mat('fl' + str(i), hexc(flagc[i]), .6, emit=hexc(flagc[i]), estr=.4))
     if os.environ.get('UNDER'):
         # cut-away diorama: the street is sliced open at y=FY, showing soil, pipes, cables and lamps under the towers
         FY = -34.0

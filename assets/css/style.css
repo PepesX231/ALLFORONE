@@ -1305,3 +1305,17 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 /* tilted towers v3 (with the lit lobby + colonnade): the colonnade's foot tucks under the sidewalk */
 .bt-sky .ly-tw{top:calc(var(--S) * -.38)!important;height:calc(var(--S) * 2.45)!important;bottom:auto!important}
 @media (max-aspect-ratio:1/1){.bt-sky .ly-tw{top:calc(var(--S) * -.24)!important;height:calc(var(--S) * 2.36)!important}}
+/* film → 3 TRACKS: a gentle fade through black (replaces the iris) */
+.iris{visibility:visible!important;background:#0a0a0f;opacity:0;transition:opacity .7s ease}
+.iris i{display:none}
+.iris.in{opacity:1}
+.iris.in.out{opacity:0;transition:opacity 1s ease .05s}
+/* towers → underground: the lawn fades into a soil gradient before the dig starts, no hard lines */
+.bt-sky .ly-tw .tw{-webkit-mask-image:linear-gradient(#000 88%,transparent 99%);mask-image:linear-gradient(#000 88%,transparent 99%)}
+.under::before{content:"";position:absolute;left:0;right:0;top:-24%;height:48%;z-index:1;pointer-events:none;
+  background:linear-gradient(rgba(122,77,58,0) 0%,rgba(92,120,74,.55) 30%,#6a4a38 55%,#7a4d3a 72%,rgba(122,77,58,0) 100%)}
+.ug-box picture{-webkit-mask-image:linear-gradient(transparent 0 20%,#000 30%,#000 72%,transparent 98%)!important;mask-image:linear-gradient(transparent 0 20%,#000 30%,#000 72%,transparent 98%)!important}
+.under{background:linear-gradient(rgba(10,10,15,0) 0%,#7a4d3a 16%,#7a4d3a 30%,#0a0a0f 60%)!important;overflow:visible}
+.ug-fx{z-index:2}
+/* fades are baked into the images (CSS masks on big layers were the most expensive thing to repaint) */
+.ug-box picture,.bt-sky .ly-tw .tw{-webkit-mask-image:none!important;mask-image:none!important}

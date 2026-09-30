@@ -278,12 +278,12 @@
         if (!toTracks) scrollTo({ top: lockY, behavior: 'instant' });
       };
       if (!toTracks || reduced) { if (toTracks) { done = true; jump(); } finish(); return; }
-      // leaving for 3 TRACKS: the film zooms into a star-shaped iris, the page lands on 3 TRACKS behind it, then the iris opens
-      leaving = true; done = true; cut.classList.add('leave');
-      var iris = document.getElementById('iris');
-      setTimeout(function () { jump(); finish(); if (iris) { iris.classList.add('open'); } }, 620);
-      setTimeout(function () { if (iris) iris.classList.remove('shut', 'open'); leaving = false; }, 1500);
-      if (iris) iris.classList.add('shut');
+      // leaving for 3 TRACKS: the film slowly fades to black, the page lands on 3 TRACKS, then it fades in
+      leaving = true; done = true;
+      var fade = document.getElementById('iris');
+      fade.classList.add('in');
+      setTimeout(function () { jump(); finish(); requestAnimationFrame(function () { fade.classList.add('out'); }); }, 700);
+      setTimeout(function () { fade.classList.remove('in', 'out'); leaving = false; }, 1700);
     }
     function jump() { var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
     function next() {

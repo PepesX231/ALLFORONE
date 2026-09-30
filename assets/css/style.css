@@ -1234,3 +1234,12 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 @media (max-width:760px){.tl-walker{display:none}}
 .under{background:linear-gradient(rgba(10,10,15,0) 12%,#0a0a0f 12.5%)}
 @media (max-aspect-ratio:1/1){.under{height:calc(var(--S) * .9)}}
+/* underground v3: rendered in Blender in the same scene/style as the towers */
+.ug-box{aspect-ratio:1920/1080}
+.ug-hang{left:44.5%;top:42.3%;width:11%}
+@media (max-aspect-ratio:1/1){.ug-box{aspect-ratio:1080/1600;width:max(100vw,calc(var(--S) * .9 * .675))}.ug-hang{left:35.5%;top:42.3%;width:29%}}
+.ug-box{top:calc(var(--S) * -.11)}
+@media (max-aspect-ratio:1/1){.ug-box{top:calc(var(--S) * -.08)}}
+.ug-hang{top:40.6%}
+@media (max-aspect-ratio:1/1){.ug-hang{top:40.6%}}
+.ug-box picture{-webkit-mask-image:linear-gradient(#000 72%,transparent 98%);mask-image:linear-gradient(#000 72%,transparent 98%)}

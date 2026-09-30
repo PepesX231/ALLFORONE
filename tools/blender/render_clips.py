@@ -320,7 +320,7 @@ if CLIP == 'towers':
         cyl(.45, 7, (-24 + k * 2.8, -10.5, 4.2), frame, v=12)
     box((52, 3, 1.2), (0, -10.5, 8.2), frame)
     # ground + sakura
-    ground = mat('ground', hexc('#8fcf6e'), .9); bpy.ops.mesh.primitive_plane_add(size=400, location=(0, 0, 0)); bpy.context.object.data.materials.append(ground)
+    ground = mat('ground', hexc('#8fcf6e'), .9); bpy.ops.mesh.primitive_plane_add(size=400, location=(0, 0, 0)); bpy.context.object.data.materials.append(ground); GROUND = bpy.context.object
     pinks = [mat('p1', hexc('#f7a8c4'), .7), mat('p2', hexc('#fbc2d6'), .7), mat('p3', hexc('#f590b5'), .7)]
     trunk = mat('trunk', hexc('#6b3f33'), .8)
     for x, y, s in ((-22, -22, 2.2), (-15, -30, 1.8), (21, -24, 2.3), (14, -31, 1.7), (-27, -12, 1.9), (27, -13, 2.0)):
@@ -714,6 +714,72 @@ if os.environ.get('TALL') and CLIP == 'towers':
     c.animation_data_clear(); c.data.sensor_fit = 'VERTICAL'; c.data.lens = float(os.environ.get('LENS', '13'))
     c.location = (0, -30, 2.2); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
     sc.render.line_thickness = float(os.environ.get('LINE', '2')); sc.cycles.samples = 24
+    if os.environ.get('UNDER'):
+        # cut-away diorama: the street is sliced open at y=FY, showing soil, pipes, cables and lamps under the towers
+        FY = -34.0
+        bpy.data.objects.remove(GROUND, do_unlink=True)
+        grass = mat('grass2', hexc('#8fcf6e'), .9)
+        box((240, 300, 1.0), (0, FY + 150, -.5), grass)                           # the lawn, only behind the cut
+        side = mat('side', hexc('#d9dde6'), .7); curb = mat('curb', hexc('#aeb4c4'), .7)
+        box((240, 3.2, .7), (0, FY + 1.6, .35), side); box((240, .5, .8), (0, FY + .25, .4), curb)
+        soils = [('#8a5236', 0, -2.4), ('#7a4431', -2.4, -6.5), ('#6a3a3e', -6.5, -11), ('#52304c', -11, -16), ('#3a2244', -16, -21), ('#1e1428', -21, -34)]
+        for i, (col, z0, z1) in enumerate(soils):
+            box((240, 60, z0 - z1), (0, FY + 30, (z0 + z1) / 2 - .5), mat(f'soil{i}', hexc(col), .95, emit=hexc(col), estr=.55))
+
+        for i, (col, z0, z1) in enumerate(soils[:-1]):             # wavy strata: blobs of each layer spill over the next boundary
+            m_ = bpy.data.materials.get(f'soil{i}')
+            x = -70
+            while x < 70:
+                w_ = rnd.uniform(3, 8); o = sphere(1, (x + w_, FY + .02, z1 - .5 + rnd.uniform(-.4, .5)), m_, seg=16); o.scale = (w_, .05, rnd.uniform(.6, 1.6)); x += w_ * rnd.uniform(1.4, 2.2)
+        rock = mat('rock', hexc('#4a3a52'), .9); rock2 = mat('rock2', hexc('#6b5a6e'), .9)
+        for i in range(40):
+            o = sphere(rnd.uniform(.35, 1.1), (rnd.uniform(-60, 60), FY - .1, rnd.uniform(-24, -1.5)), rnd.choice([rock, rock2]), seg=10); o.scale = (1, .35, .7)
+        for i in range(14):
+            L_ = rnd.uniform(1.6, 4.2); cyl(.12, L_, (rnd.uniform(-55, 55), FY - .05, -.2 - L_ / 2), mat('root', hexc('#b0763e'), .8, emit=hexc('#b0763e'), estr=.4), rot=(0, rnd.uniform(-.35, .35), 0), v=6)
+        gem = [mat('gemb', hexc('#5fb8ff'), .2, emit=hexc('#5fb8ff'), estr=2.5), mat('gemp', hexc('#b07bff'), .2, emit=hexc('#b07bff'), estr=2.5)]
+        for i in range(7):
+            bpy.ops.mesh.primitive_ico_sphere_add(radius=rnd.uniform(.45, .8), subdivisions=1, location=(rnd.uniform(-50, 50), FY - .2, rnd.uniform(-20, -8)))
+            o = bpy.context.object; o.scale = (.7, .5, 1.3); o.data.materials.append(rnd.choice(gem))
+        pipe = mat('pipe', hexc('#6f7688'), .45, .5); band = mat('band', hexc('#9a5a2e'), .6, .3)
+        for x0, x1, z in ((-62, -24, -3.4), (26, 62, -4.2), (-62, -38, -12)):
+            L = x1 - x0; cyl(1.25, L, ((x0 + x1) / 2, FY - .4, z), pipe, rot=(0, math.radians(90), 0), v=20)
+            for k in range(3): cyl(1.42, .6, (x0 + 3 + k * (L - 6) / 2, FY - .4, z), band, rot=(0, math.radians(90), 0), v=20)
+        cyl(1.25, 10, (33, FY - .4, -9.2), pipe, v=20); cyl(1.42, .6, (33, FY - .4, -6.5), band, v=20)
+        def cable(pts, col, r=.32):
+            cu = bpy.data.curves.new('cab', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = r; cu.bevel_resolution = 3
+            sp = cu.splines.new('BEZIER'); sp.bezier_points.add(len(pts) - 1)
+            for bp, p in zip(sp.bezier_points, pts): bp.co = p; bp.handle_left_type = bp.handle_right_type = 'AUTO'
+            o = bpy.data.objects.new('cab', cu); sc.collection.objects.link(o); o.data.materials.append(mat('c' + col, hexc(col), .45)); return o
+        y = FY - .9
+        cable([(-66, y, -3.4), (-34, y, -8.2), (-8, y, -9.4), (8, y, -9.4), (34, y, -8.0), (66, y, -3.2)], '#3fc6e0', .55)   # teal: the hamster's cable (flat in the middle)
+        cable([(-66, y - .2, -2.4), (-40, y - .2, -9.6), (-14, y - .2, -6.0), (16, y - .2, -12.2), (44, y - .2, -6.4), (66, y - .2, -3.0)], '#ff8a3d', .48)
+        cable([(-66, y + .2, -4.0), (-28, y + .2, -13.0), (2, y + .2, -14.2), (30, y + .2, -11.6), (66, y + .2, -4.4)], '#9b7bff', .42)
+        glass = mat('bulb', hexc('#ffc94a'), .3, emit=hexc('#ffb52e'), estr=2.2); cage = mat('cage', hexc('#3a3040'), .6)
+        for x, drop in ((-24, 4.2), (-11, 2.0), (14, 5.4), (26, 3.0), (-40, 5.0), (41, 4.0)):
+            cyl(.07, drop, (x, FY - 1.0, -1.2 - drop / 2), cage, v=6)
+            sphere(.8, (x, FY - 1.0, -1.4 - drop - .5), glass, seg=14)
+            cyl(.7, .45, (x, FY - 1.0, -1.4 - drop + .2), cage, v=12)
+            for a_ in range(4): cyl(.05, 1.6, (x + .82 * math.cos(a_ * 1.57), FY - 1.0 + .82 * math.sin(a_ * 1.57) * 0, -1.4 - drop - .5), cage, v=5)
+            bpy.ops.object.light_add(type='POINT', location=(x, FY - 2.5, -1.4 - drop - .4)); l = bpy.context.object; l.data.energy = 260; l.data.color = (1, .78, .45); l.data.shadow_soft_size = .5
+        bpy.ops.object.light_add(type='AREA', location=(0, FY - 30, -6), rotation=(math.radians(90), 0, 0)); fl = bpy.context.object
+        fl.data.energy = 5000; fl.data.size = 120; fl.data.color = (1, .92, .85)
+        # grass tufts along the lawn edge
+        tuft = [mat('t1', hexc('#6cc36b'), .8, emit=hexc('#6cc36b'), estr=.8), mat('t2', hexc('#8fcf6e'), .8, emit=hexc('#8fcf6e'), estr=.8)]
+        for i in range(90):
+            x = rnd.uniform(-70, 70)
+            bpy.ops.mesh.primitive_cone_add(radius1=rnd.uniform(.35, .7), depth=rnd.uniform(.8, 1.6), vertices=5, location=(x, FY + 3.6, .5))
+            bpy.context.object.data.materials.append(rnd.choice(tuft)); bpy.context.object.location.y = FY + .4
+        # straight-on orthographic view of the cut: nothing above the lawn is drawn (the page's towers sit on top)
+        for o in list(sc.objects):
+            if o.type != 'MESH' and o.type != 'CURVE': continue
+            zmin = min((o.matrix_world @ Vector(v)).z for v in o.bound_box)
+            ymin = min((o.matrix_world @ Vector(v)).y for v in o.bound_box)
+            zmax = max((o.matrix_world @ Vector(v)).z for v in o.bound_box)
+            if zmin > 0.45 or ymin > FY + 5 or (zmax > 2.2 and ymin > FY - 2 and o.name.startswith(('Cyl', 'cyl', 'box')) and zmin > -1): o.hide_render = True
+        c.data.type = 'ORTHO'; c.data.sensor_fit = 'HORIZONTAL' if ORIENT == 'w' else 'VERTICAL'
+        c.data.ortho_scale = float(os.environ.get('UW', '96'))
+        c.location = (float(os.environ.get('UX', '0')), FY - 60, float(os.environ.get('UZ', '-17'))); c.rotation_euler = (math.radians(90), 0, 0)
+
 
 # ---------------------------------------------------------------- bloom (compositor glare)
 try:

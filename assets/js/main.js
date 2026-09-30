@@ -241,7 +241,8 @@
       var sc = scs[i]; sc.classList.toggle('on', on);
       $$('.st, .cast', sc).forEach(function (el) { el.classList.toggle('on', on); });
     }
-    function ready() { busy = false; cut.classList.add('ready'); }
+    var dog = 0;
+    function ready() { clearTimeout(dog); busy = false; cut.classList.add('ready'); }
     function show(i, atEnd) {
       idx = i; cut.classList.remove('ready'); cut.classList.toggle('last', i === N - 1);
       dots.forEach(function (d, k) { d.classList.toggle('on', k === i); });
@@ -259,7 +260,8 @@
         if (v.readyState >= 1) go(); else v.addEventListener('loadedmetadata', go, { once: true });
         return;
       }
-      busy = true;
+      busy = true; clearTimeout(dog);
+      dog = setTimeout(function () { pop(); ready(); }, ((v.duration || 5) + 1.2) * 1000);   // never get stuck if 'ended' doesn't fire
       try { v.currentTime = 0; } catch (e) {}
       var pr = v.play(); if (pr && pr.catch) pr.catch(function () { go2(); });
       function go2() { pop(); ready(); }
@@ -274,7 +276,8 @@
     function exit(toTracks) {
       if (leaving) return;
       var finish = function () {
-        cut.hidden = true; cut.classList.remove('leave'); lock(false); vids.forEach(function (v) { v.pause(); }); scs.forEach(function (sc, k) { reveal(k, false); });
+        cut.hidden = true; cut.classList.remove('leave', 'ready', 'last'); lock(false); clearTimeout(dog); busy = false; idx = 0;
+        vids.forEach(function (v) { v.pause(); v.onended = v.ontimeupdate = null; v.classList.remove('on'); try { v.currentTime = 0; } catch (e) {} }); scs.forEach(function (sc, k) { reveal(k, false); });
         if (!toTracks) scrollTo({ top: lockY, behavior: 'instant' });
       };
       if (!toTracks || reduced) { if (toTracks) { done = true; jump(); } finish(); return; }
@@ -288,7 +291,7 @@
     function jump() { var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
     function next() {
       var now = Date.now(); if (now - lastNav < 450) return; lastNav = now;
-      if (busy) { var v = vids[idx]; try { v.currentTime = Math.max(0, (v.duration || 5) - .05); } catch (e) {} return; }
+      if (busy) { var v = vids[idx]; try { v.currentTime = Math.max(0, (v.duration || 5) - .05); } catch (e) {} setTimeout(function () { if (busy) { reveal(idx, true); ready(); } }, 250); return; }
       if (idx < N - 1) show(idx + 1); else exit(true);
     }
     function prev() {
@@ -335,6 +338,8 @@
       if (a.getAttribute('href') !== '#top') { done = true; if (!cut.hidden) { cut.hidden = true; lock(false); vids.forEach(function (v) { v.pause(); }); } }
     }, true);
     addEventListener('load', function () { setTimeout(function () { warm(1); }, 1200); });
+    addEventListener('pageshow', function () { if (!cut.hidden || root.classList.contains('cut-lock')) { cut.hidden = true; lock(false); busy = false; leaving = false; } var f = document.getElementById('iris'); if (f) f.classList.remove('in', 'out'); });
+    document.addEventListener('visibilitychange', function () { if (!document.hidden && !cut.hidden && busy) { var v = vids[idx]; var pr = v.play(); if (pr && pr.catch) pr.catch(function () { reveal(idx, true); ready(); }); } });
   })();
 
 

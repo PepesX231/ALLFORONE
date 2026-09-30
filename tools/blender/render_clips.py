@@ -137,6 +137,67 @@ def tree(x, y, s, cols, trunk):
     for dx, dy, dz, r in ((0, 0, 2.6, 1.3), (-.8, .2, 2.2, .95), (.85, -.1, 2.3, 1.0), (.1, .3, 3.3, .9)):
         sphere(r * s, (x + dx * s, y + dy * s, dz * s), rnd.choice(cols), 'leaf', 10)
 
+
+def sakura3d(x, y, s, seed, lean=0.0):
+    # stylised cherry tree: tapered curvy trunk + 3-4 limbs, each capped by a cloud of blossom puffs
+    R = random.Random(seed)
+    bark = bpy.data.materials.get('sk_bark') or mat('sk_bark', hexc('#7a4a3a'), .8, emit=hexc('#5a3228'), estr=.25)
+    pk = [bpy.data.materials.get(n) or mat(n, hexc(c), .75, emit=hexc(c), estr=e) for n, c, e in
+          (('sk_p1', '#ffc4da', .75), ('sk_p2', '#ffa9c9', .65), ('sk_p3', '#ff8fb8', .55), ('sk_p4', '#ffe6f0', .9))]
+    def curve(pts, r0, r1, m):
+        cu = bpy.data.curves.new('br', 'CURVE'); cu.dimensions = '3D'; cu.bevel_depth = 1; cu.bevel_resolution = 3; cu.use_fill_caps = True
+        sp = cu.splines.new('BEZIER'); sp.bezier_points.add(len(pts) - 1)
+        for i, (bp, pt) in enumerate(zip(sp.bezier_points, pts)):
+            bp.co = pt; bp.handle_left_type = bp.handle_right_type = 'AUTO'; bp.radius = r0 + (r1 - r0) * i / (len(pts) - 1)
+        o = bpy.data.objects.new('br', cu); sc.collection.objects.link(o); o.data.materials.append(m); return o
+    top = (x + lean * s * 1.2, y, 3.2 * s); PUFFS = []
+    curve([(x, y, -.2), (x + lean * s * .3 + .15 * s, y, 1.3 * s), (x + lean * s * .8 - .1 * s, y, 2.4 * s), top], .42 * s, .22 * s, bark)
+    for k in range(R.choice((3, 4))):
+        a = k * 2 * math.pi / 4 + R.uniform(-.5, .5)
+        L = R.uniform(1.6, 2.4) * s
+        end = (top[0] + math.cos(a) * L, top[1] + math.sin(a) * L * .6, top[2] + R.uniform(.9, 1.7) * s)
+        mid = ((top[0] + end[0]) / 2 + R.uniform(-.3, .3) * s, (top[1] + end[1]) / 2, (top[2] + end[2]) / 2 + .25 * s)
+        curve([top, mid, end], .2 * s, .07 * s, bark)
+        for j in range(R.randint(34, 44)):
+            rr = R.uniform(.26, .55) * s
+            px = end[0] + R.gauss(0, .8) * s; py = end[1] + R.gauss(0, .6) * s; pz = end[2] + R.uniform(-.4, 1.0) * s
+            m = pk[3] if pz > end[2] + .6 * s and R.random() < .5 else R.choice(pk[:3])
+            bpy.ops.mesh.primitive_ico_sphere_add(radius=rr, subdivisions=3, location=(px, py, pz)); o = bpy.context.object
+            o.scale = (1, .9, .82); PUFFS.append(o)
+    for j in range(14):   # a few puffs hanging low inside the crown
+        rr = R.uniform(.5, .8) * s
+        bpy.ops.mesh.primitive_ico_sphere_add(radius=rr, subdivisions=3, location=(top[0] + R.gauss(0, 1.1) * s, top[1] + R.gauss(0, .6) * s, top[2] + R.uniform(.4, 1.3) * s))
+        PUFFS.append(bpy.context.object)
+    bpy.ops.object.select_all(action='DESELECT')
+    for o in PUFFS: o.select_set(True)
+    bpy.context.view_layer.objects.active = PUFFS[0]; bpy.ops.object.join(); can = bpy.context.object
+    rm = can.modifiers.new('rm', 'REMESH'); rm.mode = 'VOXEL'; rm.voxel_size = .14 * s
+    sm = can.modifiers.new('sm', 'SMOOTH'); sm.iterations = 6; sm.factor = .8
+    bpy.ops.object.shade_smooth()
+    cm = bpy.data.materials.get('sk_can')
+    if not cm:
+        cm = bpy.data.materials.new('sk_can'); cm.use_nodes = True; nt = cm.node_tree; bs = nt.nodes['Principled BSDF']
+        nz = nt.nodes.new('ShaderNodeTexNoise'); nz.inputs['Scale'].default_value = .55; nz.inputs['Detail'].default_value = 3
+        rp = nt.nodes.new('ShaderNodeValToRGB'); el = rp.color_ramp.elements
+        el[0].position = .38; el[0].color = (*hexc('#ff8fb8'), 1); el[1].position = .62; el[1].color = (*hexc('#ffc9dd'), 1)
+        rp.color_ramp.interpolation = 'CONSTANT'
+        e3 = el.new(.5); e3.color = (*hexc('#ffabc9'), 1)
+        vr = nt.nodes.new('ShaderNodeTexVoronoi'); vr.inputs['Scale'].default_value = 4.5
+        dots = nt.nodes.new('ShaderNodeMath'); dots.operation = 'LESS_THAN'; dots.inputs[1].default_value = .09
+        mx = nt.nodes.new('ShaderNodeMixRGB'); mx.inputs['Color2'].default_value = (*hexc('#fff3f8'), 1)
+        tc = nt.nodes.new('ShaderNodeTexCoord')
+        nt.links.new(tc.outputs['Object'], nz.inputs['Vector']); nt.links.new(tc.outputs['Object'], vr.inputs['Vector'])
+        nt.links.new(nz.outputs['Fac'], rp.inputs['Fac']); nt.links.new(vr.outputs['Distance'], dots.inputs[0])
+        nt.links.new(rp.outputs['Color'], mx.inputs['Color1']); nt.links.new(dots.outputs[0], mx.inputs['Fac'])
+        nt.links.new(mx.outputs['Color'], bs.inputs['Base Color']); nt.links.new(mx.outputs['Color'], bs.inputs['Emission Color'])
+        bs.inputs['Emission Strength'].default_value = .55; bs.inputs['Roughness'].default_value = .9
+    can.data.materials.clear(); can.data.materials.append(cm)
+    # fallen petals ring on the ground
+    for j in range(40):
+        a = R.uniform(0, 2 * math.pi); d = R.uniform(.5, 3.2) * s
+        bpy.ops.mesh.primitive_circle_add(vertices=6, radius=R.uniform(.08, .14) * s, fill_type='NGON', location=(x + math.cos(a) * d, y + math.sin(a) * d * .7, .03))
+        bpy.context.object.data.materials.append(R.choice(pk))
+
 def petals(center, size, count, frames, m):
     bpy.ops.mesh.primitive_plane_add(size=1, location=center); em = bpy.context.object
     em.scale = size; em.hide_render = True
@@ -366,7 +427,7 @@ if CLIP == 'towers':
     pinks = [mat('p1', hexc('#f7a8c4'), .7), mat('p2', hexc('#fbc2d6'), .7), mat('p3', hexc('#f590b5'), .7)]
     trunk = mat('trunk', hexc('#6b3f33'), .8)
     for x, y, s in ((-22, -22, 2.2), (-15, -30, 1.8), (21, -24, 2.3), (14, -31, 1.7), (-27, -12, 1.9), (27, -13, 2.0)):
-        tree(x, y, s, pinks, trunk)
+        if not os.environ.get('SAKURA'): tree(x, y, s, pinks, trunk)
     cm = mat('cloud', (1, 1, 1), .9, emit=(1, 1, 1), estr=.45)
     for x, y, z, s in ((-60, 90, 70, 9), (40, 110, 95, 11), (80, 60, 55, 7), (-20, 140, 120, 12), (-90, 70, 40, 8), (-38, 25, 118, 7), (46, 35, 135, 8), (-70, 40, 160, 9), (60, 10, 105, 6), (-45, 5, 210, 14), (40, 20, 240, 16), (-5, -15, 280, 18), (75, 0, 200, 13), (-85, 25, 250, 15), (15, 40, 190, 11)):
         if not os.environ.get('NOCLOUD'): cloud((x, y, z), s, cm)
@@ -860,6 +921,12 @@ if os.environ.get('TALL') and CLIP == 'towers':
     c.location = (0, float(os.environ.get('TCY', '-30')), float(os.environ.get('TCZ', '2.2'))); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
     if os.environ.get('SHIFT'): aim(c, (0, 0, c.location.z)); c.data.shift_y = float(os.environ['SHIFT'])
     sc.render.line_thickness = float(os.environ.get('LINE', '2')); sc.cycles.samples = 24
+    if os.environ.get('SAKURA'):
+        pre = set(sc.objects)
+        SPOTS = [(-16.0, -15.0, 1.85, 1, .3), (-8.0, -17.5, 1.3, 2, .1), (8.3, -17.0, 1.35, 3, -.15), (16.3, -14.5, 1.9, 4, -.3)] if ORIENT == 'w' else \
+                [(-6.3, -16.5, 1.35, 1, .15), (6.1, -16.0, 1.4, 4, -.15)]
+        for (tx, ty, ts, sd, ln) in SPOTS: sakura3d(tx, ty, ts, sd, ln)
+        TREES = [o for o in sc.objects if o not in pre]
     if os.environ.get('DETAIL'):
         # extra dressing for the hero towers: edge light strips, rooftop beacons, lit lobby, bushes, lamps, flags
         strip = mat('strip', hexc('#8ff0ff'), .3, emit=hexc('#8ff0ff'), estr=3.5)
@@ -984,6 +1051,19 @@ if os.environ.get('TALL') and CLIP == 'towers':
         c.data.ortho_scale = float(os.environ.get('UW', '96'))
         c.location = (float(os.environ.get('UX', '0')), FY - 60, float(os.environ.get('UZ', '-17'))); c.rotation_euler = (math.radians(90), 0, 0)
 
+
+if os.environ.get('TREESONLY') and CLIP == 'towers':
+    ts_ = set(TREES)
+    for o in sc.objects:
+        if o.type in ('MESH', 'CURVE', 'FONT') and o not in ts_:
+            if o.name.startswith('Plane') and abs(o.location.z) < .01 and o.dimensions.x > 100: o.is_shadow_catcher = True
+            else: o.is_holdout = True
+    sc.render.film_transparent = True
+    tcol = bpy.data.collections.new('trees'); sc.collection.children.link(tcol)
+    for o in TREES:
+        for c_ in list(o.users_collection): c_.objects.unlink(o)
+        tcol.objects.link(o)
+    ls.select_by_collection = True; ls.collection = tcol; ls.collection_negation = 'INCLUSIVE'
 
 # ---------------------------------------------------------------- bloom (compositor glare)
 try:

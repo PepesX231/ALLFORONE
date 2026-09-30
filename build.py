@@ -22,7 +22,7 @@ html = re.sub(r'<script src="(assets/[^"?]+\.js)(?:\?v=\w+)?" defer></script>', 
 scripts = re.findall(r'assets/js/[\w.-]+\.js', read('index.html'))
 body_js = ''.join('<script>\n' + read(s) + '\n</script>\n' for s in scripts)
 html = html.replace('</body>', body_js + '</body>')
-html = re.sub(r'(src|href)="(assets/img/[^"]+)"', lambda m: '%s="%s"' % (m.group(1), data_uri(m.group(2))), html)
+html = re.sub(r'(src|href)="(assets/img/[^"'"'"'+]+)"', lambda m: '%s="%s"' % (m.group(1), data_uri(m.group(2))) if os.path.exists(os.path.join(ROOT, m.group(2))) else m.group(0), html)
 os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
 open(out, 'w', encoding='utf-8').write(html)
 print('built', out, round(len(html.encode()) / 1024), 'KB')

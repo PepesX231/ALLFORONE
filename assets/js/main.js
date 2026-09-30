@@ -23,6 +23,7 @@
              (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 2);
   if (reduced) root.classList.add('rm');
   if (lite) root.classList.add('lite');
+  if (matchMedia('(pointer: coarse)').matches && innerWidth < 900) root.classList.add('mob');
   var canAnimate = typeof Element.prototype.animate === 'function';
   var sda = root.classList.contains('sda');          // CSS scroll-driven animations available
   var mqDesktop = matchMedia('(min-width: 900px)');
@@ -269,11 +270,22 @@
       if (!cut.hidden) return; o = orient(); warm(2);
       cut.hidden = false; lock(true); show(i || 0);
     }
+    var leaving = false;
     function exit(toTracks) {
-      cut.hidden = true; lock(false); vids.forEach(function (v) { v.pause(); }); scs.forEach(function (sc, k) { reveal(k, false); });
-      if (toTracks) { done = true; var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
-      else { scrollTo({ top: lockY, behavior: 'instant' }); }
+      if (leaving) return;
+      var finish = function () {
+        cut.hidden = true; cut.classList.remove('leave'); lock(false); vids.forEach(function (v) { v.pause(); }); scs.forEach(function (sc, k) { reveal(k, false); });
+        if (!toTracks) scrollTo({ top: lockY, behavior: 'instant' });
+      };
+      if (!toTracks || reduced) { if (toTracks) { done = true; jump(); } finish(); return; }
+      // leaving for 3 TRACKS: the film zooms into a star-shaped iris, the page lands on 3 TRACKS behind it, then the iris opens
+      leaving = true; done = true; cut.classList.add('leave');
+      var iris = document.getElementById('iris');
+      setTimeout(function () { jump(); finish(); if (iris) { iris.classList.add('open'); } }, 620);
+      setTimeout(function () { if (iris) iris.classList.remove('shut', 'open'); leaving = false; }, 1500);
+      if (iris) iris.classList.add('shut');
     }
+    function jump() { var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
     function next() {
       var now = Date.now(); if (now - lastNav < 450) return; lastNav = now;
       if (busy) { var v = vids[idx]; try { v.currentTime = Math.max(0, (v.duration || 5) - .05); } catch (e) {} return; }
@@ -367,14 +379,16 @@
     var lastBolt = 0;
     function frame(ts) {
       running = false; if (!visible) return;
+      if (ts - (frame.last || 0) < 45) { running = true; raf(frame); return; }   // ~20 fps is plenty for flicker/sparks
+      frame.last = ts;
       var t = ts / 1000;
       // lamps: gentle breathing + an occasional stutter
       el.lamps.forEach(function (L) {
         var on = 1;
         if (t > L.next) { L.until = t + .35 + Math.random() * .5; L.next = t + 3 + Math.random() * 7; }
         if (t < L.until) on = Math.random() < .45 ? 0 : 1;
-        var v = on ? L.base * (.9 + .1 * Math.sin(t * 9 + L.base * 10) * Math.random()) : .05;
-        L.glow.setAttribute('opacity', v.toFixed(2)); L.off.setAttribute('opacity', on ? 0 : .72);
+        var v = on ? L.base : .05;
+        if (v !== L.v) { L.v = v; L.glow.setAttribute('opacity', v.toFixed(2)); L.off.setAttribute('opacity', on ? 0 : .72); }
       });
       // sparks: short bursts between the broken ends
       if (t > el.nextBurst) { el.burst = t + .18 + Math.random() * .35; el.nextBurst = t + .7 + Math.random() * 2.2; }

@@ -1283,3 +1283,25 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .dl-emo,.sh-peek{display:none!important}
 .dl-h small{margin-left:0!important}
 @media (max-aspect-ratio:1/1){.ug-box{width:100vw!important;top:calc(var(--S) * -.02)}}
+/* leaving the film for 3 TRACKS: zoom + star iris, instead of a hard warp */
+.cut.leave .cut-sc.on,.cut.leave .cut-v.on{transition:transform .62s cubic-bezier(.6,0,.8,.4),opacity .62s ease;transform:scale(1.35);opacity:.2}
+.iris{position:fixed;inset:0;z-index:60;pointer-events:none;display:grid;place-items:center;visibility:hidden}
+.iris i{display:block;width:260vmax;height:260vmax;background:#0a0a0f;
+  -webkit-mask:radial-gradient(circle,transparent 0 30%,#000 30.2%);mask:radial-gradient(circle,transparent 0 30%,#000 30.2%);transform:scale(1)}
+.iris.shut{visibility:visible}.iris.shut i{animation:irisIn .6s cubic-bezier(.7,0,.9,.5) forwards}
+.iris.shut.open i{animation:irisOut .8s cubic-bezier(.1,.6,.3,1) forwards}
+@keyframes irisIn{from{transform:scale(1)}to{transform:scale(.001)}}
+@keyframes irisOut{from{transform:scale(.001)}to{transform:scale(1.1)}}
+.st5 .st-go{white-space:nowrap;display:inline-flex!important;align-items:center;gap:8px;flex-direction:row}
+.st5 .st-go .ic{flex:none}
+/* phones: keep only the motion that tells the story */
+.mob #sky{display:none}
+.mob .cl{animation:none!important}
+.mob .cast.on,.mob .stop.in .tl-ham,.mob .pk-orb.emo img,.mob .dl-emo,.mob .ug-hang{animation:none!important}
+.mob .petals,.mob .motes,.mob .sf-stars{display:none}
+.mob .dawn-rays,.mob .dawn-sun{animation:none}
+.mob .pk-spark{animation:none}
+.mob .tl-walker.go{animation:none}
+/* tilted towers v3 (with the lit lobby + colonnade): the colonnade's foot tucks under the sidewalk */
+.bt-sky .ly-tw{top:calc(var(--S) * -.38)!important;height:calc(var(--S) * 2.45)!important;bottom:auto!important}
+@media (max-aspect-ratio:1/1){.bt-sky .ly-tw{top:calc(var(--S) * -.24)!important;height:calc(var(--S) * 2.36)!important}}

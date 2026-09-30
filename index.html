@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=ce35e949">
+<link rel="stylesheet" href="assets/css/style.css?v=32947d6d">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -66,7 +66,7 @@
 }
 </script>
 <script src="assets/js/data.js?v=ae8c617b" defer></script>
-<script src="assets/js/main.js?v=578fa1e9" defer></script>
+<script src="assets/js/main.js?v=6c60d701" defer></script>
 <script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
@@ -285,6 +285,7 @@
   </div>
 
   <!-- cutscene player: tap / scroll / swipe steps through the story; each step plays a 3D camera move, then waits -->
+  <div class="iris" id="iris" aria-hidden="true"><i></i></div>
   <div class="cut" id="cut" hidden>
     <video class="cut-v" data-c="c1" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>
     <video class="cut-v" data-c="c2" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>

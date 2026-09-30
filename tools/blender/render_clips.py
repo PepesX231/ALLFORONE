@@ -715,6 +715,30 @@ if os.environ.get('TALL') and CLIP == 'towers':
     c.location = (0, float(os.environ.get('TCY', '-30')), float(os.environ.get('TCZ', '2.2'))); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
     if os.environ.get('SHIFT'): aim(c, (0, 0, c.location.z)); c.data.shift_y = float(os.environ['SHIFT'])
     sc.render.line_thickness = float(os.environ.get('LINE', '2')); sc.cycles.samples = 24
+    if os.environ.get('DETAIL'):
+        # extra dressing for the hero towers: edge light strips, rooftop beacons, lit lobby, bushes, lamps, flags
+        strip = mat('strip', hexc('#8ff0ff'), .3, emit=hexc('#8ff0ff'), estr=3.5)
+        beacon = mat('beacon', hexc('#ff4d5e'), .3, emit=hexc('#ff4d5e'), estr=10)
+        for side in (-1, 1):
+            cx = side * 9.5
+            for ex in (-7.2, 7.2):
+                box((.22, .22, 76), (cx + ex, -6.25, 38.5), strip)
+            for ex in (-3, 3): sphere(.45, (cx + side * 2 + ex * .2, 1, 90.4), beacon, seg=10)
+            box((12, .15, .6), (cx, -6.3, 77.2), strip)
+        lobby = mat('lobby', hexc('#ffe2a0'), .3, emit=hexc('#ffcf7a'), estr=2.2)
+        box((44, .2, 5.2), (0, -9.6, 3.9), lobby)
+        door = mat('door', hexc('#2f6fb8'), .1, .6, emit=hexc('#9fd0ff'), estr=.6)
+        box((6, .3, 4.2), (0, -9.8, 3.3), door)
+        bush = [mat('b1', hexc('#4fae5a'), .8), mat('b2', hexc('#6cc36b'), .8)]
+        for i in range(22):
+            x = -26 + i * 2.5 + rnd.uniform(-.4, .4); o = sphere(rnd.uniform(.9, 1.3), (x, -13.2, .7), rnd.choice(bush), seg=12); o.scale = (1.2, .9, .8)
+        pole = mat('lamp', hexc('#2a2f45'), .5, .4); lampg = mat('lampg', hexc('#fff1c9'), .3, emit=hexc('#ffe7a0'), estr=6)
+        for x in (-22, -12, 12, 22):
+            cyl(.12, 5.5, (x, -16, 2.75), pole, v=8); sphere(.45, (x, -16, 5.7), lampg, seg=10)
+        flagc = ['#ff6000', '#ffd23f', '#2fd08b', '#4d9fff']
+        for i, x in enumerate((-18, -6, 6, 18)):
+            cyl(.08, 10, (x, -12.2, 13), pole, v=6)
+            box((3.2, .08, 1.9), (x + 1.65, -12.2, 16.8), mat('fl' + str(i), hexc(flagc[i]), .6, emit=hexc(flagc[i]), estr=.4))
     if os.environ.get('UNDER'):
         # cut-away diorama: the street is sliced open at y=FY, showing soil, pipes, cables and lamps under the towers
         FY = -34.0

@@ -1169,3 +1169,13 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .cut-go .ic-play{width:18px;height:18px;transform:none}
 .cut-v::-webkit-media-controls{display:none!important}
 .pk-orb.emo .pk-ic{display:none}
+/* sky → 3 TRACKS: the towers sink into the night instead of stopping on a hard edge */
+.bt-sky::after{display:block!important;content:"";position:absolute;left:0;right:0;bottom:0;z-index:4;height:46%;pointer-events:none;
+  background:linear-gradient(rgba(11,11,16,0),rgba(20,28,70,.35) 35%,rgba(11,11,16,.85) 72%,var(--ink))}
+.bt-sky .st1{z-index:6}
+/* film words stay readable on bright daytime frames */
+.cut-sc .st-big{-webkit-text-stroke:clamp(5px,.6vw,9px) #1b2a6b;paint-order:stroke fill}
+.cut-sc .st-big .hl{-webkit-text-stroke-color:#9a2f06}
+.cut-sc .st-s{color:#fff;text-shadow:0 2px 0 #1b2a6b,0 0 16px rgba(8,16,50,.85),0 0 4px rgba(8,16,50,.9)}
+.cut-sc::before{content:"";position:absolute;left:0;right:0;top:0;height:62%;z-index:4;pointer-events:none;background:linear-gradient(rgba(10,18,52,.55),rgba(10,18,52,0))}
+.sc-desk::before{background:linear-gradient(rgba(6,8,24,.35),rgba(6,8,24,0))}

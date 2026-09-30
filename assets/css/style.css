@@ -1445,3 +1445,20 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 @media (min-aspect-ratio:1/1){.sn-meadow .c-group{bottom:13.7%}.sc-meadow .c-shadow{bottom:calc(13.7% - 2.2vh)}}
 
 .cut-sc{isolation:isolate}
+/* clouds (Gemini sprites): backmost layer, drift + gentle bob */
+.cl{animation:cldrift var(--d) ease-in-out var(--dl) infinite alternate,clbob calc(var(--d) / 5) ease-in-out var(--dl) infinite alternate}
+@keyframes cldrift{from{translate:-9vw 0}to{translate:9vw 0}}
+@keyframes clbob{from{margin-top:0}to{margin-top:1.2vh}}
+.cl1{width:min(28vw,400px)}.cl2{width:min(20vw,300px)}.cl3{width:min(24vw,340px)}.cl4{width:min(17vw,240px)}.cl5{width:min(19vw,270px)}.cl6{width:min(14vw,200px)}
+/* sakura petals drifting down past the foot of the towers */
+.sakura{position:absolute;left:0;right:0;top:calc(var(--S) * .85);height:calc(var(--S) * 1.1);overflow:hidden;pointer-events:none;z-index:4}
+.sakura i{position:absolute;top:-4%;left:calc(var(--x) * 1%);width:calc(var(--s) * 1.7px);height:calc(var(--s) * 1.28px);background:url(../img/sky/petal.svg) center/contain no-repeat;opacity:.95;
+  animation:sakfall var(--d) linear var(--dl) infinite}
+@keyframes sakfall{0%{transform:translate3d(0,0,0) rotate(0deg)}25%{transform:translate3d(4vw,26vh,0) rotate(140deg)}50%{transform:translate3d(-2vw,52vh,0) rotate(260deg)}75%{transform:translate3d(5vw,78vh,0) rotate(400deg)}100%{transform:translate3d(1vw,108vh,0) rotate(540deg)}}
+.sakura i:nth-child(1){--x:4;--s:22;--d:11s;--dl:-1s}.sakura i:nth-child(2){--x:12;--s:16;--d:13s;--dl:-6s}.sakura i:nth-child(3){--x:19;--s:26;--d:10s;--dl:-3s}
+.sakura i:nth-child(4){--x:27;--s:14;--d:14s;--dl:-9s}.sakura i:nth-child(5){--x:33;--s:20;--d:12s;--dl:-4s}.sakura i:nth-child(6){--x:41;--s:17;--d:15s;--dl:-11s}
+.sakura i:nth-child(7){--x:48;--s:24;--d:11.5s;--dl:-7s}.sakura i:nth-child(8){--x:55;--s:15;--d:13.5s;--dl:-2s}.sakura i:nth-child(9){--x:62;--s:21;--d:10.5s;--dl:-8s}
+.sakura i:nth-child(10){--x:69;--s:18;--d:14.5s;--dl:-5s}.sakura i:nth-child(11){--x:76;--s:25;--d:12.5s;--dl:-10s}.sakura i:nth-child(12){--x:83;--s:14;--d:11s;--dl:-4.5s}
+.sakura i:nth-child(13){--x:90;--s:22;--d:13s;--dl:-12s}.sakura i:nth-child(14){--x:96;--s:17;--d:10s;--dl:-6.5s}.sakura i:nth-child(15){--x:8;--s:19;--d:15s;--dl:-13s}.sakura i:nth-child(16){--x:60;--s:28;--d:12s;--dl:-9.5s}
+.mob .sakura i:nth-child(n+11){display:none}
+.rm .sakura{display:none}

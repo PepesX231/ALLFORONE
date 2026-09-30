@@ -631,6 +631,8 @@ XF = os.environ.get('XFER')
 if XF:
     XT = '/tmp/claude-0/-home-claude/fed940bd-495e-598e-8150-238c153e3d70/scratchpad/xt/'
     N = int(os.environ.get('XN', '32')); sc.frame_start, sc.frame_end = 1, N
+    if os.environ.get('FSTART'): sc.frame_start = int(os.environ['FSTART'])
+    if os.environ.get('FEND'): sc.frame_end = int(os.environ['FEND'])
     OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', f'x{XF}-{ORIENT}'); os.makedirs(OUT, exist_ok=True)
     P = ORIENT == 'p'
     c.animation_data_clear()
@@ -706,6 +708,37 @@ if XF:
                 for col in o.users_collection: col.objects.unlink(o)
                 nofs.objects.link(o)
             keys([(1, (2, -17, 2.8), (0, 20, 10.5)), (N, (2, -20, 3.4), (1, 12, 75))], [(1, lens), (N, lens)])
+    elif XF == '5' and CLIP == 'kmitl':
+        # one continuous shot: sunset time-lapse on campus -> windows light up -> stars fade in -> crane up + zoom into a star cluster
+        for idb in (sc.world.node_tree, sn, sn.data, glassw.node_tree):
+            if idb.animation_data: idb.animation_data_clear()
+        lens = 25.2 if P else 24
+        for f, e, st, en, win in ((1, 22, .1, 2.2, 0), (16, 8, .16, 1.6, 0), (26, 1.5, .2, 1.0, .6), (38, -6, .03, 0, 4.5), (N, -7, .025, 0, 4.5)):
+            s.sun_elevation = math.radians(e); s.keyframe_insert('sun_elevation', frame=f)
+            bg.inputs['Strength'].default_value = st; bg.inputs['Strength'].keyframe_insert('default_value', frame=f)
+            sn.data.energy = en; sn.data.keyframe_insert('energy', frame=f)
+            sn.rotation_euler = (math.radians(90 - max(e, 0)), 0, math.radians(210)); sn.keyframe_insert('rotation_euler', frame=f)
+            em_node.default_value = win; em_node.keyframe_insert('default_value', frame=f)
+        nofs = bpy.data.collections.new('nofs'); sc.collection.children.link(nofs)
+        ls.select_by_collection = True; ls.collection = nofs; ls.collection_negation = 'EXCLUSIVE'
+        def star_mat(name, col, peak, f0, f1):
+            m = mat(name, (0, 0, 0), .5, emit=hexc(col), estr=0); m['f0'] = f0
+            es = m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength']
+            for f, v in ((1, 0), (f0, 0), (f1, peak), (N, peak)): es.default_value = v; es.keyframe_insert('default_value', frame=f)
+            return m
+        # stars appear in waves: a few bright ones first, then the field, then the faint cluster we zoom into
+        waves = [star_mat('st_a', '#fff3cf', 12, 30, 40), star_mat('st_b', '#ffffff', 8, 34, 48), star_mat('st_c', '#dfe8ff', 7, 40, 56)]
+        def put(az, el, r, m):
+            R = 180; p = (math.sin(az) * math.cos(el) * R, math.cos(az) * math.cos(el) * R, math.sin(el) * R + 10)
+            o = sphere(r, p, m, seg=6)
+            for col in o.users_collection: col.objects.unlink(o)
+            nofs.objects.link(o)
+            for f, h in ((1, True), (int(m['f0']) + 1, False)): o.hide_render = h; o.keyframe_insert('hide_render', frame=f)
+        for i in range(240): put(rnd.uniform(-1.3, 1.3), rnd.uniform(.3, 1.45), rnd.uniform(.22, .5), waves[1])
+        for i in range(140): put(rnd.gauss(.06, .22), rnd.gauss(.63, .12), rnd.uniform(.14, .32), waves[2])
+        for i in range(10): put(rnd.uniform(-.5, .6), rnd.uniform(.32, .85), rnd.uniform(.55, .8), waves[0])
+        keys([(1, (-5, -26, 2.2), (0, 20, 9.5)), (24, (2, -17, 2.8), (0, 20, 10.5)), (34, (2.4, -16, 3.3), (.6, 20, 12.5)),
+              (N, (4, -10, 10), (8, 60, 61))], [(1, lens), (34, lens), (N, lens * 1.75)])
 
 if os.environ.get('TALL') and CLIP == 'towers':
     # one tall still of the towers for the layered parallax hero (sky keyed out, clouds live in CSS behind)

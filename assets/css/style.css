@@ -1418,3 +1418,30 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 }
 @media (max-width:719px){.dl-h small{background:none!important;padding:0!important}}
 @media (min-width:720px){.dl-row{grid-template-columns:230px minmax(0,1fr)!important;align-items:center}.dl-h{white-space:nowrap;margin-bottom:0!important}.dl-h small{white-space:normal}}
+/* ===== floating cel-shaded clouds behind the towers (transform-only drift, no scroll work) ===== */
+.sky-cl{position:absolute;left:0;right:0;top:0;height:calc(var(--S) * 1.3);overflow:hidden;pointer-events:none}
+.cl{position:absolute;height:auto;max-width:none;animation:cldrift var(--d) ease-in-out var(--dl) infinite alternate;will-change:translate}
+.cl1{--d:46s;--dl:-8s;width:min(30vw,420px);left:4%;top:9%}
+.cl2{--d:58s;--dl:-30s;width:min(20vw,280px);left:70%;top:6%;opacity:.95}
+.cl3{--d:52s;--dl:-14s;width:min(24vw,330px);left:80%;top:30%}
+.cl4{--d:64s;--dl:-40s;width:min(15vw,200px);left:30%;top:24%;opacity:.85}
+.cl5{--d:70s;--dl:-22s;width:min(13vw,170px);left:52%;top:4%;opacity:.8}
+.cl6{--d:50s;--dl:-5s;width:min(22vw,300px);left:-6%;top:40%}
+@keyframes cldrift{from{translate:-6vw 0}to{translate:6vw 0}}
+@media (max-aspect-ratio:1/1){
+  .sky-cl{height:calc(var(--S) * 1.1)}
+  .cl1{width:52vw;left:-10%;top:6%}.cl2{width:36vw;left:66%;top:4%}.cl3{width:44vw;left:70%;top:22%}
+  .cl4{width:26vw;left:34%;top:15%}.cl5{display:none}.cl6{width:40vw;left:-12%;top:30%}
+}
+.rm .cl{animation:none}
+.sky-cl{height:calc(var(--S) * 1.05)}
+.cl1{top:6%}.cl2{top:3%}.cl3{top:34%}.cl4{top:52%}.cl5{top:18%}.cl6{top:62%}
+@media (max-aspect-ratio:1/1){.sky-cl{height:calc(var(--S) * .75)}.cl1{top:24%}.cl2{top:4%}.cl3{top:44%}.cl4{top:66%;left:40%}.cl6{top:80%}}
+/* sheet header: solid, thin divider + short soft shadow instead of a tall translucent band */
+.sheet-top{padding-bottom:8px!important;box-shadow:0 1px 0 rgba(255,255,255,.07)}
+.sheet-top::after{height:12px!important;background:linear-gradient(rgba(6,8,20,.35),rgba(6,8,20,0))!important}
+/* meadow: the title sits BETWEEN planes — the friends' ears poke over the subtitle, flowers stay in front */
+.sc-meadow .dp3{z-index:6}.sc-meadow .dp4{z-index:7}.sc-meadow .dp5{z-index:8}
+@media (min-aspect-ratio:1/1){.sn-meadow .c-group{bottom:13.7%}.sc-meadow .c-shadow{bottom:calc(13.7% - 2.2vh)}}
+
+.cut-sc{isolation:isolate}

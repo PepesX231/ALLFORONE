@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=e8b1f408">
+<link rel="stylesheet" href="assets/css/style.css?v=6b4eff83">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -66,7 +66,7 @@
 }
 </script>
 <script src="assets/js/data.js?v=ae8c617b" defer></script>
-<script src="assets/js/main.js?v=d47c8922" defer></script>
+<script src="assets/js/main.js?v=5a7dcb36" defer></script>
 <script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
@@ -275,22 +275,23 @@
       <span class="w st-s" style="--i:0">การแข่งขันเทคโนโลยี</span>
       <p class="st-big"><span class="w " style="--i:1">รายการแข่ง</span><span class="w hl" style="--i:2">สุดมัน</span><br><span class="w hl2" style="--i:3">แห่งปี</span></p>
       <span class="w st-s" style="--i:4">สำหรับนักเรียนมัธยมทั่วประเทศ</span>
-      <button class="w st-go cut-go" style="--i:5" type="button">แตะเพื่อไปต่อ <svg class="ic"><use href="#i-arrow"/></svg></button>
+      <button class="w st-go cut-go" style="--i:5" type="button"><svg class="ic ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>แตะเพื่อรู้จักเรามากขึ้น</button>
     </div>
   </div>
 
   <!-- cutscene player: tap / scroll / swipe steps through the story; each step plays a 3D camera move, then waits -->
   <div class="cut" id="cut" hidden>
-    <video class="cut-v" data-c="c1" muted playsinline preload="none"></video>
-    <video class="cut-v" data-c="c2" muted playsinline preload="none"></video>
-    <video class="cut-v" data-c="c3" muted playsinline preload="none"></video>
-    <video class="cut-v" data-c="c4" muted playsinline preload="none"></video>
+    <video class="cut-v" data-c="c1" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>
+    <video class="cut-v" data-c="c2" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>
+    <video class="cut-v" data-c="c3" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>
+    <video class="cut-v" data-c="c4" muted playsinline disablepictureinpicture disableremoteplayback controlslist="nodownload nofullscreen noplaybackrate" preload="none"></video>
     <div class="cut-sc sc-desk" data-i="1">
     <img class="cast c-study" src="assets/img/cast/p-study.webp" alt="" width="591" height="624" loading="lazy" decoding="async">
     
     <div class="st st2 night">
       <span class="w st-s" style="--i:0">ทุกคืนที่นั่งทำจนดึก ทุกไอเดียที่ยังไม่มีใครเห็น</span>
       <p class="st-big"><span class="w" style="--i:1">ทุกความพยายาม</span><br><span class="w hl" style="--i:2">ที่ผ่านมา</span></p>
+      <span class="w st-s" style="--i:3">จะมีเวทีให้โชว์แล้ว</span>
     </div>
     </div>
     <div class="cut-sc sc-meadow sn-meadow" data-i="2">

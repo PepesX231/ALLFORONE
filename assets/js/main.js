@@ -228,7 +228,7 @@
   (function () {
     var cut = document.getElementById('cut'), sky = $('.bt-sky'); if (!cut || !sky) return;
     var vids = $$('.cut-v', cut), scs = $$('.cut-sc', cut), dots = $$('.cut-dots i', cut), N = vids.length;
-    var SHOW = [2.55, 0, 2.55, 0];                    // seconds into the clip when the scene's words/hamsters appear (0 = at the end)
+    var SHOW = [2.55, 0, 0, 0];                    // seconds into the clip when the scene's words/hamsters appear (0 = at the end)
     var idx = 0, busy = false, done = false, lastNav = 0, o = '';
     function orient() { return innerWidth <= innerHeight ? 'p' : 'w'; }
     function prep(v) {
@@ -272,7 +272,7 @@
     function exit(toTracks) {
       cut.hidden = true; lock(false); vids.forEach(function (v) { v.pause(); }); scs.forEach(function (sc, k) { reveal(k, false); });
       if (toTracks) { done = true; var t = document.getElementById('tracks'); if (t) scrollTo({ top: t.getBoundingClientRect().top + scrollY - (($('.hdr') || {}).offsetHeight || 60), behavior: 'instant' }); }
-      else { scrollTo({ top: skyEnd() - innerHeight - 4, behavior: 'instant' }); }
+      else { scrollTo({ top: lockY, behavior: 'instant' }); }
     }
     function next() {
       var now = Date.now(); if (now - lastNav < 450) return; lastNav = now;
@@ -286,18 +286,16 @@
     function skyEnd() { var r = sky.getBoundingClientRect(); return r.bottom + scrollY; }
     function atSkyEnd() { return !done && cut.hidden && scrollY + innerHeight >= skyEnd() - 6; }
     // entering: scroll / swipe / key past the last sky screen, or tap the button
-    $$('.cut-go').forEach(function (b) { b.addEventListener('click', function () { done = false; scrollTo({ top: skyEnd() - innerHeight, behavior: 'instant' }); start(0); }); });
+    $$('.cut-go').forEach(function (b) { b.addEventListener('click', function () { done = false; start(0); }); });
     var wLast = 0;                                   // one wheel/trackpad gesture (incl. its inertia) = one step
     addEventListener('wheel', function (e) {
       var now = Date.now(), fresh = now - wLast > 320; wLast = now;
       if (!cut.hidden) { e.preventDefault(); if (!fresh || busy || Math.abs(e.deltaY) < 4) return; (e.deltaY > 0 ? next : prev)(); return; }
-      if (e.deltaY > 0 && atSkyEnd()) { e.preventDefault(); start(0); }
     }, { passive: false });
     var ty = null;
     addEventListener('touchstart', function (e) { ty = e.touches[0].clientY; }, { passive: true });
     addEventListener('touchmove', function (e) {
       if (!cut.hidden) { e.preventDefault(); return; }
-      if (ty !== null && ty - e.touches[0].clientY > 12 && atSkyEnd()) { e.preventDefault(); ty = null; start(0); }
     }, { passive: false });
     cut.addEventListener('touchend', function (e) {
       if (ty === null) return; var dy = ty - e.changedTouches[0].clientY; ty = null;
@@ -315,15 +313,8 @@
         else if (e.key === 'Escape') exit(true);
         return;
       }
-      if (/^(ArrowDown|PageDown| |Spacebar)$/.test(e.key) && atSkyEnd()) { e.preventDefault(); start(0); }
     });
-    // scrollbar drags / momentum past the sky: hold at its last screen and start the film
-    addEventListener('scroll', function () {
-      if (!cut.hidden) { if (Math.abs(scrollY - lockY) > 1) scrollTo({ top: lockY, behavior: 'instant' }); return; }
-      if (done) return;
-      var lim = skyEnd() - innerHeight;
-      if (scrollY > lim + 8 && scrollY < lim + innerHeight * 1.5) { scrollTo({ top: lim, behavior: 'instant' }); start(0); }
-    }, { passive: true });
+    addEventListener('scroll', function () { if (!cut.hidden && Math.abs(scrollY - lockY) > 1) scrollTo({ top: lockY, behavior: 'instant' }); }, { passive: true });
     // header / in-page links skip the film
     document.addEventListener('click', function (e) {
       var a = e.target.closest && e.target.closest('a[href^="#"]'); if (!a || a.closest('#cut')) return;

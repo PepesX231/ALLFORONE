@@ -407,11 +407,21 @@ elif CLIP == 'desk':
     rug = mat('rug', hexc('#5fd3a3'), .9); cyl(2.3, .04, (.4, -2.0, .03), rug, v=48)
     cyl(1.7, .045, (.4, -2.0, .035), mat('rug2', hexc('#8fe6c2'), .9), v=48)
     chm = mat('chair', hexc('#ff6a3d'), .5); blk = mat('blk', hexc('#1d2233'), .5)
-    CX, CY = 2.9, -1.2
-    box((1.0, .95, .16), (CX, CY, .95), chm, bevel=.05); box((.16, 1.0, 1.1), (CX + .5, CY, 1.55), chm, bevel=.05)
-    cyl(.06, .8, (CX, CY, .5), blk)
-    for a in range(5):
-        an = a * 2 * math.pi / 5; cyl(.04, .55, (CX + math.cos(an) * .25, CY + math.sin(an) * .25, .08), blk, rot=(0, math.radians(90), an))
+    # office chair, pulled out at the right end of the desk and turned a little toward us
+    bpy.ops.object.empty_add(location=(2.6, -1.85, 0), rotation=(0, 0, math.radians(-28))); chroot = bpy.context.object
+    parts = []
+    for k in range(5):
+        an = k * 2 * math.pi / 5 + .3
+        parts.append(cyl(.035, .46, (math.cos(an) * .23, math.sin(an) * .23, .09), blk, rot=(0, math.radians(90), an), v=8))
+        parts.append(sphere(.055, (math.cos(an) * .44, math.sin(an) * .44, .055), blk, seg=10))
+    parts.append(cyl(.09, .08, (0, 0, .13), blk, v=12)); parts.append(cyl(.045, .42, (0, 0, .36), mat('chrome', hexc('#c7d0e2'), .3, .8), v=10))
+    parts.append(box((.66, .62, .13), (0, 0, .62), chm, bevel=.06))
+    parts.append(box((.66, .6, .05), (0, 0, .7), mat('seatpad', hexc('#ff8a5c'), .6), bevel=.04))
+    parts.append(box((.08, .1, .5), (0, -.31, .92), blk))
+    bk = box((.62, .11, .62), (0, -.36, 1.28), chm, bevel=.06); bk.rotation_euler = (math.radians(-8), 0, 0); parts.append(bk)
+    for sx in (-1, 1):
+        parts.append(box((.05, .05, .22), (sx * .34, .02, .8), blk)); parts.append(box((.08, .34, .05), (sx * .34, .02, .92), blk, bevel=.02))
+    for o_ in parts: o_.parent = chroot
     cush = mat('cush', hexc('#ffb13d'), .8); o = sphere(1.0, (-3.1, -1.4, .2), cush, seg=24); o.scale = (1.1, .9, .3)
     pot = mat('pot', hexc('#e8835a'), .6); cyl(.38, .7, (4.6, .6, .35), pot)
     leafm = [mat('pl1', hexc('#4fae5a'), .8), mat('pl2', hexc('#6cc36b'), .8)]

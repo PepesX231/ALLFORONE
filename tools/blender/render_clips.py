@@ -450,7 +450,7 @@ elif CLIP == 'desk':
     cyl(1.7, .045, (.4, -2.0, .035), mat('rug2', hexc('#8fe6c2'), .9), v=48)
     chm = mat('chair', hexc('#ff6a3d'), .5); blk = mat('blk', hexc('#1d2233'), .5)
     # office chair, pulled out at the right end of the desk and turned a little toward us
-    bpy.ops.object.empty_add(location=(2.6, -1.85, 0), rotation=(0, 0, math.radians(-28))); chroot = bpy.context.object
+    bpy.ops.object.empty_add(location=(.45, -1.75, 0), rotation=(0, 0, math.radians(-14))); chroot = bpy.context.object
     parts = []
     for k in range(5):
         an = k * 2 * math.pi / 5 + .3
@@ -460,11 +460,11 @@ elif CLIP == 'desk':
     parts.append(box((.66, .62, .13), (0, 0, .62), chm, bevel=.06))
     parts.append(box((.66, .6, .05), (0, 0, .7), mat('seatpad', hexc('#ff8a5c'), .6), bevel=.04))
     parts.append(box((.08, .1, .5), (0, -.31, .92), blk))
-    bk = box((.62, .11, .62), (0, -.36, 1.28), chm, bevel=.06); bk.rotation_euler = (math.radians(-8), 0, 0); parts.append(bk)
+    bk = box((.62, .11, .5), (0, -.36, 1.2), chm, bevel=.06); bk.rotation_euler = (math.radians(-8), 0, 0); parts.append(bk)
     for sx in (-1, 1):
         parts.append(box((.05, .05, .22), (sx * .34, .02, .8), blk)); parts.append(box((.08, .34, .05), (sx * .34, .02, .92), blk, bevel=.02))
     for o_ in parts: o_.parent = chroot
-    cush = mat('cush', hexc('#ffb13d'), .8); o = sphere(1.0, (-3.1, -1.4, .2), cush, seg=24); o.scale = (1.1, .9, .3)
+    cush = mat('cush', hexc('#ffb13d'), .8); o = sphere(1.0, (-4.15, -1.2, .2), cush, seg=24); o.scale = (1.1, .9, .3)
     pot = mat('pot', hexc('#e8835a'), .6); cyl(.38, .7, (4.6, .6, .35), pot)
     leafm = [mat('pl1', hexc('#4fae5a'), .8), mat('pl2', hexc('#6cc36b'), .8)]
     for k in range(7): sp_ = sphere(rnd.uniform(.35, .5), (4.6 + rnd.uniform(-.4, .4), .6 + rnd.uniform(-.3, .3), 1.0 + rnd.uniform(0, .9)), leafm[k % 2], seg=12)
@@ -477,7 +477,7 @@ elif CLIP == 'desk':
     bpy.ops.object.light_add(type='POINT', location=(-2, -1, 4.6)); l = bpy.context.object; l.data.energy = 160; l.data.color = (1, .8, .55); l.data.shadow_soft_size = 1.5
     bpy.ops.object.light_add(type='AREA', location=(-2.5, -6, 3.5), rotation=(math.radians(70), 0, math.radians(-15))); l = bpy.context.object; l.data.energy = 260; l.data.color = (.55, .6, 1); l.data.size = 5
     # the hamster: a 2D card standing IN the 3D room (lit by the lamp, casting a shadow, no ink box around it)
-    CAM_A, LOOK_A, CAM_B, LOOK_B = ((.6, -9.4, 2.6), (-.5, .3, 1.75), (.4, -8.2, 2.35), (-.4, .3, 1.7)) if ORIENT == 'w' else ((-1.1, -9.4, 2.6), (-1.65, .3, 2.25), (-1.0, -8.3, 2.45), (-1.55, .3, 2.2))
+    CAM_A, LOOK_A, CAM_B, LOOK_B = ((.2, -9.4, 2.6), (-.95, .3, 1.75), (.05, -8.2, 2.35), (-.8, .3, 1.7)) if ORIENT == 'w' else ((-1.9, -12.2, 2.7), (-1.9, .3, 2.15), (-1.7, -10.9, 2.55), (-1.8, .3, 2.1))
     hp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'p-study.png')
     if not os.path.exists(hp):
         from PIL import Image as _I; _I.open('/home/claude/afo-repo/assets/img/cast/p-study.webp').save(hp)
@@ -487,7 +487,7 @@ elif CLIP == 'desk':
     nt.links.new(ht.outputs['Color'], bs.inputs['Emission Color']); bs.inputs['Emission Strength'].default_value = .55; bs.inputs['Roughness'].default_value = .8
     try: hm.surface_render_method = 'DITHERED'
     except Exception: pass
-    hx, hy, hh = -3.05, -1.45, 1.9; hw = hh * 685 / 718
+    hx, hy, hh = -4.1, -1.25, 1.9; hw = hh * 685 / 718
     rz = math.atan2(CAM_A[0] - hx, -(CAM_A[1] - hy))
     bpy.ops.mesh.primitive_plane_add(size=1, location=(hx, hy, .28 + hh / 2), rotation=(math.radians(90), 0, rz)); card = bpy.context.object
     card.scale = (hw, hh, 1); card.data.materials.append(hm)

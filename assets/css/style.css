@@ -1325,3 +1325,18 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 /* towers → underground: a long fade through night-dark before the dig */
 .under::before{top:-38%!important;height:78%!important;background:linear-gradient(rgba(10,10,15,0) 0%,rgba(10,10,15,.55) 26%,#0a0a0f 48%,#0a0a0f 56%,rgba(10,10,15,0) 100%)!important}
 .under{background:linear-gradient(rgba(10,10,15,0) 0%,#0a0a0f 12%,#0a0a0f 30%,#0a0a0f 100%)!important}
+/* towers → underground: a long, deep fall into black that covers everything (sky, clouds, towers) */
+.bt-sky{height:calc((100vh - var(--hdr)) * 3.6)!important;height:calc(var(--S) * 3.6)!important}
+.dig{position:absolute;left:0;right:0;bottom:calc(var(--S) * 1.06 * .7);height:calc(var(--S) * 1.5);z-index:5;pointer-events:none;
+  background:linear-gradient(rgba(10,10,15,0) 0%,rgba(10,10,15,.6) 18%,rgba(10,10,15,.94) 34%,#0a0a0f 44%,#0a0a0f 100%)}
+.under::before{display:none!important}
+.under{z-index:6}
+.ug-box picture{-webkit-mask-image:none!important;mask-image:none!important}
+@media (max-aspect-ratio:1/1){.dig{bottom:calc(var(--S) * .9 * .7)}}
+/* smoothness: no live blur anywhere (backdrop-filter over video/3D is the #1 cause of jank on phones) */
+.st .st-s,.cut-skip,.hdr,.chips,.sheet-panel{-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.st .st-s{background:rgba(10,16,48,.72)}
+.cut-skip{background:rgba(10,12,30,.78)}
+.mob .cut-sc.on .ly.cam,.mob .sc-dawn.on .ly-bg{animation:none!important}
+.mob .cut-v{will-change:opacity}
+.cut-sc .st-big{-webkit-text-stroke-width:4px}

@@ -299,6 +299,8 @@
     function atSkyEnd() { return !done && cut.hidden && scrollY + innerHeight >= skyEnd() - 6; }
     // entering: scroll / swipe / key past the last sky screen, or tap the button
     $$('.cut-go').forEach(function (b) { b.addEventListener('click', function () { done = false; start(0); }); });
+    var wio = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { wio.disconnect(); o = orient(); warm(N); } }, { rootMargin: '60% 0px' });
+    $$('.cut-go').forEach(function (b) { wio.observe(b); });
     var wLast = 0;                                   // one wheel/trackpad gesture (incl. its inertia) = one step
     addEventListener('wheel', function (e) {
       var now = Date.now(), fresh = now - wLast > 320; wLast = now;

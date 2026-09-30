@@ -342,7 +342,7 @@ elif CLIP == 'desk':
     wood = mat('wood', hexc('#7a4f38'), .55)
     box((6, 3, .12), (0, 0, 1), wood)
     for x in (-2.8, 2.8): box((.12, 2.8, 1), (x, 0, .5), wood)
-    wall = mat('wall', hexc('#232a5e'), .9); box((12, .2, 6), (0, 1.8, 3), wall)
+    wall = mat('wall', hexc('#232a5e'), .9)
     # window with city
     city = mat('city', hexc('#141a44'), .9, emit=hexc('#ffd98a'), estr=0)
     win = mat('window', hexc('#1a2a6c'), .3, emit=hexc('#2b3c8a'), estr=.6)
@@ -383,8 +383,68 @@ elif CLIP == 'desk':
     for x, z, col in ((1.1, 3.4, '#ffe066'), (1.8, 3.2, '#ff9fbf'), (1.4, 2.7, '#9be7c4'), (2.4, 2.9, '#8fd0ff')):
         box((.5, .02, .5), (x, 1.68, z), mat('n' + col, hexc(col), .8), rot=(0, rnd.uniform(-.15, .15), 0))
     paper = mat('paper', hexc('#fff8e6'), .8); box((.9, .6, .02), (.9, -.8, 1.07), paper, rot=(0, 0, -.2))
-    c = camera((0, -3.6, 1.9), (0, .3, 1.6), 30)
-    key_cam(c, [(1, (-.6, -3.9, 2.0), (0, .3, 1.55)), (F, (.25, -2.9, 1.75), (0, .3, 1.6))])
+    # ---- the rest of the study room (wide shot): floor, side wall, shelf, curtains, rug, chair, plant, fairy lights
+    floor = mat('floor', hexc('#6b4a3a'), .7); box((16, 16, .1), (0, -4, -.05), floor)
+    for i in range(-7, 8): box((.02, 16, .005), (i * .9, -4, .005), mat('seam', hexc('#4f3428'), .8))
+    box((16, .2, 9), (0, 1.8, 4.5), wall)
+    lw = mat('lwall', hexc('#2b3170'), .9); box((.2, 14, 9), (-6.6, -5, 4.5), lw)
+    box((.25, 14, .25), (-6.5, -5, .12), mat('skirt', hexc('#1b1f4a'), .6)); box((16, .25, .25), (0, 1.7, .12), mat('skirt2', hexc('#1b1f4a'), .6))
+    cur = mat('curtain', hexc('#b784ff'), .9, emit=hexc('#b784ff'), estr=.15)
+    for x in (-3.75, -.65):
+        for k in range(3): cyl(.14, 2.6, (x + (k - 1) * .16, 1.55, 3.0), cur, v=10)
+    box((3.4, .1, .08), (-2.2, 1.55, 4.35), mat('rod', hexc('#e9d2a0'), .4, .5))
+    # bookshelf on the left
+    shelfw = mat('shelf', hexc('#8a5a3c'), .6)
+    box((1.8, .6, .1), (-5.4, 1.35, 3.6), shelfw); box((1.8, .6, .1), (-5.4, 1.35, 2.6), shelfw); box((1.8, .6, .1), (-5.4, 1.35, 1.6), shelfw)
+    box((.1, .6, 3.2), (-6.3, 1.35, 2.0), shelfw); box((.1, .6, 3.2), (-4.5, 1.35, 2.0), shelfw); box((1.8, .6, .1), (-5.4, 1.35, .45), shelfw)
+    bcols = ['#ff7a8a', '#ffd23f', '#5fd3a3', '#6fa8ff', '#c38bff', '#ff9f5a']
+    for zb in (1.65, 2.65, 3.65):
+        x = -6.15
+        while x < -4.75:
+            w = rnd.uniform(.09, .16); h = rnd.uniform(.45, .75)
+            box((w, .45, h), (x + w / 2, 1.35, zb + h / 2), mat('bk' + str(round(x, 2)) + str(zb), hexc(rnd.choice(bcols)), .7)); x += w + .015
+    # rug, chair, cushion, plant, poster, fairy lights
+    rug = mat('rug', hexc('#5fd3a3'), .9); cyl(2.3, .04, (.4, -2.0, .03), rug, v=48)
+    cyl(1.7, .045, (.4, -2.0, .035), mat('rug2', hexc('#8fe6c2'), .9), v=48)
+    chm = mat('chair', hexc('#ff6a3d'), .5); blk = mat('blk', hexc('#1d2233'), .5)
+    CX, CY = 2.9, -1.2
+    box((1.0, .95, .16), (CX, CY, .95), chm, bevel=.05); box((.16, 1.0, 1.1), (CX + .5, CY, 1.55), chm, bevel=.05)
+    cyl(.06, .8, (CX, CY, .5), blk)
+    for a in range(5):
+        an = a * 2 * math.pi / 5; cyl(.04, .55, (CX + math.cos(an) * .25, CY + math.sin(an) * .25, .08), blk, rot=(0, math.radians(90), an))
+    cush = mat('cush', hexc('#ffb13d'), .8); o = sphere(1.0, (-3.1, -1.4, .2), cush, seg=24); o.scale = (1.1, .9, .3)
+    pot = mat('pot', hexc('#e8835a'), .6); cyl(.38, .7, (4.6, .6, .35), pot)
+    leafm = [mat('pl1', hexc('#4fae5a'), .8), mat('pl2', hexc('#6cc36b'), .8)]
+    for k in range(7): sp_ = sphere(rnd.uniform(.35, .5), (4.6 + rnd.uniform(-.4, .4), .6 + rnd.uniform(-.3, .3), 1.0 + rnd.uniform(0, .9)), leafm[k % 2], seg=12)
+    box((1.4, .06, 1.9), (4.2, 1.68, 3.6), mat('frame', hexc('#fff2d9'), .6)); box((1.2, .04, 1.7), (4.2, 1.64, 3.6), mat('poster', hexc('#ff8fb8'), .7, emit=hexc('#ff8fb8'), estr=.25))
+    bulb = mat('fairy', hexc('#ffd98a'), .3, emit=hexc('#ffc85a'), estr=5)
+    for k in range(26):
+        t = k / 25; x = -6.2 + t * 12.4; z = 5.2 - math.sin(t * math.pi * 3) ** 2 * .45
+        sphere(.07, (x, 1.62, z), bulb, seg=8)
+    box((12.4, .02, .02), (0, 1.63, 5.15), mat('wire', hexc('#1b1f4a'), .6))
+    bpy.ops.object.light_add(type='POINT', location=(-2, -1, 4.6)); l = bpy.context.object; l.data.energy = 160; l.data.color = (1, .8, .55); l.data.shadow_soft_size = 1.5
+    bpy.ops.object.light_add(type='AREA', location=(-2.5, -6, 3.5), rotation=(math.radians(70), 0, math.radians(-15))); l = bpy.context.object; l.data.energy = 260; l.data.color = (.55, .6, 1); l.data.size = 5
+    # the hamster: a 2D card standing IN the 3D room (lit by the lamp, casting a shadow, no ink box around it)
+    CAM_A, LOOK_A, CAM_B, LOOK_B = ((.6, -9.4, 2.6), (-.5, .3, 1.75), (.4, -8.2, 2.35), (-.4, .3, 1.7)) if ORIENT == 'w' else ((-1.1, -9.4, 2.6), (-1.65, .3, 2.25), (-1.0, -8.3, 2.45), (-1.55, .3, 2.2))
+    hp = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'p-study.png')
+    if not os.path.exists(hp):
+        from PIL import Image as _I; _I.open('/home/claude/afo-repo/assets/img/cast/p-study.webp').save(hp)
+    hm = bpy.data.materials.new('ham'); hm.use_nodes = True; nt = hm.node_tree; bs = nt.nodes['Principled BSDF']
+    ht = nt.nodes.new('ShaderNodeTexImage'); ht.image = bpy.data.images.load(hp)
+    nt.links.new(ht.outputs['Color'], bs.inputs['Base Color']); nt.links.new(ht.outputs['Alpha'], bs.inputs['Alpha'])
+    nt.links.new(ht.outputs['Color'], bs.inputs['Emission Color']); bs.inputs['Emission Strength'].default_value = .55; bs.inputs['Roughness'].default_value = .8
+    try: hm.surface_render_method = 'DITHERED'
+    except Exception: pass
+    hx, hy, hh = -3.05, -1.45, 1.9; hw = hh * 685 / 718
+    rz = math.atan2(CAM_A[0] - hx, -(CAM_A[1] - hy))
+    bpy.ops.mesh.primitive_plane_add(size=1, location=(hx, hy, .28 + hh / 2), rotation=(math.radians(90), 0, rz)); card = bpy.context.object
+    card.scale = (hw, hh, 1); card.data.materials.append(hm)
+    nofs = bpy.data.collections.new('nofs_d'); sc.collection.children.link(nofs)
+    for col in card.users_collection: col.objects.unlink(card)
+    nofs.objects.link(card)
+    ls.select_by_collection = True; ls.collection = nofs; ls.collection_negation = 'EXCLUSIVE'
+    c = camera(CAM_A, LOOK_A, 28)
+    key_cam(c, [(1, CAM_A, LOOK_A), (F, CAM_B, LOOK_B)])
 
 elif CLIP == 'friends':
     flat_sky(hexc('#3b2a8f'), hexc('#ff9a5c'), 1.0)
@@ -678,7 +738,7 @@ if XF:
         n = Vector((0, -math.sin(th), math.cos(th))); ctr = Vector((0, .33, 1.63))
         d = (.92 / 2 if P else 1.45 / 2) * lens / 18
         fin = ctr + n * d
-        keys([(1, (.25, -2.9, 1.75), (0, .3, 1.6)), (N, tuple(fin), tuple(ctr))], [(1, lens), (N, lens)])
+        keys([(1, CAM_B, LOOK_B), (int(N * .45), (.2, -3.4, 1.85), (0, .3, 1.6)), (N, tuple(fin), tuple(ctr))], [(1, 28 if not P else 29.4), (int(N * .45), lens), (N, lens)])
     elif XF in ('3', '4') and CLIP == 'kmitl':
         for idb in (sc.world.node_tree, sn, sn.data, glassw.node_tree):
             if idb.animation_data: idb.animation_data_clear()

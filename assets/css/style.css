@@ -1462,3 +1462,4 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .sakura i:nth-child(13){--x:90;--s:22;--d:13s;--dl:-12s}.sakura i:nth-child(14){--x:96;--s:17;--d:10s;--dl:-6.5s}.sakura i:nth-child(15){--x:8;--s:19;--d:15s;--dl:-13s}.sakura i:nth-child(16){--x:60;--s:28;--d:12s;--dl:-9.5s}
 .mob .sakura i:nth-child(n+11){display:none}
 .rm .sakura{display:none}
+.cut-next{white-space:nowrap}

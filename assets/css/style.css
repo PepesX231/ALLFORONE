@@ -1319,3 +1319,9 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .ug-fx{z-index:2}
 /* fades are baked into the images (CSS masks on big layers were the most expensive thing to repaint) */
 .ug-box picture,.bt-sky .ly-tw .tw{-webkit-mask-image:none!important;mask-image:none!important}
+/* clouds belong to the sky scene (no scroll parallax), they only drift sideways; stroke overlap removed */
+.bt-sky .ly-cl{top:0;bottom:0}
+.cl{filter:none}
+/* towers → underground: a long fade through night-dark before the dig */
+.under::before{top:-38%!important;height:78%!important;background:linear-gradient(rgba(10,10,15,0) 0%,rgba(10,10,15,.55) 26%,#0a0a0f 48%,#0a0a0f 56%,rgba(10,10,15,0) 100%)!important}
+.under{background:linear-gradient(rgba(10,10,15,0) 0%,#0a0a0f 12%,#0a0a0f 30%,#0a0a0f 100%)!important}

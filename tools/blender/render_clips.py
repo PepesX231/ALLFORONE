@@ -734,6 +734,7 @@ except Exception as e:
     print('bloom skipped', e)
 
 # ---------------------------------------------------------------- render
+if os.environ.get('STEP'): sc.frame_step = int(os.environ['STEP'])
 if MODE == 'still':
     sc.frame_set(FR or 1)
     sc.render.filepath = os.path.join(OUT, f'still_{FR or 1:03d}.png')

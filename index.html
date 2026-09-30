@@ -19,7 +19,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=fd5b76a0">
+<link rel="stylesheet" href="assets/css/style.css?v=83a66f5a">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -66,7 +66,7 @@
 }
 </script>
 <script src="assets/js/data.js?v=ae8c617b" defer></script>
-<script src="assets/js/main.js?v=1a890f10" defer></script>
+<script src="assets/js/main.js?v=066d7d47" defer></script>
 <script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
@@ -280,10 +280,10 @@
 <div class="xs" data-x="1" aria-hidden="true"><div class="xs-pin"><canvas></canvas></div></div>
   <div class="beat mid bt-desk" data-k="2">
     <div class="stage" data-f="1">
-    <div class="ly ly-bg ly-vid" data-f=".04"><video class="clip" data-clip="desk" muted playsinline preload="none"></video></div>
+    <div class="ly ly-bg ly-vid ly-desk"><canvas class="seq" data-seq="desk"></canvas></div>
     <img class="cast c-study" data-f="-.05" src="assets/img/cast/p-study.webp" alt="" width="591" height="624" loading="lazy" decoding="async">
     </div>
-    <div class="st st2 night" data-f=".1">
+    <div class="st st2 night" data-f="1">
       <span class="w st-s" style="--i:0">ทุกคืนที่นั่งทำจนดึก ทุกไอเดียที่ยังไม่มีใครเห็น</span>
       <p class="st-big"><span class="w" style="--i:1">ทุกความพยายาม</span><br><span class="w hl" style="--i:2">ที่ผ่านมา</span></p>
     </div>
@@ -291,13 +291,13 @@
   <div class="xs" data-x="2" aria-hidden="true"><div class="xs-pin"><canvas></canvas></div></div>
   <div class="beat mid bt-meadow sn-meadow" data-k="3">
     <div class="stage" data-f="1">
-    <div class="ly ly-bg" data-f=".05"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/meadow-p.webp"><img class="lay" src="assets/img/scene/meadow-w.webp" alt="" loading="lazy" decoding="async"></picture></div>
+    <div class="ly ly-bg cam"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/meadow-p.webp"><img class="lay" src="assets/img/scene/meadow-w.webp" alt="" loading="lazy" decoding="async"></picture></div>
     <div class="petals" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <img class="fl-mid" data-f=".04" src="assets/img/cast/flowers-b.webp" alt="" loading="lazy" decoding="async">
     <img class="cast c-group" data-f=".04" src="assets/img/cast/p-group.webp" alt="" width="756" height="495" loading="lazy" decoding="async">
     <img class="fl-front" data-f="-.06" src="assets/img/cast/flowers.webp" alt="" loading="lazy" decoding="async">
     </div>
-    <div class="st st3 night" data-f=".1">
+    <div class="st st3 night" data-f="1">
       <span class="w st-s" style="--i:0">มีเพื่อน มีพวกพ้อง ในคอมมูนิตี้เดียวกัน</span>
       <p class="st-big"><span class="w" style="--i:1">ไม่ต้อง</span><span class="w hl" style="--i:2">สู้คนเดียว</span></p>
     </div>
@@ -305,24 +305,26 @@
   <div class="xs" data-x="3" aria-hidden="true"><div class="xs-pin"><canvas></canvas></div></div>
   <div class="beat mid bt-kmitl" data-k="4">
     <div class="stage" data-f="1">
-    <div class="ly ly-bg ly-vid" data-f=".04"><video class="clip" data-clip="kmitl" muted playsinline preload="none"></video></div>
+    <div class="ly ly-bg ly-vid ly-kmitl"><canvas class="seq" data-seq="kmitl"></canvas></div>
     <img class="cast c-grad" data-f="-.05" src="assets/img/cast/p-grad.webp" alt="" width="456" height="669" loading="lazy" decoding="async">
     </div>
-    <div class="st st4" data-f=".1">
+    <div class="st st4" data-f="1">
       <span class="w st-s" style="--i:0">ชิงโอกาส</span>
       <p class="st-big"><span class="w hl" style="--i:1">รอบสัมภาษณ์</span><br><span class="w " style="--i:2">มหาวิทยาลัย</span></p>
       <span class="w st-s" style="--i:3">ท็อป 2 ของแต่ละสาย ได้ขึ้นเวทีรอบชิงที่ IoTE สจล.</span>
     </div>
   </div>
   <div class="xs" data-x="4" aria-hidden="true"><div class="xs-pin"><canvas></canvas></div></div>
-  <div class="beat bt-dawn sn-dawn" data-k="5">
-    <div class="ly ly-bg" data-f=".3"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/dawn-p.webp"><img class="lay" src="assets/img/scene/dawn-w.webp" alt="" loading="lazy" decoding="async"></picture><div class="dawn-rays" aria-hidden="true"></div><div class="dawn-sun" aria-hidden="true"></div></div>
+  <div class="beat mid bt-dawn sn-dawn" data-k="5">
+    <div class="stage" data-f="1">
+    <div class="ly ly-bg"><picture><source media="(max-aspect-ratio: 1/1)" srcset="assets/img/scene/dawn-p.webp"><img class="lay" src="assets/img/scene/dawn-w.webp" alt="" loading="lazy" decoding="async"></picture><div class="dawn-rays" aria-hidden="true"></div><div class="dawn-sun" aria-hidden="true"></div></div>
     <div class="motes" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <svg class="dawn-hill" data-f=".06" viewBox="0 0 1600 400" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="dh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2a52"/><stop offset="1" stop-color="#0a0a0f"/></linearGradient></defs><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190 L1600 400 L0 400Z" fill="url(#dh)"/><path d="M0 170 C160 120 330 95 520 110 C700 124 820 175 1000 200 C1200 228 1420 214 1600 190" fill="none" stroke="#ffd98a" stroke-width="3" opacity=".75"/></svg>
     <img class="cast c-pal c-pal1" data-f=".02" src="assets/img/cast/p-cheer.webp" alt="" width="456" height="669" loading="lazy" decoding="async">
     <img class="cast c-pal c-pal2" data-f=".02" src="assets/img/cast/p-wave.webp" alt="" width="517" height="662" loading="lazy" decoding="async">
     <img class="cast c-point" data-f="-.04" src="assets/img/cast/p-point-glow.webp" alt="" width="629" height="817" loading="lazy" decoding="async">
-    <div class="st st5 night" data-f=".1">
+    </div>
+    <div class="st st5 night" data-f="1">
       <span class="w st-s" style="--i:0">เริ่มจากศูนย์ก็ไปถึง</span>
       <p class="st-big"><span class="w" style="--i:1">นายน่ะ</span><br><span class="w hl" style="--i:2">ก็เป็นได้นะ!</span></p>
       <a class="w st-go" style="--i:3" href="#tracks">เลือกเส้นทางของนายใน 3 TRACKS <svg class="ic"><use href="#i-arrow"/></svg></a>

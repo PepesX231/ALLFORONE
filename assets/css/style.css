@@ -1125,3 +1125,14 @@ svg.ly.tr-svg{height:148%;width:100%}
 .bt-sky .st1{top:calc(var(--S) * .85)}
 .bt-sky .c-jump{bottom:32%}
 .beat.mid{overflow:visible;contain:none;z-index:2}
+/* v6.1: mid scenes are camera moves too — desk & campus are scroll-scrubbed 3D sequences, the meadow painting gets a slow push-in;
+   the words stay put with the camera instead of sliding over the picture */
+.ly.ly-vid{top:0;bottom:0}
+.ly-desk{background:#0d1438 url(../video/desk-w.jpg) center/cover}
+.ly-kmitl{background:#20283c url(../video/kmitl-w.jpg) center/cover}
+@media (max-aspect-ratio:1/1){.ly-desk{background-image:url(../video/desk-p.jpg)}.ly-kmitl{background-image:url(../video/kmitl-p.jpg)}}
+canvas.seq{display:block;width:100%;height:100%}
+.ly.cam{top:0;bottom:0;transform-origin:50% 60%;scale:calc(1 + var(--q, 0) * .12)}
+.beat.mid .st{z-index:5}
+.bt-dawn .ly-bg{transform-origin:40% 80%;scale:calc(1 + var(--q, 0) * .1)}
+.bt-dawn.mid{height:calc(var(--S) * 1.8)}

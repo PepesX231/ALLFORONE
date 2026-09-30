@@ -85,7 +85,7 @@
     var safe = root.classList.contains('safe'), still = reduced || safe;
     var beats = $$('.beat', st), vh = innerHeight, ticking = false;
     var portrait = function () { return innerWidth <= innerHeight; };
-    beats.forEach(function (b) { b._ly = $$('[data-f]', b).map(function (el) { return { el: el, f: +el.dataset.f, last: 1e9 }; }); b._on = false; });
+    beats.forEach(function (b) { b._end = !(b.nextElementSibling && b.nextElementSibling.classList.contains('xs')); b._ly = $$('[data-f]', b).map(function (el) { return { el: el, f: +el.dataset.f, last: 1e9 }; }); b._on = false; });
     function srcFor(v) { return 'assets/video/' + v.dataset.clip + '-' + (portrait() ? 'p' : 'w') + (v.canPlayType('video/mp4; codecs="avc1.640028"') ? '.mp4' : '.webm'); }
     function load(v) { if (!v) return; if (!v.poster) v.poster = 'assets/video/' + v.dataset.clip + '-' + (portrait() ? 'p' : 'w') + '.jpg'; if (!safe && !v.src) { v.src = srcFor(v); v.load(); } }
     var vids = $$('video.clip', st);
@@ -128,7 +128,12 @@
         var t = (b._top - y + b._h / 2 - (vh + hdrH) / 2) / vh;
         for (var j = 0; j < b._ly.length; j++) {
           var L = b._ly[j], ty = Math.round(-L.f * t * vh * 2) / 2;
-          if (L.f === 1) { var lim = b._h / 2 + vh / 2; ty = ty > lim ? lim : ty < -lim ? -lim : ty; }
+          if (L.f === 1) {
+            var lim = b._h / 2 + vh / 2, hi = b._end ? (b._h - (vh - hdrH)) / 2 : lim; ty = ty > hi ? hi : ty < -lim ? -lim : ty;
+            var bt = b._top - y, vis = bt < vh && bt + b._h > hdrH;
+            if (vis !== L.vis) { L.vis = vis; L.el.style.visibility = vis ? '' : 'hidden'; }
+            if (L.el.classList.contains('stage')) L.el.style.setProperty('--q', clamp((hdrH - bt) / Math.max(1, b._h - (vh - hdrH)), 0, 1).toFixed(3));
+          }
           if (ty !== L.last) { L.last = ty; L.el.style.transform = 'translate3d(0,' + ty + 'px,0)'; }
         }
       }
@@ -145,60 +150,77 @@
   })();
 
 
-  /* ---------- 1c. scene links: pre-rendered 3D camera moves, scrubbed by scroll on a canvas ----------
-     frames load only when the link is near the screen; neighbouring frames are blended so it stays smooth */
+  /* ---------- 1c. camera sequences: pre-rendered 3D frames scrubbed by scroll on a canvas ----------
+     .xs  = the camera move that links two scenes (pinned, dissolves in/out over the neighbours)
+     .seq = the camera move inside a scene (desk, campus). Progress is eased toward the scroll position
+     every frame, so wheel notches and flicks glide instead of jumping. */
   (function () {
-    var xs = $$('.xs'); if (!xs.length) return;
-    var safe = root.classList.contains('safe'), NF = 32, ticking = false;
-    var mob = matchMedia('(max-width: 760px)').matches, dprMax = mob ? 1.5 : 2;
+    var safe = root.classList.contains('safe'); if (safe) { $$('.xs').forEach(function (x) { x.style.display = 'none'; }); return; }
+    var mob = matchMedia('(max-width: 760px)').matches, dprMax = mob ? 1.5 : 2, hdrH = 60, running = false;
     function orient() { return innerWidth <= innerHeight ? 'p' : 'w'; }
-    xs.forEach(function (x) {
-      x._cv = $('canvas', x); x._ctx = x._cv.getContext('2d', { alpha: false }); x._fr = []; x._o = ''; x._on = false; x._last = -1;
-    });
-    function load(x, force) {
-      var o = force || (x._fb ? 'w' : orient()); if (x._o === o) return; x._o = o; x._fr = []; x._last = -1;
-      for (var i = 1; i <= NF; i++) {
+    var items = [];
+    $$('.xs').forEach(function (x) { items.push({ box: x, cv: $('canvas', x), dir: 'xs/x' + x.dataset.x, n: 32, xs: true }); });
+    $$('canvas.seq').forEach(function (c) { items.push({ box: c.closest('.beat'), stage: c.closest('.stage'), cv: c, dir: 'seq/' + c.dataset.seq, n: 24 }); });
+    items.forEach(function (it) { it.ctx = it.cv.getContext('2d', { alpha: false }); it.fr = []; it.o = ''; it.cur = -1; it.tgt = 0; it.drawn = -1; it.near = false; });
+    function load(it, force) {
+      var o = force || (it.fb ? 'w' : orient()); if (it.o === o) return; it.o = o; it.fr = []; it.drawn = -1;
+      for (var i = 1; i <= it.n; i++) {
         var im = new Image(); im.decoding = 'async';
-        im.onload = function () { x._last = -1; if (!ticking) { ticking = true; raf(upd); } };
-        if (i === 1) im.onerror = o === 'p' ? function () { x._fb = true; load(x, 'w'); } : function () { x.style.display = 'none'; };
-        im.src = 'assets/xs/x' + x.dataset.x + '-' + o + '/' + (i < 10 ? '0' : '') + i + '.webp'; x._fr.push(im);
+        im.onload = function () { it.drawn = -1; kick(); };
+        if (i === 1) im.onerror = o === 'p' ? function () { it.fb = true; load(it, 'w'); } : function () { it.dead = true; if (it.xs) it.box.style.display = 'none'; else it.cv.style.display = 'none'; };
+        im.src = 'assets/' + it.dir + '-' + o + '/' + (i < 10 ? '0' : '') + i + '.webp'; it.fr.push(im);
       }
     }
-    function size(x) {
-      var d = Math.min(devicePixelRatio || 1, dprMax), w = Math.round(x._cv.clientWidth * d), h = Math.round(x._cv.clientHeight * d);
-      if (x._cv.width !== w || x._cv.height !== h) { x._cv.width = w; x._cv.height = h; x._last = -1; }
+    function size(it) {
+      var d = Math.min(devicePixelRatio || 1, dprMax), w = Math.round(it.cv.clientWidth * d), h = Math.round(it.cv.clientHeight * d);
+      if (w && (it.cv.width !== w || it.cv.height !== h)) { it.cv.width = w; it.cv.height = h; it.drawn = -1; }
     }
-    function cover(ctx, im, W, H, a) {
-      if (!im.complete || !im.naturalWidth) return false;
+    function cover(c, im, W, H, a) {
+      if (!im || !im.complete || !im.naturalWidth) return false;
       var s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
-      ctx.globalAlpha = a; ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); return true;
+      c.globalAlpha = a; c.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); return true;
     }
-    function draw(x, t) {
-      var f = t * (NF - 1), i = Math.floor(f), k = f - i, W = x._cv.width, H = x._cv.height, c = x._ctx;
-      var A = x._fr[i], B = x._fr[Math.min(NF - 1, i + 1)];
-      if (!cover(c, A, W, H, 1)) { for (var j = i; j >= 0; j--) if (cover(c, x._fr[j], W, H, 1)) break; return; }
-      if (k > .02 && B) cover(c, B, W, H, k);
+    function draw(it, t) {
+      var f = t * (it.n - 1), i = Math.floor(f), k = f - i, W = it.cv.width, H = it.cv.height, c = it.ctx;
+      if (!cover(c, it.fr[i], W, H, 1)) { for (var j = i - 1; j >= 0; j--) if (cover(c, it.fr[j], W, H, 1)) break; c.globalAlpha = 1; return; }
+      if (k > .01) cover(c, it.fr[Math.min(it.n - 1, i + 1)], W, H, k);
       c.globalAlpha = 1;
     }
-    function upd() {
-      ticking = false;
-      xs.forEach(function (x) {
-        if (!x._on) return;
-        var r = x.getBoundingClientRect(), S = x._cv.clientHeight || innerHeight;
-        var p = clamp(-r.top / Math.max(1, r.height - S), 0, 1);
-        var op = p < .08 ? p / .08 : p > .92 ? (1 - p) / .08 : 1;
-        x._cv.style.opacity = op.toFixed(3);
-        var t = clamp((p - .06) / .88, 0, 1), key = Math.round(t * 600);
-        if (op > 0 && key !== x._last) { x._last = key; draw(x, t); }
-      });
+    function target(it) {
+      var r = it.box.getBoundingClientRect(), S = innerHeight - hdrH;
+      if (it.xs) return clamp((hdrH - r.top) / Math.max(1, r.height - S), 0, 1);
+      return clamp((hdrH - r.top) / Math.max(1, r.height - S), 0, 1);
     }
+    function frame() {
+      running = false; var more = false;
+      items.forEach(function (it) {
+        if (!it.near || it.dead) return;
+        it.tgt = target(it);
+        if (it.cur < 0 || reduced) it.cur = it.tgt; else it.cur += (it.tgt - it.cur) * .16;
+        if (Math.abs(it.tgt - it.cur) > .0006) more = true; else it.cur = it.tgt;
+        var p = it.cur, t = p;
+        if (it.xs) {
+          var a = .05, op = p < a ? p / a : p > 1 - a ? (1 - p) / a : 1;
+          it.cv.style.opacity = op.toFixed(3); t = clamp((p - a * .6) / (1 - a * 1.2), 0, 1);
+          if (op <= 0) return;
+        }
+        var key = Math.round(t * 2000);
+        if (key !== it.drawn) { it.drawn = key; draw(it, t); }
+      });
+      if (more) kick();
+    }
+    function kick() { if (!running) { running = true; raf(frame); } }
     var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) { var x = e.target; x._on = e.isIntersecting; if (x._on) { load(x); size(x); } });
-      if (!ticking) { ticking = true; raf(upd); }
-    }, { rootMargin: '150% 0px' });
-    xs.forEach(function (x) { if (safe) { x.style.display = 'none'; return; } io.observe(x); });
-    addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
-    addEventListener('resize', function () { xs.forEach(function (x) { if (x._on) { load(x); size(x); } }); upd(); }, { passive: true });
+      es.forEach(function (e) { var it = items.filter(function (q) { return q.box === e.target; }); it.forEach(function (q) { q.near = e.isIntersecting; if (q.near) { load(q); size(q); } }); });
+      kick();
+    }, { rootMargin: '200% 0px' });
+    items.forEach(function (it) { io.observe(it.box); });
+    addEventListener('scroll', kick, { passive: true });
+    addEventListener('resize', function () { var h = $('.hdr'); hdrH = h ? h.offsetHeight : 60; items.forEach(function (it) { if (it.near) { load(it); size(it); } }); kick(); }, { passive: true });
+    addEventListener('load', function () {                         // warm every sequence once the page is idle
+      var h = $('.hdr'); hdrH = h ? h.offsetHeight : 60;
+      setTimeout(function () { items.forEach(function (it) { load(it); }); }, 1500);
+    });
   })();
 
   /* ---------- 2. countdown (+ status) ---------- */
@@ -274,7 +296,7 @@
     function upd() {
       ticking = false; if (!active || !pts.length) return;
       var r = sec.getBoundingClientRect(), vh = innerHeight;
-      var p = reduced ? .97 : clamp((vh - r.top) / Math.max(1, vh - hdrH), 0, 1) * .97;
+      var p = reduced ? .84 : clamp((vh - r.top) / Math.max(1, vh - hdrH), 0, 1) * .84;
       p = Math.round(p * 400) / 400; if (p === last) return;
       var moved = last >= 0; last = p;
       prog.style.strokeDashoffset = ((1 - p) * (SL + 2)).toFixed(1);

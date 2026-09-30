@@ -279,6 +279,48 @@ def star_mascot(loc, s, emit=0.0):
         ch = sphere(.07 * s, (loc[0] + sx * .36 * s, loc[1] - .02 * s, loc[2] - .12 * s), M('#ff8fa3', .9), 'ck', 10); ch.scale = (1.3, .3, .7)
     return ob
 
+# 2D characters as lit cards standing in the 3D set (alpha, lamp/sun light, real shadows, no freestyle box)
+def nofs_col():
+    col = bpy.data.collections.get('nofs')
+    if not col:
+        col = bpy.data.collections.new('nofs'); sc.collection.children.link(col)
+        ls.select_by_collection = True; ls.collection = col; ls.collection_negation = 'EXCLUSIVE'
+    return col
+def char_card(src, loc, h, face, emis=.5, sat=1.0, val=1.0):
+    from PIL import Image as _I
+    png = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.path.basename(src).replace('.webp', '.png'))
+    if not os.path.exists(png): _I.open(src).save(png)
+    im = _I.open(png); w = h * im.width / im.height
+    m = bpy.data.materials.new('card_' + os.path.basename(png)); m.use_nodes = True; nt = m.node_tree; bs = nt.nodes['Principled BSDF']
+    t = nt.nodes.new('ShaderNodeTexImage'); t.image = bpy.data.images.load(png)
+    hs = nt.nodes.new('ShaderNodeHueSaturation'); hs.inputs['Saturation'].default_value = sat; hs.inputs['Value'].default_value = val
+    nt.links.new(t.outputs['Color'], hs.inputs['Color']); nt.links.new(hs.outputs['Color'], bs.inputs['Base Color']); nt.links.new(t.outputs['Alpha'], bs.inputs['Alpha'])
+    nt.links.new(t.outputs['Color'], bs.inputs['Emission Color']); bs.inputs['Emission Strength'].default_value = emis; bs.inputs['Roughness'].default_value = .9
+    try: bs.inputs['Specular IOR Level'].default_value = 0
+    except Exception: pass
+    rz = math.atan2(face[0] - loc[0], -(face[1] - loc[1]))
+    # mesh cut to the character's outline (not a rectangle), so it only hides the ink lines it really covers
+    import numpy as _np
+    from skimage import measure as _ms
+    al = _np.pad(_np.asarray(im.convert('RGBA'))[..., 3].astype(float) / 255., 2)
+    cs = max(_ms.find_contours(al, .5), key=len)
+    poly = _ms.approximate_polygon(cs, tolerance=1.5)[:-1]
+    verts, uvs = [], []
+    for (r_, c_) in poly:
+        u = (c_ - 2) / im.width; v = 1 - (r_ - 2) / im.height
+        verts.append(((u - .5) * w, 0, (v - .5) * h)); uvs.append((u, v))
+    me = bpy.data.meshes.new('cardmesh'); me.from_pydata(verts, [], [list(range(len(verts)))]); me.update()
+    uvl = me.uv_layers.new()
+    for li, lp in enumerate(me.loops): uvl.data[li].uv = uvs[lp.vertex_index]
+    import bmesh as _bm
+    bm = _bm.new(); bm.from_mesh(me); _bm.ops.triangulate(bm, faces=bm.faces[:]); bm.to_mesh(me); bm.free()
+    o = bpy.data.objects.new('card', me); sc.collection.objects.link(o)
+    o.location = (loc[0], loc[1], loc[2] + h / 2); o.rotation_euler = (0, 0, rz)
+    o.data.materials.append(m)
+    col = nofs_col()
+    for c_ in list(o.users_collection): c_.objects.unlink(o)
+    col.objects.link(o); return o
+
 # ---------------------------------------------------------------- clips
 F = FPS * SECONDS
 if CLIP == 'towers':
@@ -568,6 +610,7 @@ elif CLIP == 'kmitl':
         for p in parts: p.parent = root
         return root
     tower(4, 30, 30, 9, 10, -.1); tower(-26, 22, 20, 4, 8, .4); tower(38, 34, 14, 5, 12, -.45)
+    GRAD = char_card('/home/claude/afo-repo/assets/img/cast/p-grad.webp', (float(os.environ.get('GX', '-1.9')), float(os.environ.get('GY', '-17.5')), 0), float(os.environ.get('GH', '3.9')), (-5, -26), float(os.environ.get('GE', '.06')), 1.35, .5)
     box((3.5, 11, 30), (19.5, 29, 15), white)
     ground = mat('grass', hexc('#6fcd5c'), .9); bpy.ops.mesh.primitive_plane_add(size=400); bpy.context.object.data.materials.append(ground)
     path = mat('path', hexc('#f1e2c8'), .9); box((6, 40, .05), (-3, -20, .03), path)
@@ -789,8 +832,7 @@ if XF:
             sn.data.energy = en; sn.data.keyframe_insert('energy', frame=f)
             sn.rotation_euler = (math.radians(90 - max(e, 0)), 0, math.radians(210)); sn.keyframe_insert('rotation_euler', frame=f)
             em_node.default_value = win; em_node.keyframe_insert('default_value', frame=f)
-        nofs = bpy.data.collections.new('nofs'); sc.collection.children.link(nofs)
-        ls.select_by_collection = True; ls.collection = nofs; ls.collection_negation = 'EXCLUSIVE'
+        nofs = nofs_col()
         def star_mat(name, col, peak, f0, f1):
             m = mat(name, (0, 0, 0), .5, emit=hexc(col), estr=0); m['f0'] = f0
             es = m.node_tree.nodes['Principled BSDF'].inputs['Emission Strength']

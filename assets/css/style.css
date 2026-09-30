@@ -1106,3 +1106,22 @@ svg.ly.tr-svg{height:148%;width:100%}
 .edge.bot{height:26vh;bottom:-13vh}
 .edge svg{position:absolute;inset:0;width:100%;height:100%}
 .tr-cloud .edge.bot{height:32vh;bottom:-16vh}
+
+/* ================= story v6: the scenes are joined by real 3D camera moves (Blender renders scrubbed by scroll) =================
+   tower → fly into a lit window = the desk room · code on the laptop turns into the meadow, push into the screen ·
+   pull back from a campus screen showing the meadow to KMITL · tilt up into the night sky → dawn.
+   Each .xs overlaps the last screen of the scene before and the first screen of the scene after, so it dissolves in and out. */
+.beat.tr,.cap{display:none!important}
+.xs{--S:calc(100svh - var(--hdr));position:relative;z-index:6;height:calc(var(--S) * 3);margin:calc(var(--S) * -1) 0;pointer-events:none}
+.xs-pin{position:sticky;top:var(--hdr);height:calc(100vh - var(--hdr));height:var(--S);overflow:hidden}
+.xs canvas{display:block;width:100%;height:100%;opacity:0}
+.ly.ly-vid{top:-5%;bottom:-5%}
+.bt-meadow .fl-front{bottom:-24vh!important}
+/* mid scenes: the picture holds still (a .stage pinned by the parallax engine) while the words and characters drift past */
+.beat{overflow:clip}
+.beat.mid{height:calc((100vh - var(--hdr)) * 2.2);height:calc(var(--S) * 2.2)}
+.stage{position:absolute;left:0;right:0;top:calc(50% - var(--S) / 2);height:var(--S);overflow:hidden;will-change:transform}
+.beat.mid .st{top:calc(50% - var(--S) / 2)}
+.bt-sky .st1{top:calc(var(--S) * .85)}
+.bt-sky .c-jump{bottom:32%}
+.beat.mid{overflow:visible;contain:none;z-index:2}

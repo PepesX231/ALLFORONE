@@ -332,7 +332,7 @@ if CLIP == 'towers':
         for o in CLOUDS:
             x0 = o.location.x; o.location.x = x0 - 16; o.keyframe_insert('location', frame=1)
             o.location.x = x0 + 16; o.keyframe_insert('location', frame=F)
-    petals((0, -30, 30), (30, 15, 1), 700, F, pinks[1])
+    if not os.environ.get('TALL'): petals((0, -30, 30), (30, 15, 1), 700, F, pinks[1])
     c = camera((0, -26, 2), (0, 0, 60), 15)
     key_cam(c, [(1, (0, -24, 2.0), (0, 0, 95)), (F, (0, -36, 2.6), (0, 0, 22))] if MODE != 'idle' else [(1, (0, -24, 2.0), (0, 0, 95)), (F, (0, -24, 2.0), (0, 0, 95))])
 
@@ -623,6 +623,97 @@ elif CLIP == 'fist':
         hero.rotation_euler = (0, 0, rz); hero.keyframe_insert('rotation_euler', frame=f_)
     c = camera((0, -4.2, 2.7), (0, 1.5, 3.6), 30)
     key_cam(c, [(1, (-.8, -4.9, 2.5), (.2, 1.5, 3.55)), (F, (.2, -3.9, 2.75), (.2, 1.5, 3.65))])
+
+# ---------------------------------------------------------------- XFER: scroll-scrubbed camera moves that CONNECT two scenes
+# 1 towers -> fly into a lit window that shows the desk room   2 desk -> code on the laptop becomes the meadow, push into the screen
+# 3 kmitl  -> start on a campus screen showing the meadow, pull back to the campus   4 kmitl night -> tilt up into the starry sky (dawn follows)
+XF = os.environ.get('XFER')
+if XF:
+    XT = '/tmp/claude-0/-home-claude/fed940bd-495e-598e-8150-238c153e3d70/scratchpad/xt/'
+    N = int(os.environ.get('XN', '32')); sc.frame_start, sc.frame_end = 1, N
+    OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'out', f'x{XF}-{ORIENT}'); os.makedirs(OUT, exist_ok=True)
+    P = ORIENT == 'p'
+    c.animation_data_clear()
+    if c.data.animation_data: c.data.animation_data_clear()
+    c.data.sensor_fit = 'AUTO'; c.data.sensor_width = 36
+    def emit_img(path, strength=1.0):
+        m = bpy.data.materials.new('portal'); m.use_nodes = True; nt = m.node_tree
+        for n in list(nt.nodes):
+            if n.type != 'OUTPUT_MATERIAL': nt.nodes.remove(n)
+        t = nt.nodes.new('ShaderNodeTexImage'); t.image = bpy.data.images.load(path); t.extension = 'EXTEND'
+        e = nt.nodes.new('ShaderNodeEmission'); e.inputs['Strength'].default_value = strength
+        nt.links.new(t.outputs['Color'], e.inputs['Color']); nt.links.new(e.outputs[0], nt.nodes['Material Output'].inputs['Surface'])
+        return m
+    def portal(path, loc, rz, L):
+        w, h = (L * 9 / 16, L) if P else (L, L * 9 / 16)
+        bpy.ops.mesh.primitive_plane_add(size=1, location=loc, rotation=(math.radians(90), 0, rz)); o = bpy.context.object
+        o.scale = (w * 1.02, h * 1.02, 1); o.data.materials.append(emit_img(path)); return o, w, h
+    def keys(frames, lens=None):
+        for f, loc, look in frames:
+            c.location = loc; aim(c, look)
+            c.keyframe_insert('location', frame=f); c.keyframe_insert('rotation_euler', frame=f)
+        if lens:
+            for f, v in lens: c.data.lens = v; c.data.keyframe_insert('lens', frame=f)
+        for ad in (c.animation_data, c.data.animation_data):
+            act = ad and ad.action
+            for fc in (act.fcurves if act and hasattr(act, 'fcurves') else []):
+                for k in fc.keyframe_points: k.interpolation = 'BEZIER'; k.handle_left_type = k.handle_right_type = 'AUTO_CLAMPED'
+    if XF == '1' and CLIP == 'towers':
+        L = 2.4 if P else 3.4; lens = 24; d = (L / 2) * lens / 18
+        cx, cz, py = -8.6, 5.1, -6.33
+        portal(XT + f'desk-{ORIENT}.png', (cx, py, cz), 0, L)
+        keys([(1, (0, -36, 2.6), (0, 0, 22)), (int(N * .5), (-5, -24, 3.6), (cx, 0, 8)), (N, (cx, py - d, cz), (cx, 0, cz))], [(1, 15), (N, lens)])
+    elif XF == '2' and CLIP == 'desk':
+        # blend the code into the meadow on the laptop screen, then push in until the screen is the frame
+        nt = sm.node_tree; e1 = [n for n in nt.nodes if n.type == 'EMISSION'][0]
+        t2 = nt.nodes.new('ShaderNodeTexImage'); t2.image = bpy.data.images.load(XT + f'scr-{ORIENT}.png')
+        e2 = nt.nodes.new('ShaderNodeEmission'); e2.inputs['Strength'].default_value = 1.0
+        mx = nt.nodes.new('ShaderNodeMixShader'); out = nt.nodes['Material Output']
+        nt.links.new(t2.outputs['Color'], e2.inputs['Color']); nt.links.new(e1.outputs[0], mx.inputs[1]); nt.links.new(e2.outputs[0], mx.inputs[2])
+        nt.links.new(mx.outputs[0], out.inputs['Surface'])
+        for f, v in ((1, 0), (int(N * .15), 0), (int(N * .5), 1), (N, 1)): mx.inputs[0].default_value = v; mx.inputs[0].keyframe_insert('default_value', frame=f)
+        lens = 31.5 if P else 30; th = math.radians(78)
+        n = Vector((0, -math.sin(th), math.cos(th))); ctr = Vector((0, .33, 1.63))
+        d = (.92 / 2 if P else 1.45 / 2) * lens / 18
+        fin = ctr + n * d
+        keys([(1, (.25, -2.9, 1.75), (0, .3, 1.6)), (N, tuple(fin), tuple(ctr))], [(1, lens), (N, lens)])
+    elif XF in ('3', '4') and CLIP == 'kmitl':
+        for idb in (sc.world.node_tree, sn, sn.data, glassw.node_tree):
+            if idb.animation_data: idb.animation_data_clear()
+        lens = 25.2 if P else 24
+        if XF == '3':
+            s.sun_elevation = math.radians(22); bg.inputs['Strength'].default_value = .1; sn.data.energy = 2.2; em_node.default_value = 0
+            L = 8.0; d = (L / 2) * lens / 18; bx, by, bz = -22, -24, (4.5 if P else 4)
+            o, w, h = portal(XT + f'bb-{ORIENT}.png', (bx, by, bz), math.radians(90), L)
+            fr = mat('bbframe', hexc('#1d2233'), .5)
+            box((.3, w + .6, .3), (bx - .2, by, bz + h / 2 + .15), fr); box((.3, w + .6, .3), (bx - .2, by, bz - h / 2 - .15), fr)
+            box((.3, .3, h + .6), (bx - .2, by - w / 2 - .15, bz), fr); box((.3, .3, h + .6), (bx - .2, by + w / 2 + .15, bz), fr)
+            for yy in (by - w / 3, by + w / 3): cyl(.18, bz - h / 2, (bx - .3, yy, (bz - h / 2) / 2), fr)
+            keys([(1, (bx + d, by, bz), (bx, by, bz)), (int(N * .42), (bx + 17, by - 4, bz + .6), (bx, by, bz)), (N, (-5, -26, 2.2), (0, 20, 9.5))], [(1, lens), (N, lens)])
+        else:
+            em_node.default_value = 4.5
+            for f, e, st, en in ((1, -6, .03, 0), (N, 0.5, .1, .25)):
+                s.sun_elevation = math.radians(e); s.keyframe_insert('sun_elevation', frame=f)
+                bg.inputs['Strength'].default_value = st; bg.inputs['Strength'].keyframe_insert('default_value', frame=f)
+                sn.data.energy = en; sn.data.keyframe_insert('energy', frame=f)
+            nofs = bpy.data.collections.new('nofs'); sc.collection.children.link(nofs)
+            ls.select_by_collection = True; ls.collection = nofs; ls.collection_negation = 'EXCLUSIVE'
+            stm = mat('star', (1, 1, 1), .5, emit=hexc('#fff6dc'), estr=8)
+            for i in range(260):
+                az = rnd.uniform(-1.3, 1.3); el = rnd.uniform(.35, 1.45); R = 180
+                p = (math.sin(az) * math.cos(el) * R, math.cos(az) * math.cos(el) * R, math.sin(el) * R + 10)
+                o = sphere(rnd.uniform(.25, .6), p, stm, seg=6)
+                for col in o.users_collection: col.objects.unlink(o)
+                nofs.objects.link(o)
+            keys([(1, (2, -17, 2.8), (0, 20, 10.5)), (N, (2, -20, 3.4), (1, 12, 75))], [(1, lens), (N, lens)])
+
+if os.environ.get('TALL') and CLIP == 'towers':
+    # one tall still of the towers for the layered parallax hero (sky keyed out, clouds live in CSS behind)
+    TW, TH = [int(v) for v in os.environ['TALL'].split('x')]
+    sc.render.resolution_x, sc.render.resolution_y = TW, TH
+    c.animation_data_clear(); c.data.sensor_fit = 'VERTICAL'; c.data.lens = float(os.environ.get('LENS', '13'))
+    c.location = (0, -30, 2.2); aim(c, (0, 0, float(os.environ.get('LOOKZ', '50'))))
+    sc.render.line_thickness = float(os.environ.get('LINE', '2')); sc.cycles.samples = 24
 
 # ---------------------------------------------------------------- bloom (compositor glare)
 try:

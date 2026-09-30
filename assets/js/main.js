@@ -117,16 +117,18 @@
     }, { rootMargin: '20% 0px' });
     beats.forEach(function (b) { bio.observe(b); });
     // beat positions are cached (fixed heights, top of the page), so a scroll frame never reads layout
-    function measure() { var y = scrollY; beats.forEach(function (b) { var r = b.getBoundingClientRect(); b._top = r.top + y; b._h = r.height; }); }
+    var hdrH = 60;
+    function measure() { var hh = $('.hdr'); hdrH = hh ? hh.offsetHeight : 60; var y = scrollY; beats.forEach(function (b) { var r = b.getBoundingClientRect(); b._top = r.top + y; b._h = r.height; }); }
     function upd() {
       ticking = false;
       if (still) return;
       var y = scrollY;
       for (var i = 0; i < beats.length; i++) {
         var b = beats[i]; if (!b._on) continue;
-        var t = (b._top - y + b._h / 2 - vh / 2) / vh;
+        var t = (b._top - y + b._h / 2 - (vh + hdrH) / 2) / vh;
         for (var j = 0; j < b._ly.length; j++) {
           var L = b._ly[j], ty = Math.round(-L.f * t * vh * 2) / 2;
+          if (L.f === 1) { var lim = b._h / 2 + vh / 2; ty = ty > lim ? lim : ty < -lim ? -lim : ty; }
           if (ty !== L.last) { L.last = ty; L.el.style.transform = 'translate3d(0,' + ty + 'px,0)'; }
         }
       }
@@ -140,6 +142,63 @@
     });
     $$('.st0 .w', st).length && $('.st0', st).classList.add('on');
     upd();
+  })();
+
+
+  /* ---------- 1c. scene links: pre-rendered 3D camera moves, scrubbed by scroll on a canvas ----------
+     frames load only when the link is near the screen; neighbouring frames are blended so it stays smooth */
+  (function () {
+    var xs = $$('.xs'); if (!xs.length) return;
+    var safe = root.classList.contains('safe'), NF = 32, ticking = false;
+    var mob = matchMedia('(max-width: 760px)').matches, dprMax = mob ? 1.5 : 2;
+    function orient() { return innerWidth <= innerHeight ? 'p' : 'w'; }
+    xs.forEach(function (x) {
+      x._cv = $('canvas', x); x._ctx = x._cv.getContext('2d', { alpha: false }); x._fr = []; x._o = ''; x._on = false; x._last = -1;
+    });
+    function load(x, force) {
+      var o = force || (x._fb ? 'w' : orient()); if (x._o === o) return; x._o = o; x._fr = []; x._last = -1;
+      for (var i = 1; i <= NF; i++) {
+        var im = new Image(); im.decoding = 'async';
+        im.onload = function () { x._last = -1; if (!ticking) { ticking = true; raf(upd); } };
+        if (i === 1 && o === 'p') im.onerror = function () { x._fb = true; load(x, 'w'); };
+        im.src = 'assets/xs/x' + x.dataset.x + '-' + o + '/' + (i < 10 ? '0' : '') + i + '.webp'; x._fr.push(im);
+      }
+    }
+    function size(x) {
+      var d = Math.min(devicePixelRatio || 1, dprMax), w = Math.round(x._cv.clientWidth * d), h = Math.round(x._cv.clientHeight * d);
+      if (x._cv.width !== w || x._cv.height !== h) { x._cv.width = w; x._cv.height = h; x._last = -1; }
+    }
+    function cover(ctx, im, W, H, a) {
+      if (!im.complete || !im.naturalWidth) return false;
+      var s = Math.max(W / im.naturalWidth, H / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+      ctx.globalAlpha = a; ctx.drawImage(im, (W - w) / 2, (H - h) / 2, w, h); return true;
+    }
+    function draw(x, t) {
+      var f = t * (NF - 1), i = Math.floor(f), k = f - i, W = x._cv.width, H = x._cv.height, c = x._ctx;
+      var A = x._fr[i], B = x._fr[Math.min(NF - 1, i + 1)];
+      if (!cover(c, A, W, H, 1)) { for (var j = i; j >= 0; j--) if (cover(c, x._fr[j], W, H, 1)) break; return; }
+      if (k > .02 && B) cover(c, B, W, H, k);
+      c.globalAlpha = 1;
+    }
+    function upd() {
+      ticking = false;
+      xs.forEach(function (x) {
+        if (!x._on) return;
+        var r = x.getBoundingClientRect(), S = x._cv.clientHeight || innerHeight;
+        var p = clamp(-r.top / Math.max(1, r.height - S), 0, 1);
+        var op = p < .08 ? p / .08 : p > .92 ? (1 - p) / .08 : 1;
+        x._cv.style.opacity = op.toFixed(3);
+        var t = clamp((p - .06) / .88, 0, 1), key = Math.round(t * 600);
+        if (op > 0 && key !== x._last) { x._last = key; draw(x, t); }
+      });
+    }
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { var x = e.target; x._on = e.isIntersecting; if (x._on) { load(x); size(x); } });
+      if (!ticking) { ticking = true; raf(upd); }
+    }, { rootMargin: '150% 0px' });
+    xs.forEach(function (x) { if (safe) { x.style.display = 'none'; return; } io.observe(x); });
+    addEventListener('scroll', function () { if (!ticking) { ticking = true; raf(upd); } }, { passive: true });
+    addEventListener('resize', function () { xs.forEach(function (x) { if (x._on) { load(x); size(x); } }); upd(); }, { passive: true });
   })();
 
   /* ---------- 2. countdown (+ status) ---------- */

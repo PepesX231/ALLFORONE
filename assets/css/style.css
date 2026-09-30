@@ -1340,3 +1340,12 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .mob .cut-sc.on .ly.cam,.mob .sc-dawn.on .ly-bg{animation:none!important}
 .mob .cut-v{will-change:opacity}
 .cut-sc .st-big{-webkit-text-stroke-width:4px}
+/* crisp vector flower bed in the same ink style as the hamsters */
+.fl-front{height:auto;width:108%!important;left:-4%!important;bottom:-2vh!important}
+.sc-meadow .fl-front,.bt-meadow .fl-front{bottom:-3vh!important}
+@media (max-aspect-ratio:1/1){.fl-front{width:220%!important;left:-60%!important;bottom:-1vh!important}}
+/* backgrounds and hamsters sit in the same light: a soft rim-shadow + gentle scene tint on the cast */
+.cut-sc .cast{filter:drop-shadow(0 10px 14px rgba(8,10,30,.35)) saturate(.94)}
+.mob .cut-sc .cast{filter:none}
+/* desktop: flower bed only hides the feet, not the bodies */
+@media (min-aspect-ratio:1/1){.fl-front{bottom:-11vh!important}.sc-meadow .fl-front,.bt-meadow .fl-front{bottom:-12vh!important}}

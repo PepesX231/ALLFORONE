@@ -759,16 +759,16 @@ if os.environ.get('TALL') and CLIP == 'towers':
             cable([(-40, y + .3, -1.9 - dz), (0, y + .3, -2.1 - dz), (40, y + .3, -1.9 - dz)], col, .2, .6, 'duct')
         for x in range(-30, 31, 10): box((.5, .6, 1.9), (x, y - .1, -2.4), clip)
         # broken orange cable: two ends droop towards each other with frayed copper tips (sparks are added on the page)
-        cable([(-40, y - .3, -4.2), (-24, y - .3, -8.6), (-10, y - .3, -11.2), (-4.2, y - .3, -12.6)], '#ff8a3d', .26, .3, 'orL')
-        cable([(40, y - .3, -4.0), (24, y - .3, -9.0), (11, y - .3, -12.4), (5.4, y - .3, -13.8)], '#ff8a3d', .26, .3, 'orR')
-        for (x, z, rz) in ((-4.2, -12.6, -.35), (5.4, -13.8, .45)):
+        cable([(-40, y - .3, -4.2), (-24, y - .3, -8.6), (-13, y - .3, -11.2), (-7.4, y - .3, -12.6)], '#ff8a3d', .26, .3, 'orL')
+        cable([(40, y - .3, -4.0), (24, y - .3, -9.0), (8, y - .3, -12.4), (2.2, y - .3, -13.8)], '#ff8a3d', .26, .3, 'orR')
+        for (x, z, rz) in ((-7.4, -12.6, -.35), (2.2, -13.8, .45)):
             for k in range(5):
                 cyl(.07, .9, (x + (k - 2) * .12, y - .35, z + rnd.uniform(-.2, .2)), copper, rot=(0, math.radians(90) + rnd.uniform(-.7, .7), 0), v=5)
             cyl(.34, .3, (x, y - .3, z), clip, rot=(0, math.radians(90) + rz, 0), v=14)
         # purple cable, low and calm
         cable([(-40, y + .2, -9.5), (-18, y + .2, -15.2), (0, y + .2, -16.0), (18, y + .2, -15.0), (40, y + .2, -9.2)], '#8f6bff', .22, .35, 'pur')
         # clamps where the hamster's teal cable (drawn live on the page) is fixed
-        for x in (-21.0, 21.0):
+        for x in (-21.0, 24.0):
             cyl(.06, 3.6, (x, y - .1, -2.2 - 1.8), clip, v=6)
             box((.8, .9, .7), (x, y - .6, -6.0), clip); sphere(.18, (x, y - 1.1, -6.0), mat('bolt', hexc('#c7d0e2'), .3, .8), seg=8)
         glass = mat('bulb', hexc('#ffc94a'), .3, emit=hexc('#ffb52e'), estr=2.6); cage = mat('cage', hexc('#3a3040'), .6)
@@ -781,7 +781,7 @@ if os.environ.get('TALL') and CLIP == 'towers':
             bpy.ops.object.light_add(type='POINT', location=(x, FY - 2.5, bz)); l = bpy.context.object; l.data.energy = 220; l.data.color = (1, .78, .45); l.data.shadow_soft_size = .5
 
         # the hamster's teal cable (3D, thin): from clamp to clamp with a dip where the hamster hangs
-        cable([(-40, y - .5, -3.2), (-21, y - .5, -6.0), (-6.5, y - .5, -9.2), (21, y - .5, -6.0), (40, y - .5, -3.4)], '#3fc6e0', .24, .3, 'teal')
+        cable([(-40, y - .5, -3.2), (-21, y - .5, -6.0), (8.5, y - .5, -9.4), (24, y - .5, -6.2), (40, y - .5, -3.4)], '#3fc6e0', .24, .3, 'teal')
         # details: glowing mushrooms, a fossil bone, a junction box, dangling wire ties
         shroom = [mat('mc1', hexc('#ff7fb0'), .4, emit=hexc('#ff7fb0'), estr=1.4), mat('mc2', hexc('#8ff0ff'), .4, emit=hexc('#8ff0ff'), estr=1.4)]
         stem = mat('stem', hexc('#fff4e2'), .6, emit=hexc('#fff4e2'), estr=.4)

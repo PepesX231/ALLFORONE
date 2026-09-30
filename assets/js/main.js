@@ -332,7 +332,7 @@
     var NS = 'http://www.w3.org/2000/svg', INK = '#1b1540';
     var CAM = { w: { W: 64, H: 36, iw: 1920, ih: 1080 }, p: { W: 36 * 1080 / 1600, H: 36, iw: 1080, ih: 1600 } }, TOP = 6.5;
     var LAMPS = [[-28, -4.95], [-15.5, -4.55], [-9.5, -5.55], [9.5, -5.15], [15.5, -4.75], [28, -5.75]];
-    var ENDS = [[-4.2, -12.6], [5.4, -13.8]], ANCH = [[-21, -6], [21, -6]], GRIP = [.4, -9.6], GRIPS = { w: [-6.5, -9.2], p: [-6.5, -9.2] };
+    var ENDS = [[-7.4, -12.6], [2.2, -13.8]], ANCH = [[-21, -6], [21, -6]], GRIP = [.4, -9.6], GRIPS = { w: [8.5, -9.4], p: [8.5, -9.4] };
     var o, k, el = {}, t0 = 0, running = false, visible = false, still = reduced || root.classList.contains('safe');
     function P(x, z) { var c = CAM[o]; return [(x + c.W / 2) / c.W * c.iw, (TOP - z) / c.H * c.ih]; }
     function mk(tag, at, parent) { var e = document.createElementNS(NS, tag); for (var a in at) e.setAttribute(a, at[a]); (parent || svg).appendChild(e); return e; }
@@ -346,13 +346,13 @@
         var p = P(L[0], L[1]), g = mk('g', {});
         return { glow: mk('circle', { cx: p[0], cy: p[1], r: 2.6 * k, fill: 'url(#ugl)' }, g), off: mk('circle', { cx: p[0], cy: p[1], r: .74 * k, fill: '#3a2a2a', opacity: 0 }, g), base: .8 + Math.random() * .2, next: 2 + Math.random() * 6, until: 0 };
       });
-      el.ham = mk('image', { href: 'assets/img/cast/h-brown-hang.webp', width: 7 * k, height: 7 * k * 999 / 712, preserveAspectRatio: 'none' });
+      el.ham = mk('image', { href: 'assets/img/cast/h-brown-hang.webp', height: (o === 'p' ? 6 : 7) * k * 999 / 712, width: (o === 'p' ? 6 : 7) * k, preserveAspectRatio: 'none' });
       el.spark = mk('g', {}); el.flash = ENDS.map(function (E) { var p = P(E[0], E[1]); return mk('circle', { cx: p[0], cy: p[1], r: 2.2 * k, fill: 'url(#ugs)', opacity: 0 }); });
       el.burst = 0; el.nextBurst = .6; draw(0);
     }
     function rot(v, a) { var c = Math.cos(a), s = Math.sin(a); return [v[0] * c - v[1] * s, v[0] * s + v[1] * c]; }
     function draw() {                                        // the hamster just hangs from the (rendered) teal cable
-      var G = P(GRIP[0], GRIP[1]), hw = 7 * k, hh = hw * 999 / 712;
+      var G = P(GRIP[0], GRIP[1]), hw = (o === 'p' ? 6 : 7) * k, hh = hw * 999 / 712;
       el.ham.setAttribute('transform', 'translate(' + (G[0] - .497 * hw).toFixed(1) + ' ' + (G[1] - .085 * hh).toFixed(1) + ')');
     }
     function bolt(a, b) {                                   // jagged arc between the two frayed ends, with a couple of branches

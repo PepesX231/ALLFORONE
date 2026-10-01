@@ -1560,3 +1560,10 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .cut-sc .st-big{line-height:1.22!important;font-size:clamp(42px,min(12vw,10.5vh),112px)!important;padding:.08em 0}
 .cut-sc .st-big br{display:block;content:"";margin-top:.06em}
 .cut-sc .st-s{line-height:1.5}
+/* new collage logo + cap mark (images) */
+.logo img{display:block;width:100%;height:auto}
+.logo.mark.cap img{width:50px;height:auto;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.logo.mark.only.cap img{width:44px}
+.st0 .hero-logo{filter:drop-shadow(0 10px 18px rgba(11,27,63,.35))}
+.bbar .logo{width:92px!important}
+.rg-logo{display:block;width:150px;height:auto;margin:-10px 0 6px -6px}

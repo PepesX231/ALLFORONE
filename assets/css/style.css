@@ -1555,3 +1555,8 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .mob .bk{display:none}
 .mob .cl{will-change:auto}
 #perks,#journey,#posters,#faq,.ftr{content-visibility:auto;contain-intrinsic-size:auto 900px}
+/* cutscene titles: more air between the pill, the two big lines and the subtitle so Thai tone marks never touch */
+.cut-sc .st{gap:clamp(14px,2.4vh,26px)!important}
+.cut-sc .st-big{line-height:1.22!important;font-size:clamp(42px,min(12vw,10.5vh),112px)!important;padding:.08em 0}
+.cut-sc .st-big br{display:block;content:"";margin-top:.06em}
+.cut-sc .st-s{line-height:1.5}

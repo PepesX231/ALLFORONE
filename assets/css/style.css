@@ -1568,3 +1568,29 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .bbar .logo{width:92px!important}
 .rg-logo{display:block;width:150px;height:auto;margin:-10px 0 6px -6px}
 .st0 .hero-logo{filter:none!important}
+/* ===== cross-device polish (iOS Safari / Android Chrome / desktop) ===== */
+a,button,label,summary,[role="tab"]{touch-action:manipulation}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+img,video,canvas,svg{-webkit-user-drag:none}
+.cut,.rg-card,.sheet-scroll{-webkit-overflow-scrolling:touch}
+/* notch / home-indicator safe areas */
+.hdr{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+.cut-dots{bottom:calc(16px + env(safe-area-inset-bottom))}
+.cut-next{bottom:calc(40px + env(safe-area-inset-bottom))}
+.rg-card{max-height:calc(100dvh - 24px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}
+/* older iOS (<16.2) has no color-mix(): give the tinted surfaces solid fallbacks */
+@supports not (color:color-mix(in srgb,red 50%,blue)){
+  .sheet-panel,.sheet-top{background:#171b3e!important}
+  .sheet-scroll{background:#121531!important}
+  .dl-row,.idea,.get{background:rgba(255,255,255,.06)!important;box-shadow:inset 0 0 0 2px rgba(255,255,255,.1)!important}
+  .tab[aria-selected="true"]{box-shadow:0 3px 0 rgba(0,0,0,.35)!important}
+  .dl-h::before{box-shadow:0 3px 0 rgba(0,0,0,.35)}
+  .rg-tracks input:checked+span{background:rgba(255,255,255,.12);box-shadow:inset 0 0 0 2px #fff}
+}
+/* hero logo: crisp, no layout jump */
+.st0 .hero-logo img{aspect-ratio:1479/667}
+@media (prefers-reduced-motion:reduce){.cl,.sakura i,.skt{animation:none!important}}
+.ftr-credit a{color:#ffd23f;text-decoration:underline;text-underline-offset:3px}
+.ftr-credit{width:100%;order:3}
+@media (min-width:720px){.ftr-credit{width:auto;order:0}}
+.st0 .hero-logo{width:min(88vw,56vh,600px)}

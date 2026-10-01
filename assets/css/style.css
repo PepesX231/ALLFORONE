@@ -1567,3 +1567,4 @@ html.cut-lock{overscroll-behavior:none;scroll-behavior:auto}
 .st0 .hero-logo{filter:drop-shadow(0 10px 18px rgba(11,27,63,.35))}
 .bbar .logo{width:92px!important}
 .rg-logo{display:block;width:150px;height:auto;margin:-10px 0 6px -6px}
+.st0 .hero-logo{filter:none!important}

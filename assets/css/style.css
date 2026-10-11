@@ -1737,3 +1737,5 @@ img,video,canvas,svg{-webkit-user-drag:none}
 /* end of the tower scene: one long, even fade into the page black (no lighter band / hard line before 3 TRACKS) */
 .dig{height:calc(var(--S) * 1.2)!important;background:linear-gradient(rgba(10,10,15,0),rgba(10,10,15,.55) 30%,rgba(10,10,15,.92) 55%,#0a0a0f 72%)!important}
 .bt-sky::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:4px;background:#0a0a0f;z-index:6}
+/* brighter orange for the second headline line (was muddy on phones) */
+.st .st-big2,.st-big .st-big2{color:#ff9a2e!important;text-shadow:0 3px 0 #c2410c,0 -2px 0 #c2410c,2px 0 0 #c2410c,-2px 0 0 #c2410c,0 10px 22px rgba(0,0,0,.25)!important}

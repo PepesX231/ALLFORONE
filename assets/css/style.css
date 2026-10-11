@@ -1668,3 +1668,6 @@ img,video,canvas,svg{-webkit-user-drag:none}
 @media (max-width:520px){.hx-reg .cd b{font-size:26px}.hx-reg .cd div{padding:10px 2px 8px}}
 .st0 .hx-sub2{font-size:clamp(16px,3.8vw,22px)}
 @media (max-width:520px){.hx-br{display:block}}
+/* underground removed: the towers fade straight to black into the next section */
+.bt-sky{height:calc((100vh - var(--hdr)) * 2.5)!important;height:calc(var(--S) * 2.5)!important}
+.dig{bottom:0!important;height:calc(var(--S) * .7)!important;background:linear-gradient(rgba(10,10,15,0),rgba(10,10,15,.75) 45%,#0a0a0f 85%)!important}

@@ -1718,6 +1718,9 @@ img,video,canvas,svg{-webkit-user-drag:none}
 @media (max-aspect-ratio:1/1){.bt-sky .c-jump{right:-4%!important;bottom:22%!important;width:min(30vw,20vh)!important}}
 .st-big2{display:inline-block;margin-top:.15em;font-size:.42em;line-height:1.25;color:#fff;letter-spacing:0}
 .tr-final{position:relative;z-index:2;margin:8px auto 0!important;padding-bottom:clamp(28px,6vh,64px)}
+/* second headline line: solid navy outline so it never melts into the building */
+.st .st-big2,.st-big .st-big2{color:#fff;-webkit-text-stroke:.16em #0b1b3f;paint-order:stroke fill;text-shadow:0 .1em 0 #0b1b3f,0 0 .5em rgba(11,27,63,.55)}
+.st .st-big{-webkit-text-stroke:.06em #0b1b3f;paint-order:stroke fill}
 
 </style>
 <script>
@@ -1986,6 +1989,7 @@ img,video,canvas,svg{-webkit-user-drag:none}
     <div class="st st1 night">
       <span class="w st-s" style="--i:0">สำหรับนักเรียนมัธยมทั่วประเทศ</span>
       <p class="st-big"><span class="w " style="--i:1">ทำผลงาน</span><span class="w hl" style="--i:2">ใน 4 วัน</span><br><span class="w st-big2" style="--i:3">พร้อมอบรมฝึกทักษะตลอดกิจกรรม</span></p>
+      <span class="w st-s" style="--i:4">แข่งสร้างผลงานจริง แล้วนำเสนอต่อกรรมการ</span>
       <button class="w st-go cut-go" style="--i:5" type="button"><svg class="ic ic-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>กดเพื่อดูเส้นทางสู่มหาลัย</button>
     </div>
   </div>

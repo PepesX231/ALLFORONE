@@ -1692,3 +1692,6 @@ img,video,canvas,svg{-webkit-user-drag:none}
 @media (max-aspect-ratio:1/1){.bt-sky .c-jump{right:-4%!important;bottom:22%!important;width:min(30vw,20vh)!important}}
 .st-big2{display:inline-block;margin-top:.15em;font-size:.42em;line-height:1.25;color:#fff;letter-spacing:0}
 .tr-final{position:relative;z-index:2;margin:8px auto 0!important;padding-bottom:clamp(28px,6vh,64px)}
+/* second headline line: solid navy outline so it never melts into the building */
+.st .st-big2,.st-big .st-big2{color:#fff;-webkit-text-stroke:.16em #0b1b3f;paint-order:stroke fill;text-shadow:0 .1em 0 #0b1b3f,0 0 .5em rgba(11,27,63,.55)}
+.st .st-big{-webkit-text-stroke:.06em #0b1b3f;paint-order:stroke fill}

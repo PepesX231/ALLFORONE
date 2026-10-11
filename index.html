@@ -18,12 +18,12 @@
 <link rel="apple-touch-icon" href="assets/img/cap-icon.png">
 <link rel="preload" as="image" href="assets/img/scene/towers-w.webp" media="(min-aspect-ratio: 1/1)" fetchpriority="high">
 <link rel="preload" as="image" href="assets/img/scene/towers-p.webp" media="(max-aspect-ratio: 1/1)" fetchpriority="high">
-<link rel="preload" as="image" href="assets/img/logo-hero-sm.webp" imagesrcset="assets/img/logo-hero-sm.webp 780w, assets/img/logo-hero.webp 1479w" imagesizes="(max-width: 700px) 92vw, 560px">
+<link rel="preload" as="image" href="assets/img/logo-hero-sm.webp" imagesrcset="assets/img/logo-hero-sm.webp 640w, assets/img/logo-hero.webp 1479w" imagesizes="(max-width: 700px) 92vw, 560px">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=block&text=ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789%26.-" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/style.css?v=ac95d72c">
+<link rel="stylesheet" href="assets/css/style.css?v=d72e1148">
 <script>
   // progressive enhancement flags (set before first paint to avoid a flash)
   (function (d) {
@@ -70,7 +70,7 @@
 }
 </script>
 <script src="assets/js/data.js?v=8aab37e4" defer></script>
-<script src="assets/js/main.js?v=3316806f" defer></script>
+<script src="assets/js/main.js?v=5605ee83" defer></script>
 <script src="assets/js/tracks3d.js?v=3c451a4f" defer></script>
 </head>
 <body>
@@ -278,7 +278,7 @@
         <img class="lg-iote" src="assets/img/logo-iote.webp" alt="IoTE KMITL" width="365" height="96">
       </div>
       <h1 class="sr">All for One University</h1>
-      <div class="logo hero-logo w" style="--i:1"><img src="assets/img/logo-hero.webp" srcset="assets/img/logo-hero-sm.webp 780w, assets/img/logo-hero.webp 1479w" sizes="(max-width: 700px) 92vw, 560px" alt="All for One University" width="1479" height="667" decoding="async" fetchpriority="high"></div>
+      <div class="logo hero-logo w" style="--i:1"><img src="assets/img/logo-hero.webp" srcset="assets/img/logo-hero-sm.webp 640w, assets/img/logo-hero.webp 1479w" sizes="(max-width: 700px) 92vw, 560px" alt="All for One University" width="1479" height="667" decoding="async" fetchpriority="high"></div>
       <p class="st-tag w" style="--i:2" id="heroTitle">ขอให้ได้มหาลัยซักที่</p>
     </div>
     <div class="st st1 night">
@@ -536,6 +536,7 @@
         <label class="rg-f"><span>ชื่อ–นามสกุล</span><input name="name" autocomplete="name" placeholder="กรอกชื่อ–นามสกุล" required></label>
         <label class="rg-f"><span>ชื่อเล่น <small class="rg-opt">(ถ้ามี)</small></span><input name="nick" placeholder="กรอกชื่อเล่น"></label>
         <label class="rg-f"><span>เบอร์โทรศัพท์</span><input name="phone" type="tel" inputmode="numeric" autocomplete="tel" placeholder="0XX-XXX-XXXX" required></label>
+        <label class="rg-hp" aria-hidden="true">เว็บไซต์<input name="website" tabindex="-1" autocomplete="off"></label>
         <label class="rg-f rg-code"><span>โค้ด <small class="rg-opt">(ถ้ามี)</small></span><input name="code" placeholder="กรอกโค้ดส่วนลด / โค้ดแนะนำ"></label>
       </div>
       <p class="rg-err" id="rgErr" role="alert"></p>
@@ -547,12 +548,14 @@
       <ol class="rg-sum" id="rgSum"></ol>
       <div class="rg-total"><span>ยอดรวม</span><b id="rgTotal">0</b></div>
       <p class="rg-note" id="rgNote"></p>
+      <p class="rg-err" id="rgSendErr" role="alert"></p>
       <button class="rg-go" type="button" id="rgConfirm">ยืนยันและชำระเงิน <svg class="ic"><use href="#i-arrow"/></svg></button>
       <button class="rg-back2" type="button" id="rgEdit">← แก้ไขข้อมูล</button>
     </div>
     <div class="rg-step" data-step="3" hidden>
       <img class="rg-yay" src="assets/img/cast/st-4.webp" alt="" width="200" height="200" loading="lazy" decoding="async">
       <h2 class="rg-h">เกือบเสร็จแล้ว!</h2>
+      <p class="rg-idbox" id="rgId" hidden>รหัสใบสมัคร <b></b></p>
       <p class="rg-sub" id="rgDoneTxt"></p>
       <a class="rg-go" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">ไปหน้าชำระเงิน <svg class="ic"><use href="#i-arrow"/></svg></a>
       <a class="rg-back2" data-line href="https://page.line.me/jkm4247u?openQrModal=true" target="_blank" rel="noopener">มีคำถาม? ทักทาง LINE</a>

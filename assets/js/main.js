@@ -1106,17 +1106,27 @@
   });
   q('#rgEdit').addEventListener('click', function () { step(1); });
   q('#rgConfirm').addEventListener('click', function () {
-    var data = { mode: mode, track: (q('[name=track]:checked') || {}).value, members: members, total: PRICE * members.length, at: new Date().toISOString() };
+    var btn = this; if (btn.disabled) return;
+    var data = { mode: mode, track: (q('[name=track]:checked') || {}).value, members: members, total: PRICE * members.length, at: new Date().toISOString(), hp: (q('[name=website]') || {}).value || '' };
     var txt = 'สมัคร All for One University\n' + q('#rgSumSub').textContent + '\n' + members.map(function (m, i) { return (i + 1) + '. ' + m.name + (m.nick ? ' (' + m.nick + ')' : '') + ' ' + m.phone + (m.code ? ' โค้ด ' + m.code : ''); }).join('\n');
-    var done = function (sent) {
-      q('#rgDoneTxt').textContent = sent ? 'ส่งใบสมัครแล้ว! ชำระค่าสมัคร ' + data.total.toLocaleString('th-TH') + ' บาท ที่หน้า Hamster Hub เพื่อยืนยันที่นั่ง'
-        : 'คัดลอกรายชื่อไว้ให้แล้ว — ไปที่หน้าสมัครของ Hamster Hub วางข้อมูล แล้วชำระ ' + data.total.toLocaleString('th-TH') + ' บาท เพื่อยืนยันที่นั่ง';
-      step(3);
+    var baht = data.total.toLocaleString('th-TH');
+    var done = function (id) {
+      q('#rgId').hidden = !id; q('#rgId b').textContent = id || '';
+      q('#rgDoneTxt').textContent = id ? 'บันทึกใบสมัครแล้ว! เก็บรหัสนี้ไว้ แล้วชำระค่าสมัคร ' + baht + ' บาท ที่หน้า Hamster Hub เพื่อยืนยันที่นั่ง'
+        : 'คัดลอกรายชื่อไว้ให้แล้ว — ไปที่หน้าสมัครของ Hamster Hub วางข้อมูล แล้วชำระ ' + baht + ' บาท เพื่อยืนยันที่นั่ง';
+      btn.disabled = false; btn.classList.remove('busy'); step(3);
     };
-    if (CFG.regEndpoint) {
-      fetch(CFG.regEndpoint, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(data) })
-        .then(function () { done(true); }, function () { copy(txt); done(false); });
-    } else { copy(txt); done(false); }
+    if (!CFG.regEndpoint) { copy(txt); done(''); return; }
+    btn.disabled = true; btn.classList.add('busy'); q('#rgSendErr').textContent = '';
+    var ctl = window.AbortController ? new AbortController() : null, to = setTimeout(function () { if (ctl) ctl.abort(); }, 15000);
+    fetch(CFG.regEndpoint, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data), signal: ctl && ctl.signal, redirect: 'follow' })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        clearTimeout(to);
+        if (j && j.ok) { try { localStorage.setItem('afo-reg', JSON.stringify({ id: j.id, at: data.at })); } catch (e) {} done(j.id); }
+        else { btn.disabled = false; btn.classList.remove('busy'); q('#rgSendErr').textContent = (j && j.error) || 'ส่งไม่สำเร็จ ลองใหม่อีกครั้ง'; }
+      })
+      .catch(function () { clearTimeout(to); btn.disabled = false; btn.classList.remove('busy'); q('#rgSendErr').textContent = 'เชื่อมต่อไม่ได้ ลองใหม่ หรือทักทาง LINE ได้เลย'; });
   });
   function copy(t) { try { navigator.clipboard.writeText(t); } catch (e) {} }
   function open(trackId) {

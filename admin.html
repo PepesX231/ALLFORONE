@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>แอดมิน · All for One University</title>
+<link rel="icon" type="image/png" href="assets/img/cap-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0f;--card:#141733;--card2:#1c2050;--line:rgba(255,255,255,.09);--text:#f5f5f7;--dim:#9aa0c8;--orange:#ff6000;--yellow:#ffd23f;--mint:#3ddc97;--blue:#4d9fff;--red:#ff7a7a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Prompt,system-ui,sans-serif}
+button,input,select{font:inherit;color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 60px}
+header{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+header img{width:150px;height:auto}
+h1{margin:0;font-size:22px;font-weight:800}
+.sp{flex:1}
+.btn{border:0;border-radius:999px;padding:10px 18px;font-weight:700;cursor:pointer;background:var(--card2);box-shadow:inset 0 0 0 2px var(--line)}
+.btn.o{background:var(--orange);box-shadow:0 4px 0 #9a3a00}
+.login{max-width:380px;margin:12vh auto;padding:28px;border-radius:26px;background:var(--card);box-shadow:inset 0 0 0 2px var(--line);text-align:center}
+.login img{width:220px;height:auto}
+.login input{width:100%;margin:16px 0 10px;padding:14px 16px;border:0;border-radius:14px;background:#f3f4fb;color:#1b1540}
+.err{color:var(--red);min-height:1.4em;font-weight:600}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:20px 0}
+.stat{padding:16px;border-radius:20px;background:var(--card);box-shadow:inset 0 0 0 2px var(--line)}
+.stat b{display:block;font-size:30px;font-weight:800;line-height:1.1}.stat span{color:var(--dim);font-size:13px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.tools input,.tools select{padding:10px 14px;border:0;border-radius:12px;background:var(--card);box-shadow:inset 0 0 0 2px var(--line)}
+.tools input{flex:1;min-width:200px}
+.tbl{overflow-x:auto;border-radius:20px;background:var(--card);box-shadow:inset 0 0 0 2px var(--line)}
+table{width:100%;border-collapse:collapse;min-width:820px}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--dim);font-weight:600;position:sticky;top:0;background:var(--card)}
+tr.grp td{background:rgba(255,255,255,.025)}
+.id{font-weight:800;color:var(--yellow);white-space:nowrap}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12.5px;font-weight:700;background:rgba(255,255,255,.08)}
+.t-เกม{color:var(--mint)}.t-IoT{color:var(--blue)}
+td select{padding:6px 10px;border-radius:10px;border:0;background:var(--card2)}
+.st-ชำระแล้ว,.st-ยืนยันแล้ว{color:var(--mint)}.st-ยกเลิก{color:var(--red)}.st-รอชำระ{color:var(--yellow)}
+.empty{padding:40px;text-align:center;color:var(--dim)}
+.note{margin-top:18px;color:var(--dim);font-size:13px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <form class="login" id="login">
+    <img src="assets/img/logo-hero-sm.webp" alt="All for One University">
+    <h1>ระบบหลังบ้าน</h1>
+    <input type="password" id="key" placeholder="รหัสแอดมิน" autocomplete="current-password" required>
+    <p class="err" id="lerr"></p>
+    <button class="btn o" type="submit">เข้าสู่ระบบ</button>
+  </form>
+  <div id="dash" hidden>
+    <header>
+      <img src="assets/img/logo-hero-sm.webp" alt=""><h1>ใบสมัคร</h1><span class="sp"></span>
+      <button class="btn" id="reload">รีเฟรช</button><button class="btn" id="csv">ดาวน์โหลด CSV</button><button class="btn" id="out">ออกจากระบบ</button>
+    </header>
+    <div class="stats" id="stats"></div>
+    <div class="tools">
+      <input id="q" type="search" placeholder="ค้นหา ชื่อ / ชื่อเล่น / เบอร์ / รหัส">
+      <select id="ft"><option value="">ทุกสาย</option><option>เกม</option><option>แอป / เว็บ</option><option>IoT</option></select>
+      <select id="fs"><option value="">ทุกสถานะ</option></select>
+    </div>
+    <div class="tbl"><table><thead><tr><th>รหัส</th><th>เวลา</th><th>สาย</th><th>รูปแบบ</th><th>ชื่อ–นามสกุล</th><th>ชื่อเล่น</th><th>เบอร์</th><th>โค้ด</th><th>ยอด</th><th>สถานะ</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <p class="note">ข้อมูลจริงอยู่ใน Google Sheet ของโครงการ — เปลี่ยนสถานะที่นี่แล้วจะอัปเดตในชีตทันที (ทุกคนในใบสมัครเดียวกันเปลี่ยนพร้อมกัน)</p>
+  </div>
+</div>
+<script src="assets/js/data.js"></script>
+<script>
+(function () {
+  var EP = (window.AFO && AFO.CFG.regEndpoint) || '', $ = function (s) { return document.querySelector(s); };
+  var key = sessionStorage.getItem('afo-admin') || '', data = [], statuses = ['รอชำระ', 'ชำระแล้ว', 'ยืนยันแล้ว', 'ยกเลิก'];
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+  function api(params) {
+    var u = EP + '?' + Object.keys(params).map(function (k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch(u, { redirect: 'follow' }).then(function (r) { return r.json(); });
+  }
+  function load() {
+    if (!EP) { $('#lerr').textContent = 'ยังไม่ได้ตั้งค่า regEndpoint ใน assets/js/data.js'; return; }
+    $('#lerr').textContent = 'กำลังโหลด…';
+    api({ action: 'list', key: key }).then(function (j) {
+      if (!j.ok) { sessionStorage.removeItem('afo-admin'); $('#lerr').textContent = j.error || 'เข้าไม่ได้'; $('#login').hidden = false; $('#dash').hidden = true; return; }
+      sessionStorage.setItem('afo-admin', key); data = j.rows; statuses = j.statuses || statuses;
+      $('#fs').innerHTML = '<option value="">ทุกสถานะ</option>' + statuses.map(function (s) { return '<option>' + s + '</option>'; }).join('');
+      $('#login').hidden = true; $('#dash').hidden = false; $('#lerr').textContent = ''; render();
+    }).catch(function () { $('#lerr').textContent = 'เชื่อมต่อไม่ได้'; });
+  }
+  function render() {
+    var q = $('#q').value.trim().toLowerCase(), ft = $('#ft').value, fs = $('#fs').value;
+    var rows = data.filter(function (r) {
+      return (!ft || r.track === ft) && (!fs || r.status === fs) && (!q || [r.id, r.name, r.nick, r.phone, r.code].join(' ').toLowerCase().indexOf(q) >= 0);
+    });
+    var apps = {}, people = 0, paid = 0, per = { 'เกม': 0, 'แอป / เว็บ': 0, 'IoT': 0 };
+    data.forEach(function (r) { if (r.status === 'ยกเลิก') return; people++; apps[r.id] = r; per[r.track] = (per[r.track] || 0) + 1; if (r.status !== 'รอชำระ') paid += +r.total / (+r.size || 1); });
+    $('#stats').innerHTML = [['ใบสมัคร', Object.keys(apps).length], ['ผู้สมัคร (คน)', people], ['สายเกม', per['เกม']], ['สายแอป / เว็บ', per['แอป / เว็บ']], ['สาย IoT', per['IoT']], ['ชำระแล้ว (บาท)', Math.round(paid).toLocaleString('th-TH')]]
+      .map(function (s) { return '<div class="stat"><b>' + s[1] + '</b><span>' + s[0] + '</span></div>'; }).join('');
+    var prev = '';
+    $('#rows').innerHTML = rows.length ? rows.map(function (r) {
+      var first = r.id !== prev; prev = r.id;
+      return '<tr class="' + (r.mode === 'กลุ่ม' ? 'grp' : '') + '"><td class="id">' + (first ? esc(r.id) : '') + '</td><td>' + (first ? new Date(r.at).toLocaleString('th-TH', { dateStyle: 'short', timeStyle: 'short' }) : '') + '</td><td><span class="pill t-' + esc(r.track).replace(/\s|\//g, '') + '">' + esc(r.track) + '</span></td><td>' + esc(r.mode) + (r.mode === 'กลุ่ม' ? ' · ' + r.no + '/' + r.size : '') +
+        '</td><td>' + esc(r.name) + '</td><td>' + esc(r.nick) + '</td><td><a href="tel:' + esc(r.phone) + '" style="color:inherit">' + esc(r.phone) + '</a></td><td>' + esc(r.code) + '</td><td>' + (first ? (+r.total).toLocaleString('th-TH') : '') + '</td><td>' +
+        (first ? '<select data-id="' + esc(r.id) + '" class="st-' + esc(r.status) + '">' + statuses.map(function (s) { return '<option' + (s === r.status ? ' selected' : '') + '>' + s + '</option>'; }).join('') + '</select>' : '<span class="st-' + esc(r.status) + '">' + esc(r.status) + '</span>') + '</td></tr>';
+    }).join('') : '<tr><td colspan="10" class="empty">ยังไม่มีใบสมัคร</td></tr>';
+  }
+  $('#rows').addEventListener('change', function (e) {
+    var s = e.target.closest('select'); if (!s) return; s.disabled = true;
+    api({ action: 'status', key: key, id: s.dataset.id, status: s.value }).then(function (j) {
+      if (j.ok) data.forEach(function (r) { if (r.id === s.dataset.id) r.status = s.value; });
+      render();
+    }).catch(function () { alert('บันทึกไม่สำเร็จ'); render(); });
+  });
+  $('#login').addEventListener('submit', function (e) { e.preventDefault(); key = $('#key').value; load(); });
+  ['#q', '#ft', '#fs'].forEach(function (s) { $(s).addEventListener('input', render); });
+  $('#reload').addEventListener('click', load);
+  $('#out').addEventListener('click', function () { sessionStorage.removeItem('afo-admin'); location.reload(); });
+  $('#csv').addEventListener('click', function () {
+    var H = ['รหัส', 'เวลา', 'สาย', 'รูปแบบ', 'คนที่', 'ชื่อ–นามสกุล', 'ชื่อเล่น', 'เบอร์', 'โค้ด', 'ยอดรวม', 'สถานะ'];
+    var c = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+    var out = '﻿' + H.map(c).join(',') + '\n' + data.map(function (r) { return [r.id, r.at, r.track, r.mode, r.no, r.name, r.nick, r.phone, r.code, r.total, r.status].map(c).join(','); }).join('\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out], { type: 'text/csv' })); a.download = 'afo-registrations.csv'; a.click();
+  });
+  if (key) load();
+})();
+</script>
+</body>
+</html>

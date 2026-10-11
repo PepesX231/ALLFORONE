@@ -1745,3 +1745,11 @@ img,video,canvas,svg{-webkit-user-drag:none}
 .hx-credit:hover{background:rgba(11,27,63,.85);color:#fff}
 .st0:not(.on) .hx-credit{opacity:0;pointer-events:none}
 @media (max-width:520px){.hx-credit{font-size:10.5px;bottom:8px;left:8px;padding:4px 9px}}
+/* credit scrolls with the page: pinned to the bottom edge of the first screen, not to the viewport */
+.bt-sky > .hx-credit{position:absolute;top:calc(var(--S) - 40px);bottom:auto;z-index:7;opacity:1!important;pointer-events:auto!important}
+@media (max-width:520px){.bt-sky > .hx-credit{top:calc(var(--S) - 34px)}}
+/* credit travels with the hero text block (no floating while scrolling) */
+.st .hx-credit.w{position:static!important;display:inline-block!important;margin-top:clamp(6px,2vh,22px);background:rgba(11,27,63,.42);font-size:11px;opacity:0}
+.st.on .hx-credit.w{opacity:.85}
+.st.past .hx-credit.w{opacity:0}
+.st .hx-credit.w{white-space:nowrap;max-width:none}@media (max-width:520px){.st .hx-credit.w{font-size:9.5px;padding:3px 8px}}

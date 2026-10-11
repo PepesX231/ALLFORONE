@@ -1695,3 +1695,9 @@ img,video,canvas,svg{-webkit-user-drag:none}
 /* second headline line: solid navy outline so it never melts into the building */
 .st .st-big2,.st-big .st-big2{color:#fff;-webkit-text-stroke:.16em #0b1b3f;paint-order:stroke fill;text-shadow:0 .1em 0 #0b1b3f,0 0 .5em rgba(11,27,63,.55)}
 .st .st-big{-webkit-text-stroke:.06em #0b1b3f;paint-order:stroke fill}
+/* back to the original colour system: white + blue 3D, yellow highlight, orange second line — no outline */
+.st .st-big{-webkit-text-stroke:0!important}
+.st .st-big2,.st-big .st-big2{-webkit-text-stroke:0!important;color:#ff7a2e;font-size:.5em;white-space:nowrap;margin-top:.12em;
+  text-shadow:0 3px 0 #7c1d06,0 -2px 0 #7c1d06,2px 0 0 #7c1d06,-2px 0 0 #7c1d06,0 12px 26px rgba(120,40,0,.4)}
+@media (max-width:600px){.st .st-big2,.st-big .st-big2{white-space:normal;font-size:.56em;line-height:1.25}}
+@media (max-width:600px){.st-big2 .b2{display:block}.st .st-big2,.st-big .st-big2{white-space:nowrap}}

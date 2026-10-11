@@ -1765,6 +1765,12 @@ img,video,canvas,svg{-webkit-user-drag:none}
 .bt-sky::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:4px;background:#0a0a0f;z-index:6}
 /* brighter orange for the second headline line (was muddy on phones) */
 .st .st-big2,.st-big .st-big2{color:#ff9a2e!important;text-shadow:0 3px 0 #c2410c,0 -2px 0 #c2410c,2px 0 0 #c2410c,-2px 0 0 #c2410c,0 10px 22px rgba(0,0,0,.25)!important}
+/* developer credit: tucked in the bottom-left corner of the first screen */
+.hx-credit{position:absolute;left:max(14px,env(safe-area-inset-left));bottom:12px;z-index:6;max-width:calc(100% - 28px);padding:5px 10px;border-radius:999px;background:rgba(11,27,63,.55);color:rgba(255,255,255,.82);font-size:11.5px;font-weight:500;line-height:1.3;text-align:left;pointer-events:auto;text-decoration:none;transition:background .2s,color .2s}
+.hx-credit b{font-weight:700;color:#fff}
+.hx-credit:hover{background:rgba(11,27,63,.85);color:#fff}
+.st0:not(.on) .hx-credit{opacity:0;pointer-events:none}
+@media (max-width:520px){.hx-credit{font-size:10.5px;bottom:8px;left:8px;padding:4px 9px}}
 
 </style>
 <script>
@@ -2029,6 +2035,7 @@ img,video,canvas,svg{-webkit-user-drag:none}
         <a class="btn btn-orange hx-go" data-reg href="https://www.hamsterhub.co/allforone" target="_blank" rel="noopener">สมัครแข่งเลย · 190 บาท <svg class="ic"><use href="#i-arrow"/></svg></a>
         <a class="hx-more" href="#tracks">ดู 3 สายแข่ง ↓</a>
       </div>
+      <a class="hx-credit" href="https://github.com/PepesX231" target="_blank" rel="noopener">ออกแบบและพัฒนาเว็บไซต์โดย <b>ชมน์ปภพ ดีจริง · Chompapop Deejing</b></a>
     </div>
     <div class="st st1 night">
       <span class="w st-s" style="--i:0">สำหรับนักเรียนมัธยมทั่วประเทศ</span>
@@ -2328,7 +2335,7 @@ img,video,canvas,svg{-webkit-user-drag:none}
       <a href="tel:0900602555"><svg class="ic"><use href="#i-phone"/></svg>090-060-2555</a>
       <a href="https://www.instagram.com/hamsterhub_ig/" target="_blank" rel="noopener"><svg class="ic"><use href="#i-ig"/></svg>hamsterhub_ig</a>
     </div>
-    <div class="ftr-bottom"><span>© 2026 Hamster Hub. All rights reserved.</span><span class="ftr-credit">ออกแบบและพัฒนาเว็บไซต์โดย <a href="https://github.com/PepesX231" target="_blank" rel="noopener">ชมน์ปภพ ดีจริง · Chompapop Deejing</a></span><span>MORE STUDENTS · BRIGHTER TOMORROW</span></div>
+    <div class="ftr-bottom"><span>© 2026 Hamster Hub. All rights reserved.</span><span>MORE STUDENTS · BRIGHTER TOMORROW</span></div>
   </div>
 </footer>
 

@@ -1752,6 +1752,11 @@ img,video,canvas,svg{-webkit-user-drag:none}
 .trio-hit b{font-size:clamp(15px,min(4.6vw,3.3vh),28px)!important}
 .trio-hit small{font-size:clamp(11.5px,1.6vh,14px)!important}
 @media (max-width:719px){#tracks .peek{height:clamp(130px,18vh,180px)!important}#tracks .trio-wrap{max-width:none!important}}
+/* 3 TRACKS header: subtitle sits under the title instead of on top of it */
+#tracks .peek{display:flex!important;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:4px}
+#tracks .pk-title{margin-top:0!important;font-size:clamp(48px,min(13vw,10.5vh),150px)!important}
+#tracks .pk-sub{position:relative!important;bottom:auto!important;left:auto;right:auto;margin-top:clamp(6px,1.2vh,12px);transform:none!important;opacity:1!important}
+@media (min-width:720px){#tracks .peek{height:clamp(140px,21vh,250px)!important}#tracks .trio-wrap{max-width:min(1000px,calc((100svh - var(--hdr) - 21vh - 250px) * 2.6))!important}}
 
 </style>
 <script>

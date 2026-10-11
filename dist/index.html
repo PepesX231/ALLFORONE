@@ -1757,6 +1757,12 @@ img,video,canvas,svg{-webkit-user-drag:none}
 #tracks .pk-title{margin-top:0!important;font-size:clamp(48px,min(13vw,10.5vh),150px)!important}
 #tracks .pk-sub{position:relative!important;bottom:auto!important;left:auto;right:auto;margin-top:clamp(6px,1.2vh,12px);transform:none!important;opacity:1!important}
 @media (min-width:720px){#tracks .peek{height:clamp(140px,21vh,250px)!important}#tracks .trio-wrap{max-width:min(1000px,calc((100svh - var(--hdr) - 21vh - 250px) * 2.6))!important}}
+/* no hard clip edges around the 3 TRACKS header: let the hamsters and glow breathe */
+#tracks .peek{overflow:visible!important;contain:none!important}
+#tracks .pk-glow{top:60%!important;width:min(90vw,calc(34vh * 2.7))!important}
+/* end of the tower scene: one long, even fade into the page black (no lighter band / hard line before 3 TRACKS) */
+.dig{height:calc(var(--S) * 1.2)!important;background:linear-gradient(rgba(10,10,15,0),rgba(10,10,15,.55) 30%,rgba(10,10,15,.92) 55%,#0a0a0f 72%)!important}
+.bt-sky::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:4px;background:#0a0a0f;z-index:6}
 
 </style>
 <script>

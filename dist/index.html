@@ -1727,6 +1727,31 @@ img,video,canvas,svg{-webkit-user-drag:none}
   text-shadow:0 3px 0 #7c1d06,0 -2px 0 #7c1d06,2px 0 0 #7c1d06,-2px 0 0 #7c1d06,0 12px 26px rgba(120,40,0,.4)}
 @media (max-width:600px){.st .st-big2,.st-big .st-big2{white-space:normal;font-size:.56em;line-height:1.25}}
 @media (max-width:600px){.st-big2 .b2{display:block}.st .st-big2,.st-big .st-big2{white-space:nowrap}}
+/* ===== 3 TRACKS fits one screen: title, the three models, labels and the final/startup row ===== */
+#tracks{min-height:calc(100svh - var(--hdr))!important;justify-content:center!important;padding:clamp(8px,2vh,24px) 0 clamp(10px,2.4vh,28px)!important}
+#tracks .peek{height:clamp(130px,19vh,250px)!important;margin-top:0}
+#tracks .trio-wrap{--pb:58px;margin-top:0!important;max-width:min(1000px,calc((100svh - var(--hdr) - 19vh - 250px) * 2.6))!important}
+.tr-final{margin-top:clamp(4px,1.5vh,18px)!important;padding-bottom:0!important;gap:18px!important;max-width:1000px}
+.tr-final .pk-final{gap:12px}
+.tr-final .pk-trophy{width:44px;height:52px}
+.tr-final .pk-final h3{font-size:clamp(18px,2.4vw,26px);line-height:1.2;margin:2px 0}
+.tr-final .pk-final h3 br{display:none}
+.tr-final .pk-final p:not(.pk-final-k){font-size:13px;margin:0}
+.tr-final .pk-spirit img{width:56px;height:56px}
+.tr-final .pk-spirit blockquote p{font-size:14.5px}
+@media (max-width:719px){
+  #tracks .peek{height:clamp(110px,15vh,170px)!important}
+  #tracks .trio{aspect-ratio:1.9}
+  #tracks .trio-wrap{--pb:52px}
+  .tr-final{grid-template-columns:1fr!important;gap:10px!important}
+  .tr-final .pk-final h3{font-size:18px}
+  .tr-final .pk-spirit{justify-content:flex-start}
+}
+#tracks .peek{height:clamp(150px,23vh,270px)!important}
+#tracks .trio-wrap{max-width:min(1000px,calc((100svh - var(--hdr) - 23vh - 240px) * 2.6))!important}
+.trio-hit b{font-size:clamp(15px,min(4.6vw,3.3vh),28px)!important}
+.trio-hit small{font-size:clamp(11.5px,1.6vh,14px)!important}
+@media (max-width:719px){#tracks .peek{height:clamp(130px,18vh,180px)!important}#tracks .trio-wrap{max-width:none!important}}
 
 </style>
 <script>

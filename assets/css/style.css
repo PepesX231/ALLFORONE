@@ -1660,3 +1660,11 @@ img,video,canvas,svg{-webkit-user-drag:none}
 .sched-list li.fin{background:linear-gradient(90deg,rgba(255,210,63,.18),rgba(255,138,61,.08));box-shadow:inset 0 0 0 2px rgba(255,210,63,.4)}
 .sched-list li.fin span{color:#ffd23f}
 @media (max-width:520px){.sched-list li{grid-template-columns:56px 1fr}.sched-list b{grid-column:2}.sched-list span,.sched-list em{grid-column:2}}
+/* registration countdown on the first screen (same component as the sign-up section) */
+.st .hx-reg.w{display:block!important;width:min(100%,400px);margin-top:6px}
+.hx-reg .cd-label{margin:0 0 6px;color:#fff;font-weight:700;text-shadow:0 2px 0 #1d4fbf,0 0 10px rgba(16,39,94,.6)}
+.hx-reg .cd{margin:0;gap:8px}
+.hx-reg .cd div{box-shadow:0 6px 0 #0b1b3f,inset 0 1px 0 rgba(255,255,255,.12)}
+@media (max-width:520px){.hx-reg .cd b{font-size:26px}.hx-reg .cd div{padding:10px 2px 8px}}
+.st0 .hx-sub2{font-size:clamp(16px,3.8vw,22px)}
+@media (max-width:520px){.hx-br{display:block}}

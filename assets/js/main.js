@@ -425,7 +425,7 @@
     return ['d', 'h', 'm', 's'].map(function (u) { return $('[data-u=' + u + ']', el); });
   });
   function applyPhase(p) {                 // the page shows the deadline in ONE place only
-    $('#cdLabel').textContent = p === 'pre' ? 'เปิดรับสมัครใน' : 'ปิดรับสมัครใน';
+    $$('.cd-label').forEach(function (l) { l.textContent = p === 'pre' ? 'เปิดรับสมัครใน' : 'ปิดรับสมัครใน'; });
     $$('[data-cd-wrap]').forEach(function (w) { w.hidden = p === 'closed'; });
   }
   function tick() {

@@ -1636,3 +1636,7 @@ img,video,canvas,svg{-webkit-user-drag:none}
 .hx-stats li{flex:0 1 auto}
 @media (max-width:520px){.hx-stats{flex-wrap:nowrap}.hx-stats li{flex:1 1 0;min-width:0}.hx-cta{flex-direction:column!important;gap:8px}}
 @media (max-width:520px){.st .hx-cta.w{flex-direction:column!important;gap:8px}}
+.st0 .st-tag{font-size:clamp(19px,4.6vw,34px)!important;max-width:16em;line-height:1.3}
+.st0 .hero-logo{width:min(86vw,48vh,580px)!important}
+.hx-go{box-shadow:0 5px 0 #9a3a00!important}
+@media (min-width:900px){.st0 .st-tag{max-width:none;white-space:nowrap}}
